@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { faderScale, linearScale, logScale } from './scale.js';
 import { formatDb, formatHz, formatMs, parseNumber } from './format.js';
+import { editableText } from './ValueInput.js';
 
 describe('linearScale', () => {
   const s = linearScale(-12, 12);
@@ -78,5 +79,14 @@ describe('parseNumber', () => {
   it('rejects text that is not a number', () => {
     expect(parseNumber('abc')).toBeNull();
     expect(parseNumber('')).toBeNull();
+  });
+});
+
+describe('editableText', () => {
+  it('turns a readout into text that parses back to the same value', () => {
+    for (const shown of [formatHz(1200), formatDb(-4), formatMs(4.2)]) {
+      expect(parseNumber(editableText(shown))).not.toBeNull();
+    }
+    expect(parseNumber(editableText(formatHz(1200)))).toBeCloseTo(1200);
   });
 });

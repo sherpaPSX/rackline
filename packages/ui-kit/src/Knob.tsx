@@ -1,7 +1,9 @@
-import type { CSSProperties } from 'react';
+import { useState } from 'react';
+import type { KeyboardEvent, CSSProperties } from 'react';
 import { linearScale } from './scale.js';
 import type { ValueScale } from './scale.js';
 import { useDragValue } from './useDragValue.js';
+import { EditableReadout } from './ValueInput.js';
 
 export interface KnobProps {
   label: string;
@@ -49,6 +51,7 @@ export function Knob({
   color,
   disabled = false,
 }: KnobProps) {
+  const [editing, setEditing] = useState(false);
   const { active, position, props } = useDragValue<SVGSVGElement>(value, onChange, { scale, defaultValue });
   const angle = START + position * (END - START);
   const from = bipolar ? 0 : START;
@@ -60,7 +63,12 @@ export function Knob({
     <div className="rl-cell" data-disabled={disabled || undefined}>
       <span className="rl-label">{label}</span>
       <svg
-        {...(disabled ? {} : props)}
+        {...(disabled
+          ? {}
+          : {
+              ...props,
+              onKeyDown: (e: KeyboardEvent<SVGSVGElement>) => (e.key === 'Enter' ? setEditing(true) : props.onKeyDown(e)),
+            })}
         className="rl-knob"
         viewBox="0 0 44 44"
         width={size}
@@ -85,9 +93,16 @@ export function Knob({
           className="rl-knob-pointer"
         />
       </svg>
-      <span className="rl-value" data-active={active || undefined}>
-        {text}
-      </span>
+      <EditableReadout
+        label={label}
+        text={text}
+        active={active}
+        editing={editing}
+        onEditingChange={setEditing}
+        scale={scale}
+        onCommit={onChange}
+        disabled={disabled}
+      />
     </div>
   );
 }

@@ -113,7 +113,7 @@ function Gallery() {
         <h1>Rackline UI kit</h1>
         <p className="sub">
           Atoms taken over from Console UI Atoms, plus EQ curves and rack cards, as React components in packages/ui-kit. Drag up and down, Shift for
-          fine control, double click for the default, arrow keys. The mouse wheel works only on a focused control.
+          fine control, double click for the default, arrow keys. Click a value (or press Enter on a control) to type an exact number. The mouse wheel works only on a focused control.
         </p>
         <div className="row">
           <Segmented

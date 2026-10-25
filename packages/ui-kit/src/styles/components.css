@@ -524,3 +524,30 @@ input.rl-vbox {
   font-variant-numeric: tabular-nums;
   color: var(--rl-fg);
 }
+
+/* Readout under a knob or fader; click to type an exact value */
+button.rl-value {
+  padding: 2px 4px;
+  border: 1px solid transparent;
+  border-radius: var(--rl-radius);
+  background: none;
+  cursor: text;
+}
+button.rl-value:hover:not(:disabled) {
+  border-color: var(--rl-line);
+}
+button.rl-value:disabled {
+  cursor: default;
+}
+.rl-value-input {
+  box-sizing: border-box;
+  width: 9ch;
+  padding: 2px 4px;
+  font: 400 12px/1.2 var(--rl-font-value);
+  text-align: center;
+  color: var(--rl-fg);
+  background: var(--rl-well);
+  border: 1px solid var(--rl-accent);
+  border-radius: var(--rl-radius);
+  outline: none;
+}

@@ -1,8 +1,10 @@
-import type { CSSProperties, ReactNode } from 'react';
+import { useState } from 'react';
+import type { KeyboardEvent, CSSProperties, ReactNode } from 'react';
 import { faderScale } from './scale.js';
 import type { ValueScale } from './scale.js';
 import { formatDb } from './format.js';
 import { useDragValue } from './useDragValue.js';
+import { EditableReadout } from './ValueInput.js';
 
 export interface FaderProps {
   /** Accessible name, e.g. the rack name. Not drawn; the caller shows the name. */
@@ -35,6 +37,7 @@ export function Fader({
   disabled = false,
   hideValue = false,
 }: FaderProps) {
+  const [editing, setEditing] = useState(false);
   const { active, position, props } = useDragValue<HTMLDivElement>(valueDb, onChange, {
     scale,
     defaultValue: defaultDb,
@@ -47,7 +50,12 @@ export function Fader({
     <div className="rl-cell" data-disabled={disabled || undefined}>
       <div className="rl-fader-row">
         <div
-          {...(disabled ? {} : props)}
+          {...(disabled
+          ? {}
+          : {
+              ...props,
+              onKeyDown: (e: KeyboardEvent<HTMLDivElement>) => (e.key === 'Enter' ? setEditing(true) : props.onKeyDown(e)),
+            })}
           className="rl-fader"
           data-touch={touch || undefined}
           role="slider"
@@ -67,10 +75,17 @@ export function Fader({
         </div>
         {meter}
       </div>
-      {!hideValue && (
-        <span className="rl-value" data-active={active || undefined}>
-          {text}
-        </span>
+      {(!hideValue || editing) && (
+        <EditableReadout
+          label={label}
+          text={text}
+          active={active}
+          editing={editing}
+          onEditingChange={setEditing}
+          scale={scale}
+          onCommit={onChange}
+          disabled={disabled}
+        />
       )}
     </div>
   );
