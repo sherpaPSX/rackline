@@ -58,6 +58,26 @@ Boundaries are enforced by `no-restricted-imports` rules in
 `eslint.config.js`, so a violation fails CI. Adding a DSP module type means
 adding one entry to the module registry in `model`, not edits across packages.
 
+## Rack import (`@rackline/model`)
+
+`buildRacks(blockTable)` turns any Drag Net block graph into racks without
+touching the DSP:
+
+- A rack is a linear chain. The graph is cut where a signal splits (one
+  output feeds several blocks) or merges (a mixer: the mixer heads the rack
+  and its inputs are the rack's sources).
+- A crossover ends a rack; each band is a source for further racks. A
+  crossover band feeding only another crossover (3-way → 2-way) is shown as
+  one crossover with all bands.
+- Two racks with the same module types whose sources are a left/right pair
+  (inputs 1/2 or A/B, or the two channels of a stereo rack) become one stereo
+  rack. A mono rack summing both channels of a stereo rack is the "mono" mode.
+- Outputs belong to the rack whose end feeds them; an output fed straight
+  from an input or a band gets a rack without modules.
+- Rack names are suggested from block names (output names first).
+- Blocks of unknown type stay in the chain as modules; side-chain inputs etc.
+  are not handled yet (no sample).
+
 ## Tooling
 
 - TypeScript (strict), pnpm workspaces, ESLint (typescript-eslint strict), Vitest.
