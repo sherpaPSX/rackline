@@ -172,7 +172,7 @@ export function buildRacks(table: BlockTable): RackLayout {
       });
     };
     walk(root);
-    xo.names = bandNames(xo.names.length, xo.names);
+    if (xo.blocks.length > 1) xo.names = bandNames(xo.names.length, xo.names);
     return xo;
   };
 
