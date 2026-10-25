@@ -497,8 +497,6 @@ input.rl-vbox {
 .rl-geq-band {
   position: absolute;
   top: 0;
-  /* Slightly less than one octave of the plot, so neighbours never overlap. */
-  width: calc((100% - 44px) * 0.09);
   transform: translateX(-50%);
   display: grid;
   justify-items: center;
@@ -518,6 +516,9 @@ input.rl-vbox {
 }
 .rl-geq .rl-fader[data-touch] {
   flex-basis: 48px;
+}
+.rl-geq-faders[data-dense] .rl-label {
+  white-space: nowrap;
 }
 .rl-geq-value {
   font: 400 10px/1.2 var(--rl-font-value);

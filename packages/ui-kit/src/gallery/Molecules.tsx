@@ -198,3 +198,19 @@ export function RackSpecimen({ touch }: { touch: boolean }) {
     </RackCard>
   );
 }
+
+/** ISO 1/3-octave centres, 25 Hz to 20 kHz. */
+const THIRDS = [25, 31.5, 40, 50, 63, 80, 100, 125, 160, 200, 250, 315, 400, 500, 630, 800, 1000, 1250, 1600, 2000, 2500, 3150, 4000, 5000, 6300, 8000, 10_000, 12_500, 16_000, 20_000];
+
+export function Geq30Specimen({ touch }: { touch: boolean }) {
+  const [gains, setGains] = useState<number[]>(() => THIRDS.map((f) => (f < 50 ? 3 : f > 8000 ? 2 : f === 400 ? -3 : 0)));
+  return (
+    <GraphicEq
+      label="30-band GEQ"
+      bands={THIRDS.map((freq, i) => ({ freq, gainDb: gains[i] ?? 0 }))}
+      onChange={(i, g) => setGains((gs) => gs.map((x, j) => (j === i ? g : x)))}
+      q={4.32}
+      touch={touch}
+    />
+  );
+}
