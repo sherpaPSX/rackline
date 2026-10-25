@@ -4,7 +4,7 @@ import { Button, MuteButton, RackCard } from '@rackline/ui-kit';
 import { useCoreClient } from '../app/core-context.js';
 import { peqBands } from '../curves.js';
 import { formatParam } from '../params.js';
-import { anyMuted, blockById, inputStrips, moduleOf, outputIdsOf, rackColor, rackDetail, valueOf } from '../racks.js';
+import { anyMuted, blockById, channelName, inputStrips, moduleOf, outputIdsOf, rackChannelNames, rackColor, rackDetail, valueOf } from '../racks.js';
 import { CrossoverModule } from '../modules/CrossoverModule.js';
 import { GenericModule } from '../modules/GenericModule.js';
 import type { ModuleViewProps } from '../modules/GenericModule.js';
@@ -32,6 +32,7 @@ function RackView({ rack, setup, values }: { rack: Rack; setup: Setup; values: V
   const client = useCoreClient();
   const [expanded, setExpanded] = useState(true);
   const outputs = outputIdsOf(rack);
+  const names = rackChannelNames(setup, rack);
   const outputModule = outputs[0] === undefined ? undefined : moduleOf(setup, outputs[0]);
   const trim = outputModule?.params.find((p) => p.key === 'trim');
   const muted = anyMuted(values, outputs);
@@ -66,20 +67,20 @@ function RackView({ rack, setup, values }: { rack: Rack; setup: Setup; values: V
       }
     >
       {mixerId !== undefined && mixerModule && (
-        <ModuleView module={mixerModule} blockIds={[mixerId]} values={values} rackName={rack.name} title="L+R sum" />
+        <ModuleView module={mixerModule} blockIds={[mixerId]} values={values} rackName={rack.name} title="Sum" />
       )}
       {rack.modules.map((m) => {
         const module = setup.modules.find((x) => x.blockType === m.blockType);
         return module ? (
-          <ModuleView key={m.blockIds.join('-')} module={module} blockIds={m.blockIds} values={values} rackName={rack.name} />
+          <ModuleView key={m.blockIds.join('-')} module={module} blockIds={m.blockIds} values={values} rackName={rack.name} channelNames={names} />
         ) : (
           <UnknownModule key={m.blockIds.join('-')} blockIds={m.blockIds} setup={setup} />
         );
       })}
       {crossover && (
-        <CrossoverModule blockIds={crossover.blockIds} modules={crossoverModules} values={values} rackName={rack.name} bandColors={bandColors} />
+        <CrossoverModule blockIds={crossover.blockIds} modules={crossoverModules} values={values} rackName={rack.name} channelNames={names} bandColors={bandColors} />
       )}
-      {outputModule && <ModuleView module={outputModule} blockIds={outputs} values={values} rackName={rack.name} title="Output" />}
+      {outputModule && <ModuleView module={outputModule} blockIds={outputs} values={values} rackName={rack.name} channelNames={names} title="Output" />}
     </RackCard>
   );
 }
@@ -90,7 +91,7 @@ function InputsView({ setup, values }: { setup: Setup; values: Values }) {
     <RackCard name="Inputs" color="var(--rl-dim)" detail="Sensitivity and trim of the physical inputs" expanded={expanded} onExpandedChange={setExpanded}>
       {inputStrips(setup).map((strip) => {
         const module = moduleOf(setup, strip.blockIds[0] ?? -1);
-        return module && <ModuleView key={strip.name} module={module} blockIds={strip.blockIds} values={values} rackName={strip.name} title={strip.name} />;
+        return module && <ModuleView key={strip.name} module={module} blockIds={strip.blockIds} values={values} rackName={strip.name} title={strip.name} channelNames={strip.blockIds.map((id) => channelName(setup, id) ?? '')} />;
       })}
     </RackCard>
   );

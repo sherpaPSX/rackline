@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { anyMuted, bandStrips, channelsAgree, inputStrips, pairName, rackColor, rackDetail } from '../src/index.js';
+import { anyMuted, bandStrips, channelName, rackChannelNames, channelsAgree, inputStrips, pairName, rackColor, rackDetail } from '../src/index.js';
 import { psxState } from './fixtures.js';
 
 const state = psxState();
@@ -33,9 +33,17 @@ describe('rack views of PSX_RCF_FINAL', () => {
 
   it('describes width, source and outputs of a rack', () => {
     expect(rackDetail(setup, rack('MF\\HF'))).toBe('Stereo · from Delay High · Out 5, 6');
-    expect(rackDetail(setup, rack('ANALOG mono'))).toBe('Mono · from L+R of ANALOG');
+    expect(rackDetail(setup, rack('ANALOG mono'))).toBe('Mono · from sum of ANALOG');
     expect(rackDetail(setup, rack('SUB HORN'))).toBe('Mono · from ANALOG mono Low mid · Out 1');
     expect(rackDetail(setup, rack('ANALOG'))).toBe('Stereo · from ANALOG');
+  });
+
+  it('names stereo channels by the physical inputs and outputs', () => {
+    expect([channelName(setup, 1), channelName(setup, 10), channelName(setup, 16)]).toEqual(['In 1', 'In B', 'Out 6']);
+    expect(rackChannelNames(setup, rack('MF\\HF'))).toEqual(['Out 5', 'Out 6']);
+    // Racks without outputs are traced back to the inputs that feed them.
+    expect(rackChannelNames(setup, rack('ANALOG'))).toEqual(['In 1', 'In 2']);
+    expect(rackChannelNames(setup, rack('Delay'))).toEqual(['In 1', 'In 2']);
   });
 
   it('notices when L and R of a stereo module differ', () => {

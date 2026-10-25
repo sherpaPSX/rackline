@@ -89,11 +89,11 @@ function tapText(setup: Setup, tap: Tap): string {
 
 function channelSource(setup: Setup, sources: readonly Tap[]): string {
   const texts = [...new Set(sources.map((t) => tapText(setup, t)))];
-  if (sources.length > 1) return texts.length === 1 ? `L+R of ${texts[0]}` : texts.join(' + ');
+  if (sources.length > 1) return texts.length === 1 ? `sum of ${texts[0]}` : texts.join(' + ');
   return texts[0] ?? 'no source';
 }
 
-/** Where the rack's signal comes from, e.g. "ANALOG" (inputs 1/2), "L+R of ANALOG", "Delay High". */
+/** Where the rack's signal comes from, e.g. "ANALOG" (inputs 1/2), "sum of ANALOG", "Delay High". */
 export function sourceText(setup: Setup, rack: Rack): string {
   const [left, right] = rack.channels.map((c) => channelSource(setup, c.sources));
   return right === undefined ? (left ?? 'no source') : pairName(left ?? '', right);
@@ -123,3 +123,38 @@ export function channelsAgree(values: Values, blockIds: readonly number[], keys:
 /** A band is muted when any of its outputs is muted: a cut signal must never look live. */
 export const anyMuted = (values: Values, blockIds: readonly number[], key = 'mute'): boolean =>
   blockIds.some((id) => valueOf(values, id, key) === true);
+
+/** Physical channel of an input or output block as the device labels it: "In 1", "In A", "Out 5". */
+export function channelName(setup: Setup, blockId: number): string | undefined {
+  const block = blockById(setup, blockId);
+  const module = moduleOf(setup, blockId);
+  if (!block || block.channel <= 0) return undefined;
+  if (module?.role === 'output') return `Out ${block.channel}`;
+  if (module?.role !== 'input') return undefined;
+  // The RPM 26z labels its digital inputs A and B.
+  return `In ${module.name.startsWith('Digital') ? ('AB'[block.channel - 1] ?? block.channel) : block.channel}`;
+}
+
+/**
+ * Names of a rack's channels, so stereo controls say which physical
+ * channel they edit: the outputs it feeds, else the inputs it comes from
+ * (traced back through other racks), else L / R.
+ */
+export function rackChannelNames(setup: Setup, rack: Rack): string[] {
+  const trace = (r: Rack, channel: number, depth: number): string | undefined => {
+    const c = r.channels[channel];
+    if (!c || depth > setup.racks.length) return undefined;
+    const out = c.outputIds[0];
+    if (out !== undefined) return channelName(setup, out);
+    const tap = c.sources.length === 1 ? c.sources[0] : undefined;
+    if (tap?.kind === 'input') return channelName(setup, tap.blockId);
+    if (tap?.kind === 'rack' || tap?.kind === 'band') {
+      const from = setup.racks.find((x) => x.id === tap.rackId);
+      return from && trace(from, tap.channel, depth + 1);
+    }
+    return undefined;
+  };
+  const names = rack.channels.map((_, i) => trace(rack, i, 0));
+  const distinct = new Set(names).size === names.length && names.every((n) => n !== undefined);
+  return distinct ? (names as string[]) : rack.channels.map((_, i) => (i === 0 ? 'L' : 'R'));
+}

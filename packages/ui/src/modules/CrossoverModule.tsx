@@ -14,6 +14,7 @@ export interface CrossoverModuleProps {
   modules: readonly ModuleInfo[];
   values: Values;
   rackName: string;
+  channelNames: readonly string[];
   /** Colors of the racks fed by the first block's bands, high first, when known. */
   bandColors: readonly (string | undefined)[];
 }
@@ -27,14 +28,16 @@ function CrossoverStage({
   values,
   owner,
   colors,
+  channelNames,
 }: {
   module: ModuleInfo;
   blockIds: readonly number[];
   values: Values;
   owner: string;
   colors: readonly (string | undefined)[];
+  channelNames: readonly string[];
 }) {
-  const linked = useLinkedModule(values, blockIds, module.params.map((p) => p.key));
+  const linked = useLinkedModule(values, blockIds, module.params.map((p) => p.key), channelNames);
   const edges = crossoverEdges(module);
   const bands = crossoverBands(module, linked.value);
   const lines: EqCurveLine[] = bands.map((b, i) => ({ id: b.name, filters: b.filters, color: colors[i] ?? 'var(--rl-fg)' }));
@@ -82,7 +85,7 @@ function CrossoverStage({
 }
 
 /** The crossover at the end of a rack. A cascade (3-way + 2-way) shows each block as a stage. */
-export function CrossoverModule({ blockIds, modules, values, rackName, bandColors }: CrossoverModuleProps) {
+export function CrossoverModule({ blockIds, modules, values, rackName, channelNames, bandColors }: CrossoverModuleProps) {
   const [open, setOpen] = useState(false);
   const owner = `${rackName} crossover`;
   // Stage s of the cascade: block s of every channel.
@@ -119,6 +122,7 @@ export function CrossoverModule({ blockIds, modules, values, rackName, bandColor
                 values={values}
                 owner={stages.length > 1 ? `${owner} stage ${s + 1}` : owner}
                 colors={colors}
+                channelNames={channelNames}
               />
             )
           );

@@ -10,6 +10,8 @@ export interface LinkedModule {
   /** Blocks of the module, one per channel. */
   blockIds: readonly number[];
   stereo: boolean;
+  /** Physical names of the channels, e.g. ["In 1", "In 2"]. */
+  names: readonly string[];
   choice: ChannelChoice;
   setChoice: (choice: ChannelChoice) => void;
   /** L and R hold different values for some of the keys. */
@@ -23,10 +25,15 @@ export interface LinkedModule {
 
 /**
  * Stereo modules are edited once for both channels. When L and R already
- * differ (as in a saved setup), the controls start on L so nothing is
+ * differ (as in a saved setup), the controls start on the first channel so nothing is
  * overwritten by surprise; the engineer links them deliberately.
  */
-export function useLinkedModule(values: Values, blockIds: readonly number[], keys: readonly string[]): LinkedModule {
+export function useLinkedModule(
+  values: Values,
+  blockIds: readonly number[],
+  keys: readonly string[],
+  names: readonly string[] = ['L', 'R'],
+): LinkedModule {
   const client = useCoreClient();
   const stereo = blockIds.length > 1;
   const differ = stereo && !channelsAgree(values, blockIds, keys);
@@ -37,6 +44,7 @@ export function useLinkedModule(values: Values, blockIds: readonly number[], key
   return {
     blockIds,
     stereo,
+    names,
     choice,
     setChoice,
     differ,

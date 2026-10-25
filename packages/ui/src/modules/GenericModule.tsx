@@ -11,6 +11,8 @@ export interface ModuleViewProps {
   values: Values;
   /** Rack name, so screen readers hear "SUB FLEX Delay". */
   rackName: string;
+  /** Physical names of the channels (see rackChannelNames). */
+  channelNames?: readonly string[] | undefined;
   /** Name on the card; defaults to the module type. */
   title?: string | undefined;
 }
@@ -31,9 +33,9 @@ const SHORT: Record<string, string> = {
 };
 
 /** A small module: every parameter visible, in the order the module lists them. */
-export function GenericModule({ module, blockIds, values, rackName, title = module.name }: ModuleViewProps) {
+export function GenericModule({ module, blockIds, values, rackName, channelNames, title = module.name }: ModuleViewProps) {
   const keys = module.params.map((p) => p.key);
-  const linked = useLinkedModule(values, blockIds, keys);
+  const linked = useLinkedModule(values, blockIds, keys, channelNames);
   const owner = `${rackName} ${title}`;
   return (
     <ModuleCard name={title} badge={linked.stereo ? <ChannelPicker linked={linked} owner={owner} /> : undefined}>

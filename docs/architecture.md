@@ -134,7 +134,8 @@ Every message is JSON validated by a zod schema on both sides
 - Screens: **Show** (fader = trim + mute per input pair and band; band
   fader = Output Trim of all its outputs), **System / Tune** (racks in signal
   order, modules left to right, PEQ and crossover expand sideways with a
-  curve; stereo modules edit L+R linked, or L / R when they differ),
+  curve; stereo modules edit both channels linked, or one when they differ;
+  channels are named by their physical inputs/outputs: 1+2, A+B, 5+6),
   **Files** (find/connect a device, open `.r26`, recall presets).
 - Curves are drawn from the option labels the core sends (`curves.ts`);
   Low/High cut as 2nd-order Butterworth and Horn EQ/all-pass as flat are
