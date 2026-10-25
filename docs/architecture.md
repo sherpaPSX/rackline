@@ -73,7 +73,9 @@ adding one entry to the module registry in `model`, not edits across packages.
 - Phase 1: **unit tests only** (Vitest), mainly `protocol` and `model`.
   No E2E / Playwright yet.
 - Fixtures are real files: Lukas's `PSX_RCF_FINAL.r26` (his actual RCF rig)
-  and a captured RPM26z_01 TFTP config. Modules missing from them (GEQ, matrix
+  and a captured RPM26z_01 TFTP config, cut after the block table so no
+  compiler-generated DSP code is committed. They live in
+  `packages/protocol/test/fixtures/` (see its README). Modules missing from them (GEQ, matrix
   mixer, select, compressor, generator, digital inputs) get small fixtures made
   in Drag Net under Wine when needed.
 - The Python simulator and Drag Net under Wine are for manual verification.
