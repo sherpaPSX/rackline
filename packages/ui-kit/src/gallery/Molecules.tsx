@@ -47,7 +47,8 @@ function usePeq() {
   return { bands, selected, setSelected, update };
 }
 
-function PeqEditor({ peq, on = true }: { peq: ReturnType<typeof usePeq>; on?: boolean }) {
+/** `side` puts the band controls right of the curve, like a device in a rack. */
+function PeqEditor({ peq, on = true, side = false }: { peq: ReturnType<typeof usePeq>; on?: boolean; side?: boolean }) {
   const { bands, selected, setSelected, update } = peq;
   const band = bands[selected];
   const lines: EqCurveLine[] = on
@@ -57,7 +58,7 @@ function PeqEditor({ peq, on = true }: { peq: ReturnType<typeof usePeq>; on?: bo
       ]
     : [{ id: 'flat', filters: [] }];
   return (
-    <div className="stack">
+    <div className={side ? 'peq-side' : 'stack'}>
       <EqCurve
         label="Parametric EQ response"
         lines={lines}
@@ -67,7 +68,7 @@ function PeqEditor({ peq, on = true }: { peq: ReturnType<typeof usePeq>; on?: bo
         onMove={(id, m) => update(Number(id), m)}
       />
       {band && (
-        <div className="row wide">
+        <div className={side ? 'peq-controls' : 'row wide'}>
           <Segmented
             label="Filter type"
             value={band.type}
@@ -170,7 +171,7 @@ export function RackSpecimen({ touch }: { touch: boolean }) {
           </div>
         }
       >
-        <PeqEditor peq={peq} on={on['peq'] ?? true} />
+        <PeqEditor peq={peq} on={on['peq'] ?? true} side />
       </ModuleCard>
       <ModuleCard name="Delay" {...power('delay')}>
         <Knob size={44} label="Time" value={delay} onChange={setDelay} format={formatMs} scale={linearScale(0, 100)} defaultValue={0} />
