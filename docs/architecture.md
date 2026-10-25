@@ -78,6 +78,25 @@ touching the DSP:
 - Blocks of unknown type stay in the chain as modules; side-chain inputs etc.
   are not handled yet (no sample).
 
+## WebSocket API (`@rackline/api`)
+
+Every message is JSON validated by a zod schema on both sides
+(`parseClientMessage`, `parseServerMessage`).
+
+- On connect the core sends `hello` (with `apiVersion`) and then `state`: the
+  whole `AppState` (connection, found devices, the setup with its racks and a
+  description of every module used, and all parameter values).
+- Clients send intents: `setParam`, `recallPreset`, `discover`, `connect`,
+  `disconnect`, `openProject` (an `.r26` without a device). The core applies
+  them and broadcasts the result to all clients: `param` for one value,
+  `state` when many values or the setup change, `connection`, `devices`,
+  `error`.
+- Values are in engineering units (dB, Hz, ms, octaves). For `steps`
+  parameters (attack, release, ratio) the value is the index into the
+  module's step list; ∞ travels as `"inf"`. Enum values are option codes.
+- There is no message that changes the DSP layout or the device's network
+  settings.
+
 ## Tooling
 
 - TypeScript (strict), pnpm workspaces, ESLint (typescript-eslint strict), Vitest.
