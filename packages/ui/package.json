@@ -8,5 +8,14 @@
   "exports": {
     ".": "./src/index.ts"
   },
-  "dependencies": { "@rackline/api": "workspace:*", "@rackline/ui-kit": "workspace:*" }
+  "dependencies": {
+    "@rackline/api": "workspace:*",
+    "@rackline/ui-kit": "workspace:*",
+    "react": "19.3.0",
+    "react-dom": "19.3.0"
+  },
+  "devDependencies": {
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0"
+  }
 }
