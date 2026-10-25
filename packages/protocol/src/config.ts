@@ -1,3 +1,4 @@
+import { latin1, latin1Bytes } from './bytes.js';
 import { fail, ok, type Result } from './result.js';
 
 /**
@@ -89,9 +90,10 @@ class Reader {
     return v;
   }
 
+  /** A view into the input (not a copy). */
   take(n: number): Uint8Array {
     this.need(n);
-    const out = this.bytes.slice(this.offset, this.offset + n);
+    const out = this.bytes.subarray(this.offset, this.offset + n);
     this.offset += n;
     return out;
   }
@@ -128,7 +130,7 @@ function parse(r: Reader): Result<BlockTable> {
     const extraSize = r.u16();
 
     if (blockType === END_OF_TABLE_TYPE) {
-      const endRecordExtra = r.take(extraSize);
+      const endRecordExtra = r.take(extraSize).slice();
       if (blocks.length !== blockCount) {
         return fail(`header says ${blockCount} blocks, table has ${blocks.length}`);
       }
@@ -181,7 +183,7 @@ export function serializeBlockTable(table: BlockTable): Uint8Array {
     u16(EXTRA_FIXED_SIZE + b.name.length);
     [b.x, b.y, 0, b.kind, b.channel].forEach(u16);
     u8(b.name.length);
-    for (const c of b.name) u8(c.charCodeAt(0));
+    latin1Bytes(b.name).forEach(u8);
     u16(b.inputs.length);
     u16(b.outputs.length);
     [...b.inputs, ...b.outputs].forEach(u16);
@@ -192,10 +194,6 @@ export function serializeBlockTable(table: BlockTable): Uint8Array {
   u16(END_OF_TABLE_TYPE);
   u16(RECORD_MARKER);
   u16(table.endRecordExtra.length);
-  out.push(...table.endRecordExtra);
+  table.endRecordExtra.forEach(u8);
   return Uint8Array.from(out);
-}
-
-function latin1(bytes: Uint8Array): string {
-  return String.fromCharCode(...bytes);
 }

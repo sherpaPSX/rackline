@@ -1,3 +1,4 @@
+import { latin1, latin1Bytes } from './bytes.js';
 import { fail, ok, type Result } from './result.js';
 
 /**
@@ -21,7 +22,7 @@ const OPCODES = { rrq: 1, wrq: 2, data: 3, ack: 4, error: 5 } as const;
 
 /** Read request for the device's configuration. */
 export function encodeReadRequest(filename = CONFIG_FILE_NAME): Uint8Array {
-  return Uint8Array.from([0, OPCODES.rrq, ...ascii(filename), 0, ...ascii('octet'), 0]);
+  return Uint8Array.from([0, OPCODES.rrq, ...latin1Bytes(filename), 0, ...latin1Bytes('octet'), 0]);
 }
 
 export function encodeAck(block: number): Uint8Array {
@@ -99,16 +100,12 @@ export class TftpDownload {
   }
 }
 
-function ascii(text: string): number[] {
-  return Array.from(text, (c) => c.charCodeAt(0) & 0x7f);
-}
-
 function cStrings(bytes: Uint8Array): string[] {
   const parts: string[] = [];
   let start = 0;
   for (let i = 0; i < bytes.length; i++) {
     if (bytes[i] === 0) {
-      parts.push(String.fromCharCode(...bytes.subarray(start, i)));
+      parts.push(latin1(bytes.subarray(start, i)));
       start = i + 1;
     }
   }

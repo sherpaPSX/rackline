@@ -1,5 +1,5 @@
 import { parseBlockTable, type BlockTable } from './config.js';
-import type { ParamRecord, RecordTarget, ValueSize } from './frame.js';
+import { isValueSize, targetFromByte, type ParamRecord } from './frame.js';
 import { fail, ok, type Result } from './result.js';
 
 /**
@@ -19,8 +19,6 @@ export interface R26Preset {
   number: number;
   params: ParamRecord[];
 }
-
-const TARGETS: Readonly<Record<number, RecordTarget>> = { 0x00: 'block', 0x04: 'system' };
 
 export function parseR26(text: string): Result<R26Project> {
   const softwareVersion = /<RPM\s+SOFTWAREVERSION="([^"]*)"/.exec(text)?.[1];
@@ -50,19 +48,12 @@ export function parseR26(text: string): Result<R26Project> {
 
 function parseParam(d: string): Result<ParamRecord> {
   const fields = d.split(',').map(Number);
-  const [objectType, address, index, size, value] = fields;
-  if (
-    fields.length !== 5 ||
-    fields.some((f) => !Number.isInteger(f) || f < 0) ||
-    objectType === undefined ||
-    address === undefined ||
-    index === undefined ||
-    value === undefined
-  ) {
+  if (fields.length !== 5 || fields.some((f) => !Number.isInteger(f) || f < 0)) {
     return fail(`malformed Param d="${d}"`);
   }
-  const target = TARGETS[address >> 8];
+  const [objectType, address, index, size, value] = fields as [number, number, number, number, number];
+  const target = targetFromByte(address >> 8);
   if (target === undefined) return fail(`unknown target in Param d="${d}"`);
-  if (size !== 1 && size !== 2 && size !== 4) return fail(`invalid size in Param d="${d}"`);
-  return ok({ target, instance: address & 0xff, objectType, index, size: size satisfies ValueSize, value });
+  if (!isValueSize(size)) return fail(`invalid size in Param d="${d}"`);
+  return ok({ target, instance: address & 0xff, objectType, index, size, value });
 }

@@ -29,6 +29,8 @@ describe('discovery', () => {
 
   it('refuses malformed addresses when encoding WI', () => {
     expect(() => encodeSetIp({ mac: '00:50:c2:12:34', ip: '192.168.1.50', netmask: '255.255.255.0' })).toThrow();
-    expect(() => encodeSetIp({ mac: '00:50:c2:12:34:56', ip: '192.168.1.256', netmask: '255.255.255.0' })).toThrow();
+    for (const ip of ['192.168.1.256', '192.168..22', '192.168.69.', ' 1.2.3.4', '1.2.3.4.5']) {
+      expect(() => encodeSetIp({ mac: '00:50:c2:12:34:56', ip, netmask: '255.255.255.0' })).toThrow();
+    }
   });
 });

@@ -38,7 +38,9 @@ export interface Frame {
 }
 
 const KIND_BYTE: Record<FrameKind, number> = { read: 0, write: 1, reply: 2 };
+const KIND_BY_BYTE = invert(KIND_BYTE);
 const TARGET_BYTE: Record<RecordTarget, number> = { block: 0x00, system: 0x04 };
+const TARGET_BY_BYTE = invert(TARGET_BYTE);
 const RECORDS_OFFSET = 9;
 const RECORD_SIZE = 14;
 
@@ -70,7 +72,7 @@ export function decodeFrame(bytes: Uint8Array): Result<Frame> {
     return fail(`frame must be ${CONTROL_FRAME_SIZE} bytes, got ${bytes.length}`);
   }
   const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
-  const kind = keyOf(KIND_BYTE, view.getUint8(0));
+  const kind = KIND_BY_BYTE.get(view.getUint8(0));
   if (kind === undefined) return fail(`unknown frame kind ${view.getUint8(0)}`);
   const count = view.getUint8(8);
   if (count > MAX_RECORDS_PER_FRAME) return fail(`record count ${count} exceeds ${MAX_RECORDS_PER_FRAME}`);
@@ -78,7 +80,7 @@ export function decodeFrame(bytes: Uint8Array): Result<Frame> {
   const records: ParamRecord[] = [];
   for (let i = 0; i < count; i++) {
     const o = RECORDS_OFFSET + RECORD_SIZE * i;
-    const target = keyOf(TARGET_BYTE, view.getUint8(o));
+    const target = targetFromByte(view.getUint8(o));
     if (target === undefined) return fail(`record ${i}: unknown target byte ${view.getUint8(o)}`);
     const size = view.getUint16(o + 8);
     if (!isValueSize(size)) return fail(`record ${i}: invalid value size ${size}`);
@@ -106,18 +108,24 @@ export function readRecord(address: ParamAddress, size: ValueSize): ParamRecord 
 export function isReplyTo(request: Frame, reply: Frame): boolean {
   const a = request.records[0];
   const b = reply.records[0];
-  if (reply.kind !== 'reply' || a === undefined || b === undefined) return false;
-  return (
-    a.target === b.target && a.instance === b.instance && a.objectType === b.objectType && a.index === b.index
-  );
+  return reply.kind === 'reply' && a !== undefined && b !== undefined && sameAddress(a, b);
 }
 
-function isValueSize(n: number): n is ValueSize {
+export function sameAddress(a: ParamAddress, b: ParamAddress): boolean {
+  return a.target === b.target && a.instance === b.instance && a.objectType === b.objectType && a.index === b.index;
+}
+
+/** Record byte 0 → target, `undefined` if unknown. */
+export function targetFromByte(byte: number): RecordTarget | undefined {
+  return TARGET_BY_BYTE.get(byte);
+}
+
+export function isValueSize(n: number): n is ValueSize {
   return n === 1 || n === 2 || n === 4;
 }
 
-function keyOf<K extends string>(map: Record<K, number>, byte: number): K | undefined {
-  return (Object.keys(map) as K[]).find((k) => map[k] === byte);
+function invert<K extends string>(map: Record<K, number>): Map<number, K> {
+  return new Map((Object.keys(map) as K[]).map((k) => [map[k], k]));
 }
 
 function checkRange(value: number, max: number, name: string): number {

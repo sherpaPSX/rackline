@@ -1,5 +1,6 @@
+import { cString } from './bytes.js';
 import type { ParamAddress, ParamRecord } from './frame.js';
-import { readRecord } from './frame.js';
+import { readRecord, sameAddress } from './frame.js';
 
 /**
  * System objects addressed with target byte 0x04. Only the ones verified with
@@ -54,24 +55,18 @@ export function deviceInfoReadRecords(): ParamRecord[] {
 
 /** Decode the reply records of a `deviceInfoReadRecords` request. */
 export function decodeDeviceInfo(records: readonly ParamRecord[]): DeviceInfo {
-  const lookup = (a: ParamAddress): number | undefined =>
-    records.find((r) => r.target === a.target && r.instance === a.instance && r.objectType === a.objectType && r.index === a.index)
-      ?.value;
+  const lookup = (a: ParamAddress): number | undefined => records.find((r) => sameAddress(r, a))?.value;
   const find = (a: ParamAddress): number => lookup(a) ?? 0;
 
   const major = find(SYSTEM.firmwareMajor);
   const code = lookup(SYSTEM.modelCode);
-  const nameBytes = Array.from({ length: NAME_PARTS }, (_, i) => find(SYSTEM.name(i))).flatMap((v) => [
-    (v >>> 24) & 0xff,
-    (v >>> 16) & 0xff,
-    (v >>> 8) & 0xff,
-    v & 0xff,
-  ]);
-  const end = nameBytes.indexOf(0);
+  const nameBytes = new Uint8Array(4 * NAME_PARTS);
+  const nameView = new DataView(nameBytes.buffer);
+  for (let i = 0; i < NAME_PARTS; i++) nameView.setUint32(4 * i, find(SYSTEM.name(i)));
   return {
     model: modelName(code),
     firmware: `${Math.floor(major / 10)}.${major % 10}.${find(SYSTEM.firmwareMinor)}`,
-    name: String.fromCharCode(...(end === -1 ? nameBytes : nameBytes.slice(0, end))),
+    name: cString(nameBytes),
   };
 }
 

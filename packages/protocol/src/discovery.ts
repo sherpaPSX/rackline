@@ -71,11 +71,11 @@ function isCommand(value: string): value is DiscoveryCommand {
 
 /** Parse a dotted IPv4 address. Throws on malformed input (programmer error). */
 export function parseIpv4(ip: Ipv4): Uint8Array {
-  const parts = ip.split('.').map(Number);
-  if (parts.length !== 4 || parts.some((p) => !Number.isInteger(p) || p < 0 || p > 255)) {
+  const parts = ip.split('.');
+  if (parts.length !== 4 || parts.some((p) => !/^\d{1,3}$/.test(p) || Number(p) > 255)) {
     throw new RangeError(`invalid IPv4 address: ${ip}`);
   }
-  return Uint8Array.from(parts);
+  return Uint8Array.from(parts, Number);
 }
 
 export function formatIpv4(bytes: Uint8Array): Ipv4 {
