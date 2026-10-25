@@ -110,7 +110,13 @@ describe('encodeParam', () => {
   it('rounds to the nearest step and clamps to the raw range', () => {
     expect(encodeParam(param(0x0301, 'delay'), 1.01)).toEqual({ ok: true, value: 48 });
     expect(encodeParam(param(0x0301, 'delay'), 5000)).toEqual({ ok: true, value: 65520 });
-    expect(encodeParam(param(0x0180, 'level'), -200)).toEqual({ ok: true, value: 0 });
+    expect(encodeParam(param(0x0180, 'level'), -200)).toEqual({ ok: true, value: 132 });
+    // Drag Net help ranges: PEQ gain −15..+12 dB, mixer input −30..0 dB, generator −40..0 dB, limiter −40..0 dBFS.
+    expect(encodeParam(param(0x0608, 'band1Gain'), 20)).toEqual({ ok: true, value: 168 });
+    expect(encodeParam(param(0x0608, 'band1Gain'), -20)).toEqual({ ok: true, value: 60 });
+    expect(encodeParam(param(0x0200, 'input1Level'), 6)).toEqual({ ok: true, value: 192 });
+    expect(encodeParam(param(0x0700, 'level'), -50)).toEqual({ ok: true, value: 112 });
+    expect(encodeParam(param(0x0501, 'threshold'), -45)).toEqual({ ok: true, value: 112 });
     expect(encodeParam(param(0x0500, 'threshold'), 40)).toEqual({ ok: true, value: 128 });
     // Data sheet ranges: input trim +16..−20 dB, output trim +16..−30 dB, user gain ±15 dB.
     expect(encodeParam(param(0x0105, 'trim'), 30)).toEqual({ ok: true, value: 112 });
@@ -126,6 +132,6 @@ describe('encodeParam', () => {
   it('rejects values of the wrong type and unknown enum codes', () => {
     expect(encodeParam(param(0x0106, 'mute'), 1).ok).toBe(false);
     expect(encodeParam(param(0x0106, 'trim'), true).ok).toBe(false);
-    expect(encodeParam(param(0x0608, 'band1Type'), 7).ok).toBe(false);
+    expect(encodeParam(param(0x0608, 'band1Type'), 8).ok).toBe(false);
   });
 });

@@ -50,3 +50,25 @@ several inputs.
 Wiring is fixed at compile time. Live routing changes are only possible via
 modules that expose routing as parameters: Matrix Mixer, Select 1 of N and
 Mix N×1 levels.
+
+## Not yet mapped: what the Drag Net help says
+
+Parameter names and ranges from the Drag Net 4.2 help (read locally, not
+committed), to guide mapping with the simulator. Block types are known only
+where a template uses the block.
+
+| Module | Block type | Parameters (range, step) |
+|---|---|---|
+| Mix N × 1 (2–10 inputs) | 0x0200 (2), 0x0201 (3) | input level −30 … 0 dB, output level −30 … +16 dB (½ dB), mute per input and output |
+| Select 1 of N (2–10 inputs) | 0x0210 (2), 0x0211 (3) | selected input |
+| Matrix Mixer | 0x0817 (6 × 6) | crosspoint on/off and level −30 … 0 dB, input level −60 … 0 dB, output level −30 … +16 dB (½ dB), mute, solo, invert per input/output |
+| 30-band Perfect-Q GEQ | ? | 30 ISO ⅓-octave sliders ±6 dB (0.0125 dB) or ±12 dB (¼ dB); low cut 15 … 240 Hz, high cut 5 … 20 kHz + off; tone; level −12 … +12 dB; bypass |
+| Compressor (mono/stereo side-chain) | ? | threshold −40 … 0 dBFS (½ dB), ratio 1 … 10 000, attack 0.5 … 100 ms, release 1 ms … 5 s, knee 0 … 20 dB, bypass |
+| AGC | ? | target −50 … −5 dBFS, threshold −30 … 0 dB rel. to target, ratio 1 … 100, max/min gain −36 … +24 dB, gain increase/decrease 1 … 30 dB/s, hold 0 … 30 s or infinite, bypass |
+| Ambient Noise Compensator | ? | min/max gain, gain increase/decrease, threshold, freeze, mute program |
+| Auto Mixer / Ducker | ? | detect threshold −70 … −12 dBFS, ducker depth 0 … 80 dB, gate depth 0 … −95 dBFS or off, priority 1 … 8, forced on, last on |
+| Feedback Suppressor | ? | fixed and floating filters, sensitivity, gain margin, auto setup, built-in limiter −60 … 0 dBFS |
+| Meter | ? | none (metering point) |
+
+Limiter attack and release use the same tables as the compressor (0.5 … 100
+ms, 1 ms … 5 s). Delay: up to 5 s per configuration, 500 ms per delay block.

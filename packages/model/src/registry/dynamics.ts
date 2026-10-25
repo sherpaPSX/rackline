@@ -1,5 +1,5 @@
-import { ATTACK_MS, COMPRESSOR_THRESHOLD, RATIO, RELEASE_MS } from '../units.js';
-import { level, num, steps } from './params.js';
+import { ATTACK_MS, COMPRESSOR_THRESHOLD, LIMITER_THRESHOLD, RATIO, RELEASE_MS } from '../units.js';
+import { num, steps } from './params.js';
 import type { ModuleDef } from './types.js';
 
 export const compressor: ModuleDef = {
@@ -23,7 +23,7 @@ export const limiter: ModuleDef = {
   role: 'processing',
   evidence: 'simulator',
   params: [
-    level(2, 'threshold', 'Threshold'),
+    num(2, 'threshold', 'Threshold', LIMITER_THRESHOLD),
     steps(3, 'attack', 'Attack', 'ms', ATTACK_MS),
     steps(4, 'release', 'Release', 'ms', RELEASE_MS),
   ],

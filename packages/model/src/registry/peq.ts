@@ -2,7 +2,10 @@ import { FREQUENCY, PEQ_BANDWIDTH, PEQ_GAIN } from '../units.js';
 import { bool, choice, num } from './params.js';
 import type { ModuleDef, ParamDef } from './types.js';
 
-/** Type 3 appears in Lukas's presets but was never mapped; "Low cut" is a guess by symmetry with 4 = High cut. */
+/**
+ * Codes 0, 1, 2, 4, 5, 6 are verified with the simulator. 3 and 7 follow the
+ * order of Drag Net's filter type list, which matches every verified code.
+ */
 export const PEQ_FILTER_TYPES = {
   0: 'Band',
   1: 'Low shelf',
@@ -10,14 +13,15 @@ export const PEQ_FILTER_TYPES = {
   3: 'Low cut',
   4: 'High cut',
   5: 'Horn EQ',
-  6: 'All-pass',
+  6: 'All-pass (1st order)',
+  7: 'All-pass (2nd order)',
 };
 
 /** RPM PEQs hold 1 to 15 filters; the count is fixed at compile time. */
 export const PEQ_MAX_FILTERS = 15;
 const PEQ_BASE_TYPE = 0x0600;
-/** Filter counts seen in real samples; the other type numbers follow the same pattern but are guessed. */
-const SEEN_FILTER_COUNTS = [2, 4, 9];
+/** Filter counts seen in real samples (Lukas's config, Drag Net templates); the others follow the same pattern. */
+const SEEN_FILTER_COUNTS = [2, 3, 4, 5, 6, 8, 9, 12, 15];
 
 /** Filter n (1-based) uses indexes 5n−3 … 5n+1. */
 function filterParams(n: number): ParamDef[] {

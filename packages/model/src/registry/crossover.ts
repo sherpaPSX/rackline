@@ -2,7 +2,23 @@ import { FREQUENCY } from '../units.js';
 import { bool, choice, num } from './params.js';
 import type { ModuleDef, ParamDef } from './types.js';
 
-export const CROSSOVER_FILTER_TYPES = { 0: 'Off', 1: 'LR12', 2: 'LR24', 4: 'BW18', 5: 'BW24', 6: 'Bessel12', 8: 'Bessel24' };
+/**
+ * Codes 0, 1, 2, 4, 5, 6, 8 are verified with the simulator. 3, 7 and 9
+ * follow the order of Drag Net's filter type list, which matches every
+ * verified code. Simple mode always uses LR24.
+ */
+export const CROSSOVER_FILTER_TYPES = {
+  0: 'Off',
+  1: 'LR12',
+  2: 'LR24',
+  3: 'BW12',
+  4: 'BW18',
+  5: 'BW24',
+  6: 'Bessel12',
+  7: 'Bessel18',
+  8: 'Bessel24',
+  9: '1st order',
+};
 
 /**
  * One crossover filter: type, frequency, invert at `index`, `index + 1`,
