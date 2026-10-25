@@ -10,14 +10,19 @@ export {
   blockById,
   channelName,
   channelsAgree,
+  flowBands,
+  flowSources,
+  flowTargets,
   inputStrips,
+  joinChannels,
   moduleOf,
   outputIdsOf,
   pairName,
   rackChannelNames,
   rackColor,
   rackDetail,
+  rackTree,
   sourceText,
   valueOf,
 } from './racks.js';
-export type { BandStrip, InputStrip } from './racks.js';
+export type { BandStrip, FlowLink, InputStrip } from './racks.js';

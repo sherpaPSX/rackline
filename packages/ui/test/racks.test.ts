@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { anyMuted, bandStrips, channelName, rackChannelNames, channelsAgree, inputStrips, pairName, rackColor, rackDetail } from '../src/index.js';
+import { anyMuted, bandStrips, channelName, rackChannelNames, channelsAgree, flowBands, flowSources, flowTargets, inputStrips, joinChannels, pairName, rackColor, rackDetail, rackTree } from '../src/index.js';
 import { psxState } from './fixtures.js';
 
 const state = psxState();
@@ -21,6 +21,35 @@ describe('rack views of PSX_RCF_FINAL', () => {
     ]);
     expect(rackColor(setup, rack('LF').id)).toBe('var(--rl-band-2)');
     expect(rackColor(setup, rack('ANALOG').id)).toBe('var(--rl-dim)');
+  });
+
+  it('draws the signal flow: sources, targets and crossover bands', () => {
+    const text = (links: { text: string }[]) => links.map((l) => l.text);
+    expect(text(flowSources(setup, rack('ANALOG')))).toEqual(['In 1+2']);
+    expect(text(flowSources(setup, rack('ANALOG mono')))).toEqual(['Σ ANALOG']);
+    expect(flowSources(setup, rack('MF\\HF'))).toEqual([{ text: 'Delay · High', rackId: rack('Delay').id, color: 'var(--rl-dim)' }]);
+    expect(text(flowTargets(setup, rack('ANALOG')))).toEqual(['Delay', 'ANALOG mono']);
+    expect(flowTargets(setup, rack('MF\\HF'))).toEqual([{ text: 'Out 5+6' }]);
+    expect(flowBands(setup, rack('ANALOG mono')).map((b) => [b.band, text(b.to)])).toEqual([
+      ['High', []],
+      ['High mid', ['SUB FLEX']],
+      ['Low mid', ['SUB HORN']],
+      ['Low', []],
+    ]);
+    expect(joinChannels(['In 1', 'In 2'])).toBe('In 1+2');
+    expect(joinChannels(['Out 5'])).toBe('Out 5');
+  });
+
+  it('orders racks as a tree, each under the rack that feeds it', () => {
+    expect(rackTree(setup).map((n) => `${'  '.repeat(n.depth)}${n.rack.name}`)).toEqual([
+      'ANALOG',
+      '  Delay',
+      '    MF\\HF',
+      '    LF',
+      '  ANALOG mono',
+      '    SUB FLEX',
+      '    SUB HORN',
+    ]);
   });
 
   it('pairs left/right inputs into one strip', () => {

@@ -251,3 +251,75 @@ body {
     width: 88px;
   }
 }
+
+/* System: signal flow */
+.app-rack {
+  /* A rack fed by another rack sits one step in, so the screen reads as the signal tree. */
+  margin-left: calc(var(--app-depth, 0) * var(--rl-s5));
+  scroll-margin-top: 72px;
+}
+@media (max-width: 600px) {
+  .app-rack {
+    margin-left: calc(var(--app-depth, 0) * var(--rl-s2));
+  }
+}
+.app-flow {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: var(--rl-s1);
+  max-width: 180px;
+}
+.app-flow-label {
+  font: 600 11px var(--rl-font-label);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--rl-dim);
+}
+.app-flow-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 100%;
+  height: 26px;
+  padding: 0 var(--rl-s2);
+  background: var(--rl-bg);
+  border: 1px solid var(--rl-line);
+  border-left: 3px solid var(--app-flow);
+  border-radius: var(--rl-radius);
+  color: var(--rl-fg);
+  font: 500 13px var(--rl-font-label);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+button.app-flow-chip {
+  cursor: pointer;
+}
+button.app-flow-chip:hover {
+  border-color: var(--rl-dim);
+  border-left-color: var(--app-flow);
+}
+button.app-flow-chip:focus-visible {
+  outline: 2px solid var(--rl-accent);
+  outline-offset: 1px;
+}
+.app-flow-band {
+  display: flex;
+  align-items: center;
+  gap: var(--rl-s1);
+  max-width: 100%;
+}
+.app-flow-band-name {
+  width: 56px;
+  flex: none;
+  font: 500 12px var(--rl-font-label);
+  color: var(--rl-dim);
+}
+.app-flow-unused {
+  font: 500 12px var(--rl-font-label);
+  color: var(--rl-dim);
+  opacity: 0.7;
+}
