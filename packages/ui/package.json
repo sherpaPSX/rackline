@@ -1,0 +1,12 @@
+{
+  "name": "@rackline/ui",
+  "version": "0.0.0",
+  "private": true,
+  "description": "React app for desktop and phone; talks to the core only via the WebSocket API",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": { "@rackline/api": "workspace:*", "@rackline/ui-kit": "workspace:*" }
+}

@@ -1,0 +1,12 @@
+{
+  "name": "@rackline/desktop",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Thin Electron shell: starts the server and opens the window",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": { "@rackline/server": "workspace:*" }
+}
