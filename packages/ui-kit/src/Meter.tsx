@@ -12,6 +12,15 @@ export interface MeterProps {
   hotDb?: number;
   /** Peak hold fall-off per frame, in dB. */
   releaseDb?: number;
+  /** Draws a line at this level, e.g. a limiter threshold. */
+  markDb?: number | undefined;
+  /**
+   * Gain reduction meter: `readLevel` returns dB of reduction (0 or more) and
+   * the bar grows down from the top, `-floorDb` dB at full length.
+   */
+  reduction?: boolean;
+  /** A short horizontal bar, e.g. in a rack header. */
+  horizontal?: boolean;
 }
 
 const prefersReducedMotion = () => globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
@@ -20,7 +29,7 @@ const prefersReducedMotion = () => globalThis.matchMedia?.('(prefers-reduced-mot
  * Level meter. Draws outside React state: the bar is updated directly each
  * animation frame (about every 300 ms with reduced motion).
  */
-export function Meter({ readLevel, floorDb = -60, warnDb = -12, hotDb = -3, releaseDb = 0.8 }: MeterProps) {
+export function Meter({ readLevel, floorDb = -60, warnDb = -12, hotDb = -3, releaseDb = 0.8, markDb, reduction = false, horizontal = false }: MeterProps) {
   const bar = useRef<HTMLElement>(null);
   const read = useRef(readLevel);
   useEffect(() => {
@@ -28,14 +37,14 @@ export function Meter({ readLevel, floorDb = -60, warnDb = -12, hotDb = -3, rele
   });
 
   useEffect(() => {
-    const scale = linearScale(floorDb, 0);
-    let shown = floorDb;
+    const scale = reduction ? linearScale(0, -floorDb) : linearScale(floorDb, 0);
+    let shown = scale.min;
     let frame = 0;
     let timer: ReturnType<typeof setTimeout> | undefined;
     const slow = prefersReducedMotion();
     const draw = () => {
       shown = Math.max(read.current(), shown - releaseDb);
-      if (bar.current) bar.current.style.height = `${scale.toPosition(shown) * 100}%`;
+      if (bar.current) bar.current.style[horizontal ? 'width' : 'height'] = `${scale.toPosition(shown) * 100}%`;
       if (slow) timer = setTimeout(draw, 300);
       else frame = requestAnimationFrame(draw);
     };
@@ -44,7 +53,7 @@ export function Meter({ readLevel, floorDb = -60, warnDb = -12, hotDb = -3, rele
       cancelAnimationFrame(frame);
       clearTimeout(timer);
     };
-  }, [floorDb, releaseDb]);
+  }, [floorDb, releaseDb, reduction, horizontal]);
 
   const zones = linearScale(floorDb, 0);
   const style = {
@@ -52,8 +61,9 @@ export function Meter({ readLevel, floorDb = -60, warnDb = -12, hotDb = -3, rele
     '--rl-hot-at': `${zones.toPosition(hotDb) * 100}%`,
   } as CSSProperties;
   return (
-    <div className="rl-meter" aria-hidden="true" style={style}>
+    <div className="rl-meter" aria-hidden="true" style={style} data-reduction={reduction || undefined} data-horizontal={horizontal || undefined}>
       <b ref={bar} />
+      {markDb !== undefined && <i style={{ [horizontal ? 'left' : 'bottom']: `${zones.toPosition(markDb) * 100}%` }} />}
     </div>
   );
 }

@@ -1,8 +1,10 @@
-import type { CSSProperties, ReactNode } from 'react';
+import { useState } from 'react';
+import type { KeyboardEvent, CSSProperties, ReactNode } from 'react';
 import { faderScale } from './scale.js';
 import type { ValueScale } from './scale.js';
 import { formatDb } from './format.js';
 import { useDragValue } from './useDragValue.js';
+import { EditableReadout } from './ValueInput.js';
 
 export interface FaderProps {
   /** Accessible name, e.g. the rack name. Not drawn; the caller shows the name. */
@@ -12,11 +14,13 @@ export interface FaderProps {
   defaultDb?: number;
   scale?: ValueScale;
   /** Larger cap for touch screens (44 px target). */
-  touch?: boolean;
+  touch?: boolean | undefined;
   color?: string;
   /** Usually a `Meter`, drawn right of the fader at the same height. */
   meter?: ReactNode;
   disabled?: boolean;
+  /** Hide the dB readout when the caller shows the value elsewhere. */
+  hideValue?: boolean;
 }
 
 const DEFAULT_SCALE = faderScale();
@@ -31,7 +35,9 @@ export function Fader({
   color,
   meter,
   disabled = false,
+  hideValue = false,
 }: FaderProps) {
+  const [editing, setEditing] = useState(false);
   const { active, position, props } = useDragValue<HTMLDivElement>(valueDb, onChange, {
     scale,
     defaultValue: defaultDb,
@@ -44,7 +50,12 @@ export function Fader({
     <div className="rl-cell" data-disabled={disabled || undefined}>
       <div className="rl-fader-row">
         <div
-          {...(disabled ? {} : props)}
+          {...(disabled
+          ? {}
+          : {
+              ...props,
+              onKeyDown: (e: KeyboardEvent<HTMLDivElement>) => (e.key === 'Enter' ? setEditing(true) : props.onKeyDown(e)),
+            })}
           className="rl-fader"
           data-touch={touch || undefined}
           role="slider"
@@ -64,9 +75,18 @@ export function Fader({
         </div>
         {meter}
       </div>
-      <span className="rl-value" data-active={active || undefined}>
-        {text}
-      </span>
+      {(!hideValue || editing) && (
+        <EditableReadout
+          label={label}
+          text={text}
+          active={active}
+          editing={editing}
+          onEditingChange={setEditing}
+          scale={scale}
+          onCommit={onChange}
+          disabled={disabled}
+        />
+      )}
     </div>
   );
 }

@@ -31,6 +31,7 @@ const page = `<!doctype html>
 *{box-sizing:border-box}
 body{margin:0;background:var(--rl-bg);color:var(--rl-fg);font:14px var(--rl-font-label);padding-block:var(--rl-s6);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 main{max-width:1000px;margin:0 auto;display:grid;gap:var(--rl-s6)}
+main>*{min-width:0}
 h1{font-size:22px;font-weight:600;margin:0}
 .sub{color:var(--rl-dim);max-width:70ch;line-height:1.45}
 h2{font:600 12px var(--rl-font-label);text-transform:uppercase;letter-spacing:.14em;color:var(--rl-dim);margin:0 0 var(--rl-s3);display:flex;gap:var(--rl-s2);align-items:center}
@@ -46,6 +47,22 @@ h2::after{content:"";flex:1;height:1px;background:var(--rl-line)}
 .title{font-size:22px;font-weight:600}
 .strips{display:flex;flex-wrap:wrap;gap:var(--rl-s2)}
 .strip{display:grid;justify-items:center;gap:var(--rl-s3);padding:var(--rl-s3) var(--rl-s2);background:var(--rl-bg);border:1px solid var(--rl-line);border-top:3px solid;border-radius:var(--rl-radius);width:112px}
+.stack{display:grid;gap:var(--rl-s4)}
+.mini-curve{width:200px}
+.lim-meters{display:flex;gap:var(--rl-s2);--rl-meter-h:120px}
+.lim-meters .rl-meter{width:8px}
+.peq-side{display:flex;flex-wrap:wrap;gap:var(--rl-s3) var(--rl-s4);align-items:center}
+.peq-side>.peq-graph{flex:1 1 280px;min-width:0}
+.peq-graph{display:grid;gap:var(--rl-s2)}
+.peq-strip{display:flex;align-items:center;justify-content:space-between;gap:var(--rl-s2);min-width:0}
+.peq-strip>.peq-bands{flex:1;min-width:0}
+.eq-tools{display:flex;justify-content:flex-end}
+.peq-bands{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,36px);gap:3px;padding-left:34px}
+.peq-bands .rl-btn{min-width:0;padding:0}
+.peq-bands .rl-btn[data-selected]{outline:2px solid var(--rl-fg);outline-offset:1px}
+.peq-controls{display:grid;grid-template-columns:repeat(2,auto);gap:var(--rl-s3) var(--rl-s4);justify-items:center}
+.peq-controls>.rl-seg{grid-column:1/-1}
+@media (max-width:600px){.peq-controls{grid-template-columns:repeat(3,auto);flex:1;justify-content:space-around}}
 .strip-name{font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
 </style>
 </head>

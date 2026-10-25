@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { faderScale, linearScale, logScale } from './scale.js';
+import { centeredScale, faderScale, linearScale, logScale } from './scale.js';
 import { formatDb, formatHz, formatMs, parseNumber } from './format.js';
+import { editableText } from './ValueInput.js';
 
 describe('linearScale', () => {
   const s = linearScale(-12, 12);
@@ -23,6 +24,20 @@ describe('logScale', () => {
   });
   it('round-trips', () => {
     expect(s.fromPosition(s.toPosition(1234))).toBeCloseTo(1234);
+  });
+});
+
+describe('centeredScale', () => {
+  const s = centeredScale(-30, 16);
+  it('puts the centre in the middle of a lopsided range', () => {
+    expect(s.toPosition(0)).toBe(0.5);
+    expect(s.toPosition(-30)).toBe(0);
+    expect(s.toPosition(16)).toBe(1);
+    expect(s.toPosition(-15)).toBe(0.25);
+    expect(s.toPosition(8)).toBe(0.75);
+  });
+  it('round-trips on both sides', () => {
+    for (const db of [-22, -1, 0, 3, 12]) expect(s.fromPosition(s.toPosition(db))).toBeCloseTo(db);
   });
 });
 
@@ -78,5 +93,14 @@ describe('parseNumber', () => {
   it('rejects text that is not a number', () => {
     expect(parseNumber('abc')).toBeNull();
     expect(parseNumber('')).toBeNull();
+  });
+});
+
+describe('editableText', () => {
+  it('turns a readout into text that parses back to the same value', () => {
+    for (const shown of [formatHz(1200), formatDb(-4), formatMs(4.2)]) {
+      expect(parseNumber(editableText(shown))).not.toBeNull();
+    }
+    expect(parseNumber(editableText(formatHz(1200)))).toBeCloseTo(1200);
   });
 });

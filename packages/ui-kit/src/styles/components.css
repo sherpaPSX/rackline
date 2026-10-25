@@ -10,7 +10,10 @@
 .rl-value {
   font: 400 12px/1.2 var(--rl-font-value);
   font-variant-numeric: tabular-nums;
-  min-width: 8ch;
+  /* Fixed width (fits "2000.0 ms") so changing values never shift the layout. */
+  box-sizing: content-box;
+  width: 9ch;
+  white-space: nowrap;
   text-align: center;
   color: var(--rl-fg);
 }
@@ -135,7 +138,7 @@
 .rl-meter {
   position: relative;
   width: 6px;
-  height: var(--rl-fader-h);
+  height: var(--rl-meter-h, var(--rl-fader-h));
   background: var(--rl-well);
   border-radius: 2px;
   overflow: hidden;
@@ -152,7 +155,37 @@
       var(--rl-warn) var(--rl-warn-at) var(--rl-hot-at),
       var(--rl-danger) var(--rl-hot-at)
     )
-    bottom / 100% var(--rl-fader-h) no-repeat;
+    bottom / 100% var(--rl-meter-h, var(--rl-fader-h)) no-repeat;
+}
+.rl-meter[data-reduction] b {
+  top: 0;
+  bottom: auto;
+  background: var(--rl-warn);
+}
+.rl-meter[data-horizontal] {
+  width: var(--rl-meter-w, 96px);
+  height: 6px;
+}
+.rl-meter[data-horizontal] b {
+  top: 0;
+  right: auto;
+  width: 0;
+  height: auto;
+  background: linear-gradient(
+      to right,
+      var(--rl-accent) 0 var(--rl-warn-at),
+      var(--rl-warn) var(--rl-warn-at) var(--rl-hot-at),
+      var(--rl-danger) var(--rl-hot-at)
+    )
+    left / var(--rl-meter-w, 96px) 100% no-repeat;
+}
+.rl-meter i {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  margin-bottom: -1px;
+  background: var(--rl-fg);
 }
 
 /* Buttons */
@@ -292,8 +325,10 @@
   align-items: center;
   justify-content: center;
   height: var(--rl-control-h);
-  min-width: 10ch;
+  /* Fixed width (fits "2000.0 ms") so changing values never shift the layout. */
+  width: calc(9ch + 2 * var(--rl-s2) + 2px);
   padding: 0 var(--rl-s2);
+  white-space: nowrap;
   font: 400 14px/1 var(--rl-font-value);
   font-variant-numeric: tabular-nums;
   color: var(--rl-fg);
@@ -305,7 +340,6 @@
   outline: none;
 }
 input.rl-vbox {
-  width: 10ch;
   cursor: text;
   border-color: var(--rl-accent);
 }
@@ -315,8 +349,284 @@ input.rl-vbox {
   color: var(--rl-accent);
 }
 
+/* Both labels in one cell: the wider one sets the width, only one is visible. */
+.rl-confirm {
+  display: inline-grid;
+}
+.rl-confirm > span {
+  grid-area: 1 / 1;
+}
+.rl-confirm > span[aria-hidden] {
+  visibility: hidden;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .rl-btn:active {
     transform: none;
   }
+}
+
+/* EQ / crossover curve */
+.rl-eq {
+  display: block;
+  width: 100%;
+  height: auto;
+  user-select: none;
+}
+.rl-eq[data-interactive] {
+  cursor: crosshair;
+  touch-action: none;
+}
+.rl-eq-bg {
+  fill: var(--rl-well);
+}
+.rl-eq-grid {
+  stroke: var(--rl-line);
+  stroke-width: 1;
+}
+.rl-eq-grid[data-zero] {
+  stroke: var(--rl-dim);
+  stroke-opacity: 0.6;
+}
+.rl-eq-tick {
+  fill: var(--rl-dim);
+  font: 10px var(--rl-font-value);
+}
+.rl-eq-line {
+  fill: none;
+  stroke: var(--rl-k, var(--rl-accent));
+  stroke-width: 2;
+}
+.rl-eq-line[data-secondary] {
+  stroke-width: 1.5;
+  stroke-dasharray: 4 4;
+  opacity: 0.8;
+}
+.rl-eq-area {
+  fill: var(--rl-k, var(--rl-accent));
+  stroke: none;
+  opacity: 0.12;
+}
+.rl-eq-handle {
+  outline: none;
+  cursor: grab;
+}
+.rl-eq-handle circle {
+  fill: var(--rl-panel);
+  stroke: var(--rl-accent);
+  stroke-width: 2;
+}
+.rl-eq-handle text {
+  fill: var(--rl-fg);
+  font: 600 10px var(--rl-font-value);
+  pointer-events: none;
+}
+.rl-eq-handle[data-selected] circle {
+  fill: var(--rl-accent);
+}
+.rl-eq-handle[data-selected] text {
+  fill: var(--rl-on-accent);
+}
+.rl-eq-handle[data-off] {
+  opacity: 0.5;
+}
+.rl-eq-handle[data-off] circle {
+  stroke: var(--rl-dim);
+  stroke-dasharray: 3 2;
+}
+.rl-eq-handle:focus-visible circle {
+  stroke: var(--rl-fg);
+  stroke-width: 3;
+}
+
+/* Rack card */
+.rl-rack {
+  min-width: 0;
+  background: var(--rl-panel);
+  border: 1px solid var(--rl-line);
+  border-left: 4px solid var(--rl-rack, var(--rl-line));
+  border-radius: var(--rl-radius);
+}
+.rl-rack-head {
+  display: flex;
+  align-items: center;
+  gap: var(--rl-s2);
+  min-height: 48px;
+  padding: var(--rl-s1) var(--rl-s3) var(--rl-s1) var(--rl-s1);
+}
+.rl-rack-title {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  gap: 2px;
+}
+.rl-rack-name {
+  font: 600 16px/1.2 var(--rl-font-label);
+  color: var(--rl-fg);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.rl-rack-detail {
+  font: 500 13px/1.2 var(--rl-font-label);
+  color: var(--rl-dim);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.rl-rack-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--rl-s2);
+}
+@media (max-width: 480px) {
+  .rl-rack-actions {
+    --rl-meter-w: 48px;
+  }
+}
+.rl-rack-chain {
+  /* Signal flows left to right; the chain scrolls sideways instead of wrapping. */
+  display: flex;
+  align-items: stretch;
+  gap: var(--rl-s2);
+  overflow-x: auto;
+  padding: 0 var(--rl-s3) var(--rl-s3);
+  scrollbar-width: thin;
+}
+
+/* Module card */
+.rl-module {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  min-width: var(--rl-module-w, 112px);
+  background: var(--rl-bg);
+  border: 1px solid var(--rl-line);
+  border-radius: var(--rl-radius);
+}
+.rl-module[data-wide][data-expanded] {
+  width: min(720px, 100%);
+}
+.rl-module[data-wide][data-expanded] .rl-module-body {
+  display: block;
+}
+.rl-module-head {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  height: 34px;
+  padding: 0 2px;
+  border-bottom: 1px solid var(--rl-line);
+}
+.rl-module-name {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+  height: 28px;
+  padding: 0 var(--rl-s1);
+  border: 0;
+  background: none;
+  color: var(--rl-fg);
+  font: 600 14px var(--rl-font-label);
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+button.rl-module-name {
+  cursor: pointer;
+}
+button.rl-module-name:hover {
+  color: var(--rl-accent);
+}
+.rl-module-name:focus-visible {
+  outline: 2px solid var(--rl-accent);
+}
+.rl-module-body {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: center;
+  justify-content: center;
+  align-items: flex-end;
+  gap: var(--rl-s3) var(--rl-s4);
+  padding: var(--rl-s3);
+}
+.rl-module[data-off] .rl-module-body {
+  opacity: 0.42;
+}
+.rl-module[data-off] .rl-module-name {
+  color: var(--rl-dim);
+}
+
+/* Graphic EQ: faders aligned under their points on the curve */
+.rl-geq {
+  display: grid;
+  gap: var(--rl-s3);
+}
+.rl-geq-faders {
+  position: relative;
+  height: calc(var(--rl-fader-h) + 44px);
+}
+.rl-geq-band {
+  position: absolute;
+  top: 0;
+  transform: translateX(-50%);
+  display: grid;
+  /* The column never grows with the readout, so faders keep their width. */
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: center;
+  gap: var(--rl-s1);
+}
+.rl-geq-band > .rl-cell {
+  width: 100%;
+  justify-items: stretch;
+}
+.rl-geq .rl-fader-row {
+  justify-content: center;
+}
+.rl-geq .rl-fader {
+  flex: 0 1 36px;
+  width: auto;
+  min-width: 0;
+}
+.rl-geq .rl-fader[data-touch] {
+  flex-basis: 48px;
+}
+.rl-geq-faders[data-dense] .rl-label {
+  white-space: nowrap;
+}
+.rl-geq-value {
+  white-space: nowrap;
+  font: 400 10px/1.2 var(--rl-font-value);
+  font-variant-numeric: tabular-nums;
+  color: var(--rl-fg);
+}
+
+/* Readout under a knob or fader; click to type an exact value */
+button.rl-value {
+  padding: 2px 4px;
+  border: 1px solid transparent;
+  border-radius: var(--rl-radius);
+  background: none;
+  cursor: text;
+}
+button.rl-value:hover:not(:disabled) {
+  border-color: var(--rl-line);
+}
+button.rl-value:disabled {
+  cursor: default;
+}
+.rl-value-input {
+  box-sizing: content-box;
+  width: 9ch;
+  padding: 2px 4px;
+  font: 400 12px/1.2 var(--rl-font-value);
+  text-align: center;
+  color: var(--rl-fg);
+  background: var(--rl-well);
+  border: 1px solid var(--rl-accent);
+  border-radius: var(--rl-radius);
+  outline: none;
 }

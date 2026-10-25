@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import type { ButtonHTMLAttributes, ReactNode } from 'react';
 
 /**
@@ -60,5 +61,45 @@ export function MuteButton({ muted, onChange, target, touch }: MuteButtonProps) 
     >
       M
     </ToggleButton>
+  );
+}
+
+export interface ConfirmButtonProps {
+  label: string;
+  /** Shown after the first click, e.g. "Sure?". */
+  confirmLabel: string;
+  onConfirm: () => void;
+  /** How long the button waits for the second click. */
+  timeoutMs?: number;
+  touch?: boolean | undefined;
+}
+
+/**
+ * For actions that are easy to hit by mistake during a show (reset, recall):
+ * the first click arms the button, the second within `timeoutMs` runs it.
+ * Both labels share one grid cell so the width never changes.
+ */
+export function ConfirmButton({ label, confirmLabel, onConfirm, timeoutMs = 3000, touch }: ConfirmButtonProps) {
+  const [armed, setArmed] = useState(false);
+  useEffect(() => {
+    if (!armed) return;
+    const timer = setTimeout(() => setArmed(false), timeoutMs);
+    return () => clearTimeout(timer);
+  }, [armed, timeoutMs]);
+  return (
+    <Button
+      className="rl-confirm"
+      data-tone="danger"
+      aria-pressed={armed}
+      touch={touch}
+      onBlur={() => setArmed(false)}
+      onClick={() => {
+        if (armed) onConfirm();
+        setArmed(!armed);
+      }}
+    >
+      <span aria-hidden={armed || undefined}>{label}</span>
+      <span aria-hidden={!armed || undefined}>{confirmLabel}</span>
+    </Button>
   );
 }

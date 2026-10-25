@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { ValueScale } from './scale.js';
-import { parseNumber } from './format.js';
+import { ValueInput, editableText } from './ValueInput.js';
 import { useDragValue } from './useDragValue.js';
 
 export interface ValueBoxProps {
@@ -30,24 +30,14 @@ export function ValueBox({ label, value, onChange, format, scale, defaultValue, 
   const text = format(value);
 
   if (editing !== null) {
-    const commit = () => {
-      const parsed = parseNumber(editing);
-      if (parsed !== null) onChange(Math.min(scale.max, Math.max(scale.min, parsed)));
-      setEditing(null);
-    };
     return (
-      <input
+      <ValueInput
         className="rl-vbox"
-        aria-label={label}
-        value={editing}
-        autoFocus
-        onFocus={(e) => e.currentTarget.select()}
-        onChange={(e) => setEditing(e.currentTarget.value)}
-        onBlur={commit}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter') commit();
-          if (e.key === 'Escape') setEditing(null);
-        }}
+        label={label}
+        initial={editing}
+        scale={scale}
+        onCommit={onChange}
+        onClose={() => setEditing(null)}
       />
     );
   }
@@ -63,7 +53,7 @@ export function ValueBox({ label, value, onChange, format, scale, defaultValue, 
       aria-valuemax={scale.max}
       aria-valuenow={value}
       aria-valuetext={text}
-      onDoubleClick={() => setEditing(text.replace(/[^\d.,+\-−k]/gi, ''))}
+      onDoubleClick={() => setEditing(editableText(text))}
       onKeyDown={(e) => {
         if (e.key === 'Enter') setEditing('');
         else if (e.key === 'Delete') onChange(defaultValue);
