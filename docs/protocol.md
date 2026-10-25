@@ -243,7 +243,8 @@ block table).
 | Release (0–14) | 1, 5, 10, 25, 50, 75, 100, 250, 500, 750, 1000, 2000, 3000, 4000, 5000 ms |
 | Ratio (0–28) | 1.0, 1.1 … 1.9, 2, 2.2, 2.4, 2.6, 2.8, 3, 3.25, 3.5, 3.75, 4, 4.5, 5, 6, 8, 10, 12, 15, 20, ∞ : 1 |
 
-**Enums:** PEQ type 0 Band, 1 Low Shelf, 2 Hi Shelf, 4 Hi Cut, 5 Horn EQ,
+**Enums:** PEQ type 0 Band, 1 Low Shelf, 2 Hi Shelf, 3 (used in Lukas's
+presets, name unverified; probably Low Cut), 4 Hi Cut, 5 Horn EQ,
 6 All-Pass. Crossover type 0 Off, 1 LR12, 2 LR24, 4 BW18, 5 BW24, 6 Bessel12,
 8 Bessel24. Input gain select 0 Pro, 1 +12 dB Consumer, 2 User. Generator
 0 Pink, 1 Sine. Level Mute/Opt bit0 mute, bit1 off at minimum.
@@ -268,6 +269,18 @@ From Lukas's config: 0x0610 = 3-way crossover, parameter groups of 4 from
 idx 2 (LowUpper: type 3, freq 4, invert 5?; MidLower 8; MidUpper 12;
 HighLower 16), outputs in order High, Mid, Low. 0x0601 = 2-band PEQ,
 0x0603 = 4-band PEQ (same 5-per-band layout).
+
+- **PEQ block types:** 0x0600 + filters − 1 (seen: 2, 4 and 9 filters). The
+  other sizes (1–15) are assumed to follow the pattern (unverified).
+- **2-way output order:** High, Low, inferred from Lukas's config (the
+  second output, low-pass 120 Hz, feeds SUB FLEX; the first is unconnected).
+- **Unknown indexes:** the index before each crossover filter group (2-way:
+  2, 6; 3-way: 2, 6, 10, 14) is 1 in all samples; Level idx 4 is 255. Not
+  exposed.
+
+Code: the module registry in `@rackline/model` (`findModule`,
+`decodeParam` / `encodeParam`, `decodeBlockValues`) holds these indexes and
+conversions; the tests decode Lukas's preset 0.
 
 Other variants (3/4-way crossovers, PEQs with other band counts, other mixers)
 use the same type families and are mapped the same way.

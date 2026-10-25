@@ -68,6 +68,8 @@ lows L+R → Mix 2×1 → 2-way (BassHorn, Subbass), i.e. a 4-band crossover as 
    system delay = added to each band's delay (UI still shows one system delay).
 3. Load indicator: **DSP %** and **delay blocks X of 10**, plus PEQ filter
    count (max 15). Exact DSP % only comes from the compiler; before that show
-   an estimate from the table above with a margin.
+   an estimate from the table above with a margin. `estimateDspLoad` in
+   `@rackline/model` sums the table: 91 % for PSX_RCF_FINAL against 97 %
+   measured, 7 delay blocks (matches).
 4. Adding a module must check the limit up front (grey out modules that won't
    fit) and warn that PEQ filter count can't change live.
