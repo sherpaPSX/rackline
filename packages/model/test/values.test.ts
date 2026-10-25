@@ -112,6 +112,12 @@ describe('encodeParam', () => {
     expect(encodeParam(param(0x0301, 'delay'), 5000)).toEqual({ ok: true, value: 65520 });
     expect(encodeParam(param(0x0180, 'level'), -200)).toEqual({ ok: true, value: 0 });
     expect(encodeParam(param(0x0500, 'threshold'), 40)).toEqual({ ok: true, value: 128 });
+    // Data sheet ranges: input trim +16..−20 dB, output trim +16..−30 dB, user gain ±15 dB.
+    expect(encodeParam(param(0x0105, 'trim'), 30)).toEqual({ ok: true, value: 112 });
+    expect(encodeParam(param(0x0103, 'trim'), -100)).toEqual({ ok: true, value: 76 });
+    expect(encodeParam(param(0x0106, 'trim'), -40)).toEqual({ ok: true, value: 132 });
+    expect(encodeParam(param(0x0106, 'trim'), 20)).toEqual({ ok: true, value: 224 });
+    expect(encodeParam(param(0x0105, 'userTrim'), 20)).toEqual({ ok: true, value: 222 });
     expect(encodeParam(param(0x0500, 'ratio'), 4.2)).toEqual({ ok: true, value: 19 });
     expect(encodeParam(param(0x0500, 'ratio'), Infinity)).toEqual({ ok: true, value: 28 });
     expect(encodeParam(param(0x0180, 'options'), { mute: true, offAtMin: true })).toEqual({ ok: true, value: 3 });

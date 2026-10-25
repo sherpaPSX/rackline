@@ -29,8 +29,15 @@ const linear = (unit: Unit, offset: number, divisor: number, rawMin: number, raw
  * range; the limits Drag Net offers are unverified.
  */
 export const LEVEL = linear('dB', 192, 2, 0, 255);
-/** Analog/digital input trim: dB = raw − 96 (raw 0 = −100 dB in Drag Net). Upper limit unverified. */
-export const INPUT_TRIM = linear('dB', 96, 1, 0, 255);
+/**
+ * Analog/digital input trim: dB = raw − 96. The RPM 26z data sheet gives
+ * +16 to −20 dB in 1 dB steps (raw 76..112); Drag Net shows raw 0 as −100 dB.
+ */
+export const INPUT_TRIM = linear('dB', 96, 1, 76, 112);
+/** Analog input user-defined line gain: ±15 dB in 1 dB steps (data sheet), stored like LEVEL. */
+export const USER_GAIN = linear('dB', 192, 2, 162, 222);
+/** Output trim: +16 to −30 dB in ½ dB steps (data sheet), stored like LEVEL. */
+export const OUTPUT_TRIM = linear('dB', 192, 2, 132, 224);
 /** Compressor threshold: dBFS = raw − 96, max 32 dBFS. */
 export const COMPRESSOR_THRESHOLD = linear('dBFS', 96, 1, 0, 128);
 /** PEQ gain: dB = (raw − 120) / 4. Limits unverified (byte range). */
