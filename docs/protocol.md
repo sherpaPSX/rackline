@@ -232,8 +232,8 @@ block table).
 
 | Quantity | Conversion |
 |---|---|
-| Levels (Mixer, Level, Output Trim, Input User Trim, Generator Level, Limiter Threshold) | dB = (raw − 192) / 2, raw 0 = −96 dB (Level: Off) |
-| Digital/analog input trim | dB = raw − 96 (0 = −100 dB) |
+| Levels (Mixer, Level, Output Trim, Input User Trim, Generator Level, Limiter Threshold) | dB = (raw − 192) / 2, raw 0 = −96 dB (Level: Off). Data sheet ranges: output trim +16 … −30 dB in ½ dB steps, user line gain ±15 dB in 1 dB steps |
+| Digital/analog input trim | dB = raw − 96 (0 = −100 dB); range +16 … −20 dB, 1 dB steps (data sheet) |
 | Compressor threshold | dBFS = raw − 96, max 32 |
 | PEQ gain | dB = (raw − 120) / 4 |
 | PEQ bandwidth | octaves = 0.025 · (raw + 1) |
