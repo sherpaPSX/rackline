@@ -23,6 +23,21 @@ export function linearScale(min: number, max: number): ValueScale {
   };
 }
 
+/**
+ * Two linear halves meeting at `center` (0 dB by default), which sits in the
+ * middle of the travel even when the range is lopsided, e.g. −30 … +16 dB.
+ */
+export function centeredScale(min: number, max: number, center = 0): ValueScale {
+  const lower = linearScale(min, center);
+  const upper = linearScale(center, max);
+  return {
+    min,
+    max,
+    toPosition: (value) => (value < center ? lower.toPosition(value) / 2 : 0.5 + upper.toPosition(value) / 2),
+    fromPosition: (position) => (position < 0.5 ? lower.fromPosition(position * 2) : upper.fromPosition((position - 0.5) * 2)),
+  };
+}
+
 /** Logarithmic scale for frequency or Q; `min` must be > 0. */
 export function logScale(min: number, max: number): ValueScale {
   const span = Math.log(max / min);

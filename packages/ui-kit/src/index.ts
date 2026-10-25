@@ -1,4 +1,4 @@
-export { clamp, linearScale, logScale, faderScale, DEFAULT_FADER_TAPER } from './scale.js';
+export { centeredScale, clamp, linearScale, logScale, faderScale, DEFAULT_FADER_TAPER } from './scale.js';
 export type { ValueScale, FaderTaper } from './scale.js';
 export { formatDb, formatHz, formatMs, parseNumber } from './format.js';
 export { useDragValue } from './useDragValue.js';

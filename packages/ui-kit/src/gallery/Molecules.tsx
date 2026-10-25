@@ -6,6 +6,7 @@ import {
   Icon,
   Knob,
   Meter,
+  centeredScale,
   ModuleCard,
   MuteButton,
   RackCard,
@@ -38,6 +39,8 @@ function limiterInput(): number {
 }
 
 const FREQ = logScale(20, 20_000);
+/** RPM Level block range; 0 dB stays at 12 o'clock. */
+const LEVEL = centeredScale(-30, 16);
 const GAIN = linearScale(-15, 15);
 const Q = logScale(0.3, 16);
 
@@ -162,6 +165,7 @@ export function RackSpecimen({ touch }: { touch: boolean }) {
       onExpandedChange={setExpanded}
       actions={
         <>
+          <Meter horizontal readLevel={() => (muted ? -Infinity : (on['limiter'] === false ? limiterInput() : Math.min(limiterInput(), threshold)) + level)} />
           <span className="rl-value">{formatDb(level)}</span>
           <MuteButton muted={muted} onChange={setMuted} target="Subbass" touch={touch} />
         </>
@@ -199,7 +203,7 @@ export function RackSpecimen({ touch }: { touch: boolean }) {
         </div>
       </ModuleCard>
       <ModuleCard name="Level" {...power('level')}>
-        <Knob size={44} label="Gain" value={level} onChange={setLevel} format={formatDb} scale={linearScale(-20, 10)} defaultValue={0} bipolar />
+        <Knob size={44} label="Gain" value={level} onChange={setLevel} format={formatDb} scale={LEVEL} defaultValue={0} bipolar />
         <div className="rl-cell">
           <span className="rl-label">Polarity</span>
           <ToggleButton pressed={invert} onChange={setInvert} square aria-label="Invert polarity" touch={touch}>

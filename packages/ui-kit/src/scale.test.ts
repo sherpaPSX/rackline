@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { faderScale, linearScale, logScale } from './scale.js';
+import { centeredScale, faderScale, linearScale, logScale } from './scale.js';
 import { formatDb, formatHz, formatMs, parseNumber } from './format.js';
 import { editableText } from './ValueInput.js';
 
@@ -24,6 +24,20 @@ describe('logScale', () => {
   });
   it('round-trips', () => {
     expect(s.fromPosition(s.toPosition(1234))).toBeCloseTo(1234);
+  });
+});
+
+describe('centeredScale', () => {
+  const s = centeredScale(-30, 16);
+  it('puts the centre in the middle of a lopsided range', () => {
+    expect(s.toPosition(0)).toBe(0.5);
+    expect(s.toPosition(-30)).toBe(0);
+    expect(s.toPosition(16)).toBe(1);
+    expect(s.toPosition(-15)).toBe(0.25);
+    expect(s.toPosition(8)).toBe(0.75);
+  });
+  it('round-trips on both sides', () => {
+    for (const db of [-22, -1, 0, 3, 12]) expect(s.fromPosition(s.toPosition(db))).toBeCloseTo(db);
   });
 });
 

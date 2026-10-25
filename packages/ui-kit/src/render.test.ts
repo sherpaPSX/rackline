@@ -25,6 +25,8 @@ describe('controls render accessible markup', () => {
     expect(html).toContain('bottom:75%');
     const gr = renderToStaticMarkup(createElement(Meter, { readLevel: () => 3, reduction: true }));
     expect(gr).toContain('data-reduction="true"');
+    const h = renderToStaticMarkup(createElement(Meter, { readLevel: () => -20, floorDb: -40, markDb: -10, horizontal: true }));
+    expect(h).toContain('left:75%');
   });
 
   it('MuteButton is pressed and named after its target', () => {

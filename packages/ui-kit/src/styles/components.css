@@ -159,6 +159,23 @@
   bottom: auto;
   background: var(--rl-warn);
 }
+.rl-meter[data-horizontal] {
+  width: var(--rl-meter-w, 96px);
+  height: 6px;
+}
+.rl-meter[data-horizontal] b {
+  top: 0;
+  right: auto;
+  width: 0;
+  height: auto;
+  background: linear-gradient(
+      to right,
+      var(--rl-accent) 0 var(--rl-warn-at),
+      var(--rl-warn) var(--rl-warn-at) var(--rl-hot-at),
+      var(--rl-danger) var(--rl-hot-at)
+    )
+    left / var(--rl-meter-w, 96px) 100% no-repeat;
+}
 .rl-meter i {
   position: absolute;
   left: 0;
@@ -436,6 +453,11 @@ input.rl-vbox {
   display: flex;
   align-items: center;
   gap: var(--rl-s2);
+}
+@media (max-width: 480px) {
+  .rl-rack-actions {
+    --rl-meter-w: 48px;
+  }
 }
 .rl-rack-chain {
   /* Signal flows left to right; the chain scrolls sideways instead of wrapping. */
