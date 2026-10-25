@@ -174,7 +174,7 @@ function Gallery() {
         <PeqSpecimen />
       </Section>
 
-      <Section title="System EQ" note="Nine octave faders, 63 Hz to 16 kHz, with the summed curve. Points on the curve move only up and down.">
+      <Section title="System EQ" note="Ten octave faders, 31.5 Hz to 16 kHz, with the summed curve. Range ±12 dB (the RPM PEQ allows −15 to +12 dB). Points on the curve move only up and down.">
         <SystemEqSpecimen touch={touch} />
       </Section>
 

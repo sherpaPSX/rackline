@@ -92,10 +92,10 @@ export function PeqSpecimen() {
   return <PeqEditor peq={peq} />;
 }
 
-const OCTAVES = [63, 125, 250, 500, 1000, 2000, 4000, 8000, 16_000];
+const OCTAVES = [31.5, 63, 125, 250, 500, 1000, 2000, 4000, 8000, 16_000];
 
 export function SystemEqSpecimen({ touch }: { touch: boolean }) {
-  const [gains, setGains] = useState([2, 1, 0, -1.5, 0, 0.5, -2, 1, 2.5]);
+  const [gains, setGains] = useState([3, 2, 1, 0, -1.5, 0, 0.5, -2, 1, 2.5]);
   return (
     <GraphicEq
       label="System EQ"
