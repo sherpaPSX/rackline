@@ -182,6 +182,7 @@ export function RackSpecimen({ touch }: { touch: boolean }) {
   const [expanded, setExpanded] = useState(true);
   const [muted, setMuted] = useState(false);
   const [peqOpen, setPeqOpen] = useState(false);
+  const [limiterOpen, setLimiterOpen] = useState(false);
   const [on, setOn] = useState<Record<string, boolean>>({ peq: true, delay: true, limiter: true, level: true });
   const [delay, setDelay] = useState(4.2);
   const [threshold, setThreshold] = useState(-6);
@@ -191,6 +192,20 @@ export function RackSpecimen({ touch }: { touch: boolean }) {
   const [invert, setInvert] = useState(false);
   const peq = usePeq();
   const power = (id: string) => ({ on: on[id] ?? true, onOnChange: (v: boolean) => setOn((o) => ({ ...o, [id]: v })) });
+
+  // Compact limiter shows only what it is doing right now; settings live in the expanded card.
+  const limiterMeters = (
+    <div className="lim-meters">
+      <div className="rl-cell">
+        <span className="rl-label">In</span>
+        <Meter readLevel={limiterInput} floorDb={-40} markDb={threshold} warnDb={threshold} hotDb={0} />
+      </div>
+      <div className="rl-cell">
+        <span className="rl-label">GR</span>
+        <Meter reduction floorDb={-20} readLevel={() => (on['limiter'] === false ? 0 : Math.max(0, limiterInput() - threshold))} />
+      </div>
+    </div>
+  );
 
   return (
     <RackCard
@@ -212,6 +227,7 @@ export function RackSpecimen({ touch }: { touch: boolean }) {
         {...power('peq')}
         expanded={peqOpen}
         onExpandedChange={setPeqOpen}
+        wide
         summary={
           <div className="mini-curve">
             <EqCurve compact label="Speaker PEQ" lines={[{ id: 't', filters: on['peq'] ? active(peq.bands) : [], fill: true }]} />
@@ -223,20 +239,11 @@ export function RackSpecimen({ touch }: { touch: boolean }) {
       <ModuleCard name="Delay" {...power('delay')}>
         <Knob size={44} label="Time" value={delay} onChange={setDelay} format={formatMs} scale={linearScale(0, 100)} defaultValue={0} />
       </ModuleCard>
-      <ModuleCard name="Limiter" {...power('limiter')}>
+      <ModuleCard name="Limiter" {...power('limiter')} summary={limiterMeters} expanded={limiterOpen} onExpandedChange={setLimiterOpen}>
         <Knob size={44} label="Threshold" value={threshold} onChange={setThreshold} format={formatDb} scale={linearScale(-30, 0)} defaultValue={0} color="var(--rl-warn)" />
         <Knob size={44} label="Attack" value={attack} onChange={setAttack} format={formatMs} scale={logScale(0.5, 100)} defaultValue={5} />
         <Knob size={44} label="Release" value={release} onChange={setRelease} format={formatMs} scale={logScale(10, 2000)} defaultValue={200} />
-        <div className="lim-meters">
-          <div className="rl-cell">
-            <span className="rl-label">In</span>
-            <Meter readLevel={limiterInput} floorDb={-40} markDb={threshold} warnDb={threshold} hotDb={0} />
-          </div>
-          <div className="rl-cell">
-            <span className="rl-label">GR</span>
-            <Meter reduction floorDb={-20} readLevel={() => (on['limiter'] === false ? 0 : Math.max(0, limiterInput() - threshold))} />
-          </div>
-        </div>
+        {limiterMeters}
       </ModuleCard>
       <ModuleCard name="Level" {...power('level')}>
         <Knob size={44} label="Gain" value={level} onChange={setLevel} format={formatDb} scale={LEVEL} defaultValue={0} bipolar />

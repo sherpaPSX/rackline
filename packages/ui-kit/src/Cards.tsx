@@ -49,6 +49,8 @@ export interface ModuleCardProps {
   summary?: ReactNode;
   expanded?: boolean | undefined;
   onExpandedChange?: ((expanded: boolean) => void) | undefined;
+  /** Expanded content needs room (a curve): the card grows to a wide fixed width. */
+  wide?: boolean | undefined;
   /** Shown only while editing the layout. */
   onRemove?: (() => void) | undefined;
 }
@@ -58,11 +60,16 @@ export interface ModuleCardProps {
  * all their controls; big ones show a summary and expand to the right, in
  * place, like a device in a DAW chain.
  */
-export function ModuleCard({ name, on, onOnChange, children, summary, expanded = false, onExpandedChange, onRemove }: ModuleCardProps) {
+export function ModuleCard({ name, on, onOnChange, children, summary, expanded = false, onExpandedChange, wide, onRemove }: ModuleCardProps) {
   const expandable = summary !== undefined && onExpandedChange !== undefined;
   const open = !expandable || expanded;
   return (
-    <div className="rl-module" data-off={!on || undefined} data-expanded={(expandable && expanded) || undefined}>
+    <div
+      className="rl-module"
+      data-off={!on || undefined}
+      data-expanded={(expandable && expanded) || undefined}
+      data-wide={wide || undefined}
+    >
       <div className="rl-module-head">
         <IconButton icon="power" label={on ? `Bypass ${name}` : `Enable ${name}`} pressed={on} onClick={() => onOnChange(!on)} />
         {expandable ? (

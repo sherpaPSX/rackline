@@ -470,6 +470,9 @@ input.rl-vbox {
 .rl-rack-detail {
   font: 500 13px/1.2 var(--rl-font-label);
   color: var(--rl-dim);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .rl-rack-actions {
   display: flex;
@@ -496,15 +499,15 @@ input.rl-vbox {
   flex: none;
   display: flex;
   flex-direction: column;
-  min-width: var(--rl-module-w, 176px);
+  min-width: var(--rl-module-w, 112px);
   background: var(--rl-bg);
   border: 1px solid var(--rl-line);
   border-radius: var(--rl-radius);
 }
-.rl-module[data-expanded] {
+.rl-module[data-wide][data-expanded] {
   width: min(720px, 100%);
 }
-.rl-module[data-expanded] .rl-module-body {
+.rl-module[data-wide][data-expanded] .rl-module-body {
   display: block;
 }
 .rl-module-head {
