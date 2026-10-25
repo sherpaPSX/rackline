@@ -192,6 +192,1435 @@
       "kind": "bool"
      }
     ]
+   },
+   {
+    "btype": 513,
+    "btypeHex": "0x0201",
+    "typeName": "Mix 3 x 1",
+    "params": [
+     {
+      "index": 2,
+      "name": "level.1",
+      "size": 1,
+      "kind": "linear",
+      "unit": "dB",
+      "formula": "(raw-192)/2",
+      "min": -96
+     },
+     {
+      "index": 3,
+      "name": "Mute.1",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 4,
+      "name": "level.2",
+      "size": 1,
+      "kind": "linear",
+      "unit": "dB",
+      "formula": "(raw-192)/2",
+      "min": -96
+     },
+     {
+      "index": 5,
+      "name": "Mute.2",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 6,
+      "name": "level.3",
+      "size": 1,
+      "kind": "linear",
+      "unit": "dB",
+      "formula": "(raw-192)/2",
+      "min": -96
+     },
+     {
+      "index": 7,
+      "name": "Mute.3",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 8,
+      "name": "OutLevel",
+      "size": 1,
+      "kind": "linear",
+      "unit": "dB",
+      "formula": "(raw-192)/2",
+      "min": -96
+     },
+     {
+      "index": 9,
+      "name": "OutMute",
+      "size": 1,
+      "kind": "bool"
+     }
+    ]
+   },
+   {
+    "btype": 520,
+    "btypeHex": "0x0208",
+    "typeName": "Mix 10 x 1",
+    "params": [
+     {
+      "index": 2,
+      "name": "level.1",
+      "size": 1,
+      "kind": "linear",
+      "unit": "dB",
+      "formula": "(raw-192)/2",
+      "min": -96
+     },
+     {
+      "index": 3,
+      "name": "Mute.1",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 4,
+      "name": "level.2",
+      "size": 1,
+      "kind": "linear",
+      "unit": "dB",
+      "formula": "(raw-192)/2",
+      "min": -96
+     },
+     {
+      "index": 5,
+      "name": "Mute.2",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 6,
+      "name": "level.3",
+      "size": 1,
+      "kind": "linear",
+      "unit": "dB",
+      "formula": "(raw-192)/2",
+      "min": -96
+     },
+     {
+      "index": 7,
+      "name": "Mute.3",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 8,
+      "name": "level.4",
+      "size": 1,
+      "kind": "linear",
+      "unit": "dB",
+      "formula": "(raw-192)/2",
+      "min": -96
+     },
+     {
+      "index": 9,
+      "name": "Mute.4",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 10,
+      "name": "level.5",
+      "size": 1,
+      "kind": "linear",
+      "unit": "dB",
+      "formula": "(raw-192)/2",
+      "min": -96
+     },
+     {
+      "index": 11,
+      "name": "Mute.5",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 12,
+      "name": "level.6",
+      "size": 1,
+      "kind": "linear",
+      "unit": "dB",
+      "formula": "(raw-192)/2",
+      "min": -96
+     },
+     {
+      "index": 13,
+      "name": "Mute.6",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 14,
+      "name": "level.7",
+      "size": 1,
+      "kind": "linear",
+      "unit": "dB",
+      "formula": "(raw-192)/2",
+      "min": -96
+     },
+     {
+      "index": 15,
+      "name": "Mute.7",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 16,
+      "name": "level.8",
+      "size": 1,
+      "kind": "linear",
+      "unit": "dB",
+      "formula": "(raw-192)/2",
+      "min": -96
+     },
+     {
+      "index": 17,
+      "name": "Mute.8",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 18,
+      "name": "level.9",
+      "size": 1,
+      "kind": "linear",
+      "unit": "dB",
+      "formula": "(raw-192)/2",
+      "min": -96
+     },
+     {
+      "index": 19,
+      "name": "Mute.9",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 20,
+      "name": "level.10",
+      "size": 1,
+      "kind": "linear",
+      "unit": "dB",
+      "formula": "(raw-192)/2",
+      "min": -96
+     },
+     {
+      "index": 21,
+      "name": "Mute.10",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 22,
+      "name": "OutLevel",
+      "size": 1,
+      "kind": "linear",
+      "unit": "dB",
+      "formula": "(raw-192)/2",
+      "min": -96
+     },
+     {
+      "index": 23,
+      "name": "OutMute",
+      "size": 1,
+      "kind": "bool"
+     }
+    ]
+   },
+   {
+    "btype": 528,
+    "btypeHex": "0x0210",
+    "typeName": "Select 1 of 2",
+    "params": [
+     {
+      "index": 2,
+      "name": "Input",
+      "size": 1,
+      "kind": "enum",
+      "formula": "Input raw+1"
+     }
+    ]
+   },
+   {
+    "btype": 529,
+    "btypeHex": "0x0211",
+    "typeName": "Select 1 of 3",
+    "params": [
+     {
+      "index": 2,
+      "name": "Input",
+      "size": 1,
+      "kind": "enum",
+      "formula": "Input raw+1"
+     }
+    ]
+   },
+   {
+    "btype": 536,
+    "btypeHex": "0x0218",
+    "typeName": "Select 1 of 10",
+    "params": [
+     {
+      "index": 2,
+      "name": "Input",
+      "size": 1,
+      "kind": "enum",
+      "formula": "Input raw+1"
+     }
+    ]
+   },
+   {
+    "btype": 1024,
+    "btypeHex": "0x0400",
+    "typeName": "Meter",
+    "params": []
+   },
+   {
+    "btype": 2049,
+    "btypeHex": "0x0801",
+    "typeName": "Matrix Mix 2 x 2",
+    "params": [
+     {
+      "index": 2,
+      "name": "ViewSlidersOut.1",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 3,
+      "name": "ViewSlidersOut.2",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 4,
+      "name": "ViewSlidersIn",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 5,
+      "name": "Level.OUT0:IN0",
+      "size": 1,
+      "kind": "linear",
+      "unit": "dB",
+      "formula": "(raw-192)/2",
+      "min": -96
+     },
+     {
+      "index": 6,
+      "name": "Mute.OUT0:IN0",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 7,
+      "name": "Level.0:1",
+      "size": 1,
+      "kind": "linear",
+      "unit": "dB",
+      "formula": "(raw-192)/2",
+      "min": -96
+     },
+     {
+      "index": 8,
+      "name": "Mute.0:1",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 9,
+      "name": "Level.1:0",
+      "size": 1,
+      "kind": "linear",
+      "unit": "dB",
+      "formula": "(raw-192)/2",
+      "min": -96
+     },
+     {
+      "index": 10,
+      "name": "Mute.1:0",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 11,
+      "name": "Level.1:1",
+      "size": 1,
+      "kind": "linear",
+      "unit": "dB",
+      "formula": "(raw-192)/2",
+      "min": -96
+     },
+     {
+      "index": 12,
+      "name": "Mute.1:1",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 13,
+      "name": "InLevel.0",
+      "size": 1,
+      "kind": "linear",
+      "unit": "dB",
+      "formula": "(raw-192)/2",
+      "min": -96
+     },
+     {
+      "index": 14,
+      "name": "InSolo.0",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 15,
+      "name": "InMute.0",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 16,
+      "name": "InInvert.0",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 17,
+      "name": "InLevel.1",
+      "size": 1,
+      "kind": "linear",
+      "unit": "dB",
+      "formula": "(raw-192)/2",
+      "min": -96
+     },
+     {
+      "index": 18,
+      "name": "InSolo.1",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 19,
+      "name": "InMute.1",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 20,
+      "name": "InInvert.1",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 21,
+      "name": "OutLevel.0",
+      "size": 1,
+      "kind": "linear",
+      "unit": "dB",
+      "formula": "(raw-192)/2",
+      "min": -96
+     },
+     {
+      "index": 22,
+      "name": "OutSolo.0",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 23,
+      "name": "OutMute.0",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 24,
+      "name": "OutInvert.0",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 25,
+      "name": "OutLevel.1",
+      "size": 1,
+      "kind": "linear",
+      "unit": "dB",
+      "formula": "(raw-192)/2",
+      "min": -96
+     },
+     {
+      "index": 26,
+      "name": "OutSolo.1",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 27,
+      "name": "OutMute.1",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 28,
+      "name": "OutInvert.1",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 29,
+      "name": "ViewInputs",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 30,
+      "name": "ViewOutputs",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 31,
+      "name": "AutoCancel",
+      "size": 1,
+      "kind": "bool"
+     }
+    ]
+   },
+   {
+    "btype": 2071,
+    "btypeHex": "0x0817",
+    "typeName": "Matrix Mix 6 x 6",
+    "params": [
+     {
+      "index": 2,
+      "name": "ViewSliders: Out1",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 3,
+      "name": "ViewSliders: Out2",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 4,
+      "name": "ViewSliders: Out3",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 5,
+      "name": "ViewSliders: Out4",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 6,
+      "name": "ViewSliders: Out5",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 7,
+      "name": "ViewSliders: Out6",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 8,
+      "name": "ViewSliders: In1",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 9,
+      "name": "Level: Out1:In1",
+      "size": 1,
+      "kind": "linear",
+      "unit": "dB",
+      "formula": "(raw-192)/2",
+      "min": -96
+     },
+     {
+      "index": 10,
+      "name": "Mute: Out1:In1",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 11,
+      "name": "Level: Out1:In2",
+      "size": 1,
+      "kind": "linear",
+      "unit": "dB",
+      "formula": "(raw-192)/2",
+      "min": -96
+     },
+     {
+      "index": 12,
+      "name": "Mute: Out1:In2",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 13,
+      "name": "Level: Out1:In3",
+      "size": 1,
+      "kind": "linear",
+      "unit": "dB",
+      "formula": "(raw-192)/2",
+      "min": -96
+     },
+     {
+      "index": 14,
+      "name": "Mute: Out1:In3",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 15,
+      "name": "Level: Out1:In4",
+      "size": 1,
+      "kind": "linear",
+      "unit": "dB",
+      "formula": "(raw-192)/2",
+      "min": -96
+     },
+     {
+      "index": 16,
+      "name": "Mute: Out1:In4",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 17,
+      "name": "Level: Out1:In5",
+      "size": 1,
+      "kind": "linear",
+      "unit": "dB",
+      "formula": "(raw-192)/2",
+      "min": -96
+     },
+     {
+      "index": 18,
+      "name": "Mute: Out1:In5",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 19,
+      "name": "Level: Out1:In6",
+      "size": 1,
+      "kind": "linear",
+      "unit": "dB",
+      "formula": "(raw-192)/2",
+      "min": -96
+     },
+     {
+      "index": 20,
+      "name": "Mute: Out1:In6",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 21,
+      "name": "Level: Out2:In1",
+      "size": 1,
+      "kind": "linear",
+      "unit": "dB",
+      "formula": "(raw-192)/2",
+      "min": -96
+     },
+     {
+      "index": 22,
+      "name": "Mute: Out2:In1",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 23,
+      "name": "Level: Out2:In2",
+      "size": 1,
+      "kind": "linear",
+      "unit": "dB",
+      "formula": "(raw-192)/2",
+      "min": -96
+     },
+     {
+      "index": 24,
+      "name": "Mute: Out2:In2",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 25,
+      "name": "Level: Out2:In3",
+      "size": 1,
+      "kind": "linear",
+      "unit": "dB",
+      "formula": "(raw-192)/2",
+      "min": -96
+     },
+     {
+      "index": 26,
+      "name": "Mute: Out2:In3",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 27,
+      "name": "Level: Out2:In4",
+      "size": 1,
+      "kind": "linear",
+      "unit": "dB",
+      "formula": "(raw-192)/2",
+      "min": -96
+     },
+     {
+      "index": 28,
+      "name": "Mute: Out2:In4",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 29,
+      "name": "Level: Out2:In5",
+      "size": 1,
+      "kind": "linear",
+      "unit": "dB",
+      "formula": "(raw-192)/2",
+      "min": -96
+     },
+     {
+      "index": 30,
+      "name": "Mute: Out2:In5",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 31,
+      "name": "Level: Out2:In6",
+      "size": 1,
+      "kind": "linear",
+      "unit": "dB",
+      "formula": "(raw-192)/2",
+      "min": -96
+     },
+     {
+      "index": 32,
+      "name": "Mute: Out2:In6",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 33,
+      "name": "Level: Out3:In1",
+      "size": 1,
+      "kind": "linear",
+      "unit": "dB",
+      "formula": "(raw-192)/2",
+      "min": -96
+     },
+     {
+      "index": 34,
+      "name": "Mute: Out3:In1",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 35,
+      "name": "Level: Out3:In2",
+      "size": 1,
+      "kind": "linear",
+      "unit": "dB",
+      "formula": "(raw-192)/2",
+      "min": -96
+     },
+     {
+      "index": 36,
+      "name": "Mute: Out3:In2",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 37,
+      "name": "Level: Out3:In3",
+      "size": 1,
+      "kind": "linear",
+      "unit": "dB",
+      "formula": "(raw-192)/2",
+      "min": -96
+     },
+     {
+      "index": 38,
+      "name": "Mute: Out3:In3",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 39,
+      "name": "Level: Out3:In4",
+      "size": 1,
+      "kind": "linear",
+      "unit": "dB",
+      "formula": "(raw-192)/2",
+      "min": -96
+     },
+     {
+      "index": 40,
+      "name": "Mute: Out3:In4",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 41,
+      "name": "Level: Out3:In5",
+      "size": 1,
+      "kind": "linear",
+      "unit": "dB",
+      "formula": "(raw-192)/2",
+      "min": -96
+     },
+     {
+      "index": 42,
+      "name": "Mute: Out3:In5",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 43,
+      "name": "Level: Out3:In6",
+      "size": 1,
+      "kind": "linear",
+      "unit": "dB",
+      "formula": "(raw-192)/2",
+      "min": -96
+     },
+     {
+      "index": 44,
+      "name": "Mute: Out3:In6",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 45,
+      "name": "Level: Out4:In1",
+      "size": 1,
+      "kind": "linear",
+      "unit": "dB",
+      "formula": "(raw-192)/2",
+      "min": -96
+     },
+     {
+      "index": 46,
+      "name": "Mute: Out4:In1",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 47,
+      "name": "Level: Out4:In2",
+      "size": 1,
+      "kind": "linear",
+      "unit": "dB",
+      "formula": "(raw-192)/2",
+      "min": -96
+     },
+     {
+      "index": 48,
+      "name": "Mute: Out4:In2",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 49,
+      "name": "Level: Out4:In3",
+      "size": 1,
+      "kind": "linear",
+      "unit": "dB",
+      "formula": "(raw-192)/2",
+      "min": -96
+     },
+     {
+      "index": 50,
+      "name": "Mute: Out4:In3",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 51,
+      "name": "Level: Out4:In4",
+      "size": 1,
+      "kind": "linear",
+      "unit": "dB",
+      "formula": "(raw-192)/2",
+      "min": -96
+     },
+     {
+      "index": 52,
+      "name": "Mute: Out4:In4",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 53,
+      "name": "Level: Out4:In5",
+      "size": 1,
+      "kind": "linear",
+      "unit": "dB",
+      "formula": "(raw-192)/2",
+      "min": -96
+     },
+     {
+      "index": 54,
+      "name": "Mute: Out4:In5",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 55,
+      "name": "Level: Out4:In6",
+      "size": 1,
+      "kind": "linear",
+      "unit": "dB",
+      "formula": "(raw-192)/2",
+      "min": -96
+     },
+     {
+      "index": 56,
+      "name": "Mute: Out4:In6",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 57,
+      "name": "Level: Out5:In1",
+      "size": 1,
+      "kind": "linear",
+      "unit": "dB",
+      "formula": "(raw-192)/2",
+      "min": -96
+     },
+     {
+      "index": 58,
+      "name": "Mute: Out5:In1",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 59,
+      "name": "Level: Out5:In2",
+      "size": 1,
+      "kind": "linear",
+      "unit": "dB",
+      "formula": "(raw-192)/2",
+      "min": -96
+     },
+     {
+      "index": 60,
+      "name": "Mute: Out5:In2",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 61,
+      "name": "Level: Out5:In3",
+      "size": 1,
+      "kind": "linear",
+      "unit": "dB",
+      "formula": "(raw-192)/2",
+      "min": -96
+     },
+     {
+      "index": 62,
+      "name": "Mute: Out5:In3",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 63,
+      "name": "Level: Out5:In4",
+      "size": 1,
+      "kind": "linear",
+      "unit": "dB",
+      "formula": "(raw-192)/2",
+      "min": -96
+     },
+     {
+      "index": 64,
+      "name": "Mute: Out5:In4",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 65,
+      "name": "Level: Out5:In5",
+      "size": 1,
+      "kind": "linear",
+      "unit": "dB",
+      "formula": "(raw-192)/2",
+      "min": -96
+     },
+     {
+      "index": 66,
+      "name": "Mute: Out5:In5",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 67,
+      "name": "Level: Out5:In6",
+      "size": 1,
+      "kind": "linear",
+      "unit": "dB",
+      "formula": "(raw-192)/2",
+      "min": -96
+     },
+     {
+      "index": 68,
+      "name": "Mute: Out5:In6",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 69,
+      "name": "Level: Out6:In1",
+      "size": 1,
+      "kind": "linear",
+      "unit": "dB",
+      "formula": "(raw-192)/2",
+      "min": -96
+     },
+     {
+      "index": 70,
+      "name": "Mute: Out6:In1",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 71,
+      "name": "Level: Out6:In2",
+      "size": 1,
+      "kind": "linear",
+      "unit": "dB",
+      "formula": "(raw-192)/2",
+      "min": -96
+     },
+     {
+      "index": 72,
+      "name": "Mute: Out6:In2",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 73,
+      "name": "Level: Out6:In3",
+      "size": 1,
+      "kind": "linear",
+      "unit": "dB",
+      "formula": "(raw-192)/2",
+      "min": -96
+     },
+     {
+      "index": 74,
+      "name": "Mute: Out6:In3",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 75,
+      "name": "Level: Out6:In4",
+      "size": 1,
+      "kind": "linear",
+      "unit": "dB",
+      "formula": "(raw-192)/2",
+      "min": -96
+     },
+     {
+      "index": 76,
+      "name": "Mute: Out6:In4",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 77,
+      "name": "Level: Out6:In5",
+      "size": 1,
+      "kind": "linear",
+      "unit": "dB",
+      "formula": "(raw-192)/2",
+      "min": -96
+     },
+     {
+      "index": 78,
+      "name": "Mute: Out6:In5",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 79,
+      "name": "Level: Out6:In6",
+      "size": 1,
+      "kind": "linear",
+      "unit": "dB",
+      "formula": "(raw-192)/2",
+      "min": -96
+     },
+     {
+      "index": 80,
+      "name": "Mute: Out6:In6",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 81,
+      "name": "Level: In1",
+      "size": 1,
+      "kind": "linear",
+      "unit": "dB",
+      "formula": "(raw-192)/2",
+      "min": -96
+     },
+     {
+      "index": 82,
+      "name": "Solo: In1",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 83,
+      "name": "Mute: In1",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 84,
+      "name": "Invert: In1",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 85,
+      "name": "Level: In2",
+      "size": 1,
+      "kind": "linear",
+      "unit": "dB",
+      "formula": "(raw-192)/2",
+      "min": -96
+     },
+     {
+      "index": 86,
+      "name": "Solo: In2",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 87,
+      "name": "Mute: In2",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 88,
+      "name": "Invert: In2",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 89,
+      "name": "Level: In3",
+      "size": 1,
+      "kind": "linear",
+      "unit": "dB",
+      "formula": "(raw-192)/2",
+      "min": -96
+     },
+     {
+      "index": 90,
+      "name": "Solo: In3",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 91,
+      "name": "Mute: In3",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 92,
+      "name": "Invert: In3",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 93,
+      "name": "Level: In4",
+      "size": 1,
+      "kind": "linear",
+      "unit": "dB",
+      "formula": "(raw-192)/2",
+      "min": -96
+     },
+     {
+      "index": 94,
+      "name": "Solo: In4",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 95,
+      "name": "Mute: In4",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 96,
+      "name": "Invert: In4",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 97,
+      "name": "Level: In5",
+      "size": 1,
+      "kind": "linear",
+      "unit": "dB",
+      "formula": "(raw-192)/2",
+      "min": -96
+     },
+     {
+      "index": 98,
+      "name": "Solo: In5",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 99,
+      "name": "Mute: In5",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 100,
+      "name": "Invert: In5",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 101,
+      "name": "Level: In6",
+      "size": 1,
+      "kind": "linear",
+      "unit": "dB",
+      "formula": "(raw-192)/2",
+      "min": -96
+     },
+     {
+      "index": 102,
+      "name": "Solo: In6",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 103,
+      "name": "Mute: In6",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 104,
+      "name": "Invert: In6",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 105,
+      "name": "Level: Out1",
+      "size": 1,
+      "kind": "linear",
+      "unit": "dB",
+      "formula": "(raw-192)/2",
+      "min": -96
+     },
+     {
+      "index": 106,
+      "name": "Solo: Out1",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 107,
+      "name": "Mute: Out1",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 108,
+      "name": "Invert: Out1",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 109,
+      "name": "Level: Out2",
+      "size": 1,
+      "kind": "linear",
+      "unit": "dB",
+      "formula": "(raw-192)/2",
+      "min": -96
+     },
+     {
+      "index": 110,
+      "name": "Solo: Out2",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 111,
+      "name": "Mute: Out2",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 112,
+      "name": "Invert: Out2",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 113,
+      "name": "Level: Out3",
+      "size": 1,
+      "kind": "linear",
+      "unit": "dB",
+      "formula": "(raw-192)/2",
+      "min": -96
+     },
+     {
+      "index": 114,
+      "name": "Solo: Out3",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 115,
+      "name": "Mute: Out3",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 116,
+      "name": "Invert: Out3",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 117,
+      "name": "Level: Out4",
+      "size": 1,
+      "kind": "linear",
+      "unit": "dB",
+      "formula": "(raw-192)/2",
+      "min": -96
+     },
+     {
+      "index": 118,
+      "name": "Solo: Out4",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 119,
+      "name": "Mute: Out4",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 120,
+      "name": "Invert: Out4",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 121,
+      "name": "Level: Out5",
+      "size": 1,
+      "kind": "linear",
+      "unit": "dB",
+      "formula": "(raw-192)/2",
+      "min": -96
+     },
+     {
+      "index": 122,
+      "name": "Solo: Out5",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 123,
+      "name": "Mute: Out5",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 124,
+      "name": "Invert: Out5",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 125,
+      "name": "Level: Out6",
+      "size": 1,
+      "kind": "linear",
+      "unit": "dB",
+      "formula": "(raw-192)/2",
+      "min": -96
+     },
+     {
+      "index": 126,
+      "name": "Solo: Out6",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 127,
+      "name": "Mute: Out6",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 128,
+      "name": "Invert: Out6",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 129,
+      "name": "ViewInputs",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 130,
+      "name": "ViewOutputs",
+      "size": 1,
+      "kind": "bool"
+     },
+     {
+      "index": 131,
+      "name": "AutoCancel",
+      "size": 1,
+      "kind": "bool"
+     }
+    ]
    }
   ],
   "delay": [
@@ -1639,6 +3068,7 @@
  "notes": [
   "Ověřeno proti Drag Netu 4.2 se simulátorem, na skutečném RPM zatím ne.",
   "Delay: raw = počet vzorků při 48 kHz.",
-  "Level Mute/Opt: bit0 mute, bit1 off na minimu."
+  "Level Mute/Opt: bit0 mute, bit1 off na minimu.",
+  "Mix N x 1 = 0x0200 + N - 2, Select 1 of N = 0x0210 + N - 2 (N = 2..10, sampled for 2, 3, 10). Matrix 2 x 2 = 0x0801, 6 x 6 = 0x0817; other matrix sizes unknown."
  ]
 }
