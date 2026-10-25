@@ -27,3 +27,7 @@ export { RackCard, ModuleCard } from './Cards.js';
 export type { RackCardProps, ModuleCardProps } from './Cards.js';
 export { GraphicEq } from './GraphicEq.js';
 export type { GraphicEqProps, GraphicEqBand } from './GraphicEq.js';
+export { Select } from './Select.js';
+export type { SelectProps, SelectOption } from './Select.js';
+export { TextField } from './TextField.js';
+export type { TextFieldProps } from './TextField.js';

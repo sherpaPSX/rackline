@@ -38,8 +38,11 @@ export function RackCard({ name, color, detail, actions, expanded, onExpandedCha
 
 export interface ModuleCardProps {
   name: string;
-  on: boolean;
-  onOnChange: (on: boolean) => void;
+  /** Bypass state; without `onOnChange` the module has no bypass and no power button. */
+  on?: boolean | undefined;
+  onOnChange?: ((on: boolean) => void) | undefined;
+  /** Short note in the header, e.g. "L ≠ R". */
+  badge?: ReactNode;
   /** Every parameter, each with exactly one editor. Small modules show only this. */
   children: ReactNode;
   /**
@@ -60,7 +63,7 @@ export interface ModuleCardProps {
  * all their controls; big ones show a summary and expand to the right, in
  * place, like a device in a DAW chain.
  */
-export function ModuleCard({ name, on, onOnChange, children, summary, expanded = false, onExpandedChange, wide, onRemove }: ModuleCardProps) {
+export function ModuleCard({ name, on = true, onOnChange, badge, children, summary, expanded = false, onExpandedChange, wide, onRemove }: ModuleCardProps) {
   const expandable = summary !== undefined && onExpandedChange !== undefined;
   const open = !expandable || expanded;
   return (
@@ -71,7 +74,9 @@ export function ModuleCard({ name, on, onOnChange, children, summary, expanded =
       data-wide={wide || undefined}
     >
       <div className="rl-module-head">
-        <IconButton icon="power" label={on ? `Bypass ${name}` : `Enable ${name}`} pressed={on} onClick={() => onOnChange(!on)} />
+        {onOnChange && (
+          <IconButton icon="power" label={on ? `Bypass ${name}` : `Enable ${name}`} pressed={on} onClick={() => onOnChange(!on)} />
+        )}
         {expandable ? (
           <button type="button" className="rl-module-name" onClick={() => onExpandedChange(!expanded)} aria-expanded={expanded}>
             {name}
@@ -79,6 +84,7 @@ export function ModuleCard({ name, on, onOnChange, children, summary, expanded =
         ) : (
           <span className="rl-module-name">{name}</span>
         )}
+        {badge && <span className="rl-module-badge">{badge}</span>}
         {onRemove && <IconButton icon="close" label={`Remove ${name}`} onClick={onRemove} />}
         {expandable && (
           <IconButton

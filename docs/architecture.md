@@ -131,6 +131,18 @@ Every message is JSON validated by a zod schema on both sides
   A new `state` (new setup, preset recall) clears the history.
 - View helpers (`racks.ts`) derive band strips, input pairs and rack detail
   lines from the API's JSON only.
+- Screens: **Show** (fader = trim + mute per input pair and band; band
+  fader = Output Trim of all its outputs), **System / Tune** (racks in signal
+  order, modules left to right, PEQ and crossover expand sideways with a
+  curve; stereo modules edit L+R linked, or L / R when they differ),
+  **Files** (find/connect a device, open `.r26`, recall presets).
+- Curves are drawn from the option labels the core sends (`curves.ts`);
+  Low/High cut as 2nd-order Butterworth and Horn EQ/all-pass as flat are
+  guesses.
+- `pnpm --filter @rackline/ui dev` runs the UI against a core on
+  `ws://127.0.0.1:5180` (`?core=` overrides); `pnpm --filter @rackline/ui
+  preview` builds one self-contained HTML file with a fake in-page core on
+  `PSX_RCF_FINAL.r26`, for review.
 
 ## Tooling
 
