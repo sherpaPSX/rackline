@@ -1,6 +1,7 @@
 // @ts-check
 import js from '@eslint/js';
 import tseslint from 'typescript-eslint';
+import reactHooks from 'eslint-plugin-react-hooks';
 
 /**
  * Package boundaries (see docs/architecture.md). Each package may import only
@@ -47,6 +48,10 @@ export default tseslint.config(
       '@typescript-eslint/no-explicit-any': 'error',
       '@typescript-eslint/consistent-type-imports': 'error',
     },
+  },
+  {
+    files: ['packages/ui-kit/**/*.{ts,tsx}', 'packages/ui/**/*.{ts,tsx}'],
+    ...reactHooks.configs.flat.recommended,
   },
   ...boundaries,
 );

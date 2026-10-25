@@ -1,0 +1,322 @@
+/* Atoms. Class names start with rl-; state lives in data-* and aria-* attributes. */
+
+.rl-label {
+  font: 600 12px/1.2 var(--rl-font-label);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--rl-dim);
+}
+
+.rl-value {
+  font: 400 12px/1.2 var(--rl-font-value);
+  font-variant-numeric: tabular-nums;
+  min-width: 8ch;
+  text-align: center;
+  color: var(--rl-fg);
+}
+.rl-value[data-active] {
+  color: var(--rl-accent);
+}
+
+.rl-cell {
+  display: grid;
+  justify-items: center;
+  gap: var(--rl-s2);
+}
+.rl-cell[data-disabled] {
+  opacity: 0.35;
+}
+
+/* Knob */
+.rl-knob {
+  display: block;
+  cursor: ns-resize;
+  touch-action: none;
+  outline: none;
+  border-radius: 50%;
+}
+.rl-knob:focus-visible {
+  box-shadow: 0 0 0 2px var(--rl-accent);
+}
+.rl-knob-track,
+.rl-knob-arc {
+  fill: none;
+  stroke-width: 4;
+  stroke-linecap: round;
+}
+.rl-knob-track {
+  stroke: var(--rl-well);
+}
+.rl-knob-arc {
+  stroke: var(--rl-k, var(--rl-accent));
+}
+.rl-knob-cap {
+  fill: var(--rl-panel);
+  stroke: var(--rl-line);
+  stroke-width: 1;
+}
+.rl-knob-pointer {
+  stroke: var(--rl-fg);
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+/* Fader */
+.rl-fader-row {
+  display: flex;
+  gap: var(--rl-s2);
+  align-items: flex-end;
+}
+.rl-fader {
+  --rl-cap-h: 16px;
+  position: relative;
+  width: 36px;
+  height: var(--rl-fader-h);
+  cursor: ns-resize;
+  touch-action: none;
+  outline: none;
+}
+.rl-fader[data-touch] {
+  --rl-cap-h: 28px;
+  width: 48px;
+}
+.rl-fader:focus-visible {
+  box-shadow: 0 0 0 2px var(--rl-accent);
+  border-radius: var(--rl-radius);
+}
+.rl-fader-slot,
+.rl-fader-fill {
+  position: absolute;
+  left: 50%;
+  width: 4px;
+  margin-left: -2px;
+  bottom: 0;
+  border-radius: 2px;
+}
+.rl-fader-slot {
+  top: 0;
+  background: var(--rl-well);
+}
+.rl-fader-fill {
+  height: calc(var(--rl-pos) * 100%);
+  background: var(--rl-k, var(--rl-accent));
+}
+.rl-fader-unity {
+  position: absolute;
+  left: -6px;
+  right: -6px;
+  height: 1px;
+  bottom: calc(var(--rl-unity) * 100%);
+  background: var(--rl-dim);
+}
+.rl-fader-cap {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: var(--rl-cap-h);
+  bottom: calc(var(--rl-pos) * 100%);
+  margin-bottom: calc(var(--rl-cap-h) / -2);
+  background: var(--rl-fg);
+  border-radius: 2px;
+  box-shadow: inset 0 -2px 0 var(--rl-dim);
+}
+.rl-fader-cap::after {
+  content: '';
+  position: absolute;
+  left: 4px;
+  right: 4px;
+  top: 50%;
+  height: 2px;
+  margin-top: -1px;
+  background: var(--rl-bg);
+}
+
+/* Meter */
+.rl-meter {
+  position: relative;
+  width: 6px;
+  height: var(--rl-fader-h);
+  background: var(--rl-well);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.rl-meter b {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 0;
+  background: linear-gradient(
+      to top,
+      var(--rl-accent) 0 var(--rl-warn-at),
+      var(--rl-warn) var(--rl-warn-at) var(--rl-hot-at),
+      var(--rl-danger) var(--rl-hot-at)
+    )
+    bottom / 100% var(--rl-fader-h) no-repeat;
+}
+
+/* Buttons */
+.rl-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: var(--rl-control-h);
+  min-width: 36px;
+  padding: 0 var(--rl-s3);
+  font: 600 12px/1 var(--rl-font-label);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--rl-fg);
+  background: var(--rl-well);
+  border: 1px solid var(--rl-line);
+  border-radius: var(--rl-radius);
+  cursor: pointer;
+}
+.rl-btn:hover {
+  border-color: var(--rl-dim);
+}
+.rl-btn:focus-visible {
+  outline: 2px solid var(--rl-accent);
+  outline-offset: 1px;
+}
+.rl-btn:active {
+  transform: translateY(1px);
+}
+.rl-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.rl-btn[data-square] {
+  width: var(--rl-control-h);
+  min-width: 0;
+  padding: 0;
+}
+.rl-btn[data-touch] {
+  height: var(--rl-touch-h);
+  font-size: 14px;
+}
+.rl-btn[data-square][data-touch] {
+  width: var(--rl-touch-h);
+}
+.rl-btn[aria-pressed='true'],
+.rl-btn[aria-checked='true'] {
+  background: var(--rl-accent);
+  border-color: var(--rl-accent);
+  color: var(--rl-on-accent);
+}
+.rl-btn[aria-pressed='true'][data-tone='warn'] {
+  background: var(--rl-warn);
+  border-color: var(--rl-warn);
+}
+.rl-btn[aria-pressed='true'][data-tone='danger'] {
+  background: var(--rl-danger);
+  border-color: var(--rl-danger);
+  color: var(--rl-on-danger);
+}
+
+.rl-seg {
+  display: inline-flex;
+}
+.rl-seg .rl-btn {
+  border-radius: 0;
+  margin-left: -1px;
+}
+.rl-seg .rl-btn:first-child {
+  border-radius: var(--rl-radius) 0 0 var(--rl-radius);
+  margin-left: 0;
+}
+.rl-seg .rl-btn:last-child {
+  border-radius: 0 var(--rl-radius) var(--rl-radius) 0;
+}
+.rl-seg .rl-btn[aria-checked='true'] {
+  position: relative;
+}
+
+.rl-icon-btn {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--rl-radius);
+  background: transparent;
+  color: var(--rl-dim);
+  cursor: pointer;
+  flex: none;
+}
+.rl-icon-btn[data-touch] {
+  width: var(--rl-touch-h);
+  height: var(--rl-touch-h);
+}
+.rl-icon-btn:hover {
+  color: var(--rl-fg);
+  background: var(--rl-well);
+}
+.rl-icon-btn:focus-visible {
+  outline: 2px solid var(--rl-accent);
+  outline-offset: -2px;
+}
+.rl-icon-btn[aria-pressed='true'] {
+  color: var(--rl-accent);
+}
+
+/* LED */
+.rl-led {
+  display: inline-block;
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--rl-well);
+  border: 1px solid var(--rl-line);
+  --rl-led: var(--rl-accent);
+}
+.rl-led[data-tone='warn'] {
+  --rl-led: var(--rl-warn);
+}
+.rl-led[data-tone='danger'] {
+  --rl-led: var(--rl-danger);
+}
+.rl-led[data-on] {
+  background: var(--rl-led);
+  border-color: var(--rl-led);
+  box-shadow: 0 0 6px var(--rl-led);
+}
+
+/* Value box */
+.rl-vbox {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--rl-control-h);
+  min-width: 10ch;
+  padding: 0 var(--rl-s2);
+  font: 400 14px/1 var(--rl-font-value);
+  font-variant-numeric: tabular-nums;
+  color: var(--rl-fg);
+  background: var(--rl-well);
+  border: 1px solid var(--rl-line);
+  border-radius: var(--rl-radius);
+  cursor: ns-resize;
+  touch-action: none;
+  outline: none;
+}
+input.rl-vbox {
+  width: 10ch;
+  cursor: text;
+  border-color: var(--rl-accent);
+}
+.rl-vbox:focus-visible,
+.rl-vbox[data-active] {
+  border-color: var(--rl-accent);
+  color: var(--rl-accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rl-btn:active {
+    transform: none;
+  }
+}
