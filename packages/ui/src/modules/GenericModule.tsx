@@ -1,3 +1,5 @@
+import { useState } from 'react';
+import type { ReactNode } from 'react';
 import type { ModuleInfo, Values } from '@rackline/api';
 import { ModuleCard } from '@rackline/ui-kit';
 import { ChannelPicker } from './ChannelPicker.js';
@@ -15,7 +17,14 @@ export interface ModuleViewProps {
   channelNames?: readonly string[] | undefined;
   /** Name on the card; defaults to the module type. */
   title?: string | undefined;
+  /** More controls at the end of the card, e.g. the band's output polarity in its Level module. */
+  extra?: ReactNode;
 }
+
+/** Level's limits for remote wall controls: not needed while tuning. */
+const HIDDEN = new Set(['min', 'max']);
+/** Dynamics show only their key controls until expanded (D27; live meters join them once the core reads meters). */
+const COMPACT = /^(Limiter|Compressor)/;
 
 /** Labels short enough for a knob; the full label stays the accessible name. */
 const SHORT: Record<string, string> = {
@@ -28,27 +37,33 @@ const SHORT: Record<string, string> = {
   outputMute: 'Out',
   options: 'Mute',
   invert: 'Polarity',
-  min: 'Min',
-  max: 'Max',
 };
 
 /** A small module: every parameter visible, in the order the module lists them. */
-export function GenericModule({ module, blockIds, values, rackName, channelNames, title = module.name }: ModuleViewProps) {
-  const keys = module.params.map((p) => p.key);
-  const linked = useLinkedModule(values, blockIds, keys, channelNames);
+export function GenericModule({ module, blockIds, values, rackName, channelNames, title = module.name, extra }: ModuleViewProps) {
+  const [open, setOpen] = useState(false);
+  const params = module.params.filter((p) => !HIDDEN.has(p.key));
+  const linked = useLinkedModule(values, blockIds, params.map((p) => p.key), channelNames);
   const owner = `${rackName} ${title}`;
+  const control = (p: ModuleInfo['params'][number]) => (
+    <ParamControl
+      key={p.key}
+      param={p}
+      owner={owner}
+      label={SHORT[p.key]}
+      value={linked.value(p.key)}
+      onChange={(value) => linked.set({ [p.key]: value })}
+    />
+  );
+  const compact = COMPACT.test(module.name) ? params.filter((p) => module.compact.includes(p.key)) : [];
   return (
-    <ModuleCard name={title} badge={linked.stereo ? <ChannelPicker linked={linked} owner={owner} /> : undefined}>
-      {module.params.map((p) => (
-        <ParamControl
-          key={p.key}
-          param={p}
-          owner={owner}
-          label={SHORT[p.key]}
-          value={linked.value(p.key)}
-          onChange={(value) => linked.set({ [p.key]: value })}
-        />
-      ))}
+    <ModuleCard
+      name={title}
+      badge={linked.stereo ? <ChannelPicker linked={linked} owner={owner} /> : undefined}
+      {...(compact.length > 0 && compact.length < params.length ? { summary: compact.map(control), expanded: open, onExpandedChange: setOpen } : {})}
+    >
+      {params.map(control)}
+      {extra}
     </ModuleCard>
   );
 }

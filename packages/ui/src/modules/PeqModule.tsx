@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { ConfirmButton, EqCurve, Knob, ModuleCard, Select, ToggleButton } from '@rackline/ui-kit';
 import type { EqCurveLine } from '@rackline/ui-kit';
-import { peqBands, peqFilter, peqFilters, peqHasGain, readPeqBand } from '../curves.js';
+import { peqBands, peqBypassPatch, peqFilter, peqFilters, peqHasGain, readPeqBand } from '../curves.js';
 import { formatParam, numberScale } from '../params.js';
 import type { NumberParam } from '../params.js';
 import { ChannelPicker } from './ChannelPicker.js';
@@ -12,6 +12,8 @@ import { useLinkedModule } from './linked.js';
 export function PeqModule({ module, blockIds, values, rackName, channelNames, title = 'PEQ' }: ModuleViewProps) {
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState(1);
+  /** Filters that were on when this window bypassed the PEQ. */
+  const [remembered, setRemembered] = useState<number[] | undefined>(undefined);
   const numbers = peqBands(module);
   const linked = useLinkedModule(values, blockIds, module.params.map((p) => p.key), channelNames);
   const bands = numbers.map((n) => readPeqBand(module, linked.value, n));
@@ -48,6 +50,11 @@ export function PeqModule({ module, blockIds, values, rackName, channelNames, ti
   return (
     <ModuleCard
       name={title}
+      on={bands.some((b) => b.on)}
+      onOnChange={(on) => {
+        linked.set(peqBypassPatch(bands, on, remembered));
+        setRemembered(on ? undefined : bands.filter((b) => b.on).map((b) => b.band));
+      }}
       badge={linked.stereo ? <ChannelPicker linked={linked} owner={owner} /> : undefined}
       expanded={open}
       onExpandedChange={setOpen}

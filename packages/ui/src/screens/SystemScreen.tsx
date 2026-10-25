@@ -8,6 +8,7 @@ import { anyMuted, blockById, channelName, inputStrips, moduleOf, outputIdsOf, r
 import { CrossoverModule } from '../modules/CrossoverModule.js';
 import { GenericModule } from '../modules/GenericModule.js';
 import type { ModuleViewProps } from '../modules/GenericModule.js';
+import { OutputPolarity } from '../modules/OutputPolarity.js';
 import { PeqModule } from '../modules/PeqModule.js';
 
 function ModuleView(props: ModuleViewProps) {
@@ -38,6 +39,9 @@ function RackView({ rack, setup, values }: { rack: Rack; setup: Setup; values: V
   const muted = anyMuted(values, outputs);
   const mixerId = rack.channels[0]?.mixerId;
   const mixerModule = mixerId === undefined ? undefined : moduleOf(setup, mixerId);
+  const invert = outputModule?.params.find((p) => p.key === 'invert');
+  // The band's Level module carries its output polarity, as in the ui-kit rack; without one, an Output card does.
+  const levelIndex = rack.modules.findLastIndex((m) => setup.modules.find((x) => x.blockType === m.blockType)?.params.some((p) => p.key === 'level'));
   const crossover = rack.crossover;
   const crossoverModules = (crossover?.blockIds[0] ?? []).map((id) => moduleOf(setup, id)).filter((m): m is ModuleInfo => m !== undefined);
   // Racks fed by this rack's crossover bands, so the curve uses their colors.
@@ -69,10 +73,18 @@ function RackView({ rack, setup, values }: { rack: Rack; setup: Setup; values: V
       {mixerId !== undefined && mixerModule && (
         <ModuleView module={mixerModule} blockIds={[mixerId]} values={values} rackName={rack.name} title="Sum" />
       )}
-      {rack.modules.map((m) => {
+      {rack.modules.map((m, i) => {
         const module = setup.modules.find((x) => x.blockType === m.blockType);
         return module ? (
-          <ModuleView key={m.blockIds.join('-')} module={module} blockIds={m.blockIds} values={values} rackName={rack.name} channelNames={names} />
+          <ModuleView
+            key={m.blockIds.join('-')}
+            module={module}
+            blockIds={m.blockIds}
+            values={values}
+            rackName={rack.name}
+            channelNames={names}
+            extra={i === levelIndex && invert && <OutputPolarity param={invert} outputIds={outputs} names={names} values={values} owner={rack.name} />}
+          />
         ) : (
           <UnknownModule key={m.blockIds.join('-')} blockIds={m.blockIds} setup={setup} />
         );
@@ -80,7 +92,9 @@ function RackView({ rack, setup, values }: { rack: Rack; setup: Setup; values: V
       {crossover && (
         <CrossoverModule blockIds={crossover.blockIds} modules={crossoverModules} values={values} rackName={rack.name} channelNames={names} bandColors={bandColors} />
       )}
-      {outputModule && <ModuleView module={outputModule} blockIds={outputs} values={values} rackName={rack.name} channelNames={names} title="Output" />}
+      {outputModule && levelIndex < 0 && (
+        <ModuleView module={outputModule} blockIds={outputs} values={values} rackName={rack.name} channelNames={names} title="Output" />
+      )}
     </RackCard>
   );
 }

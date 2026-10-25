@@ -98,11 +98,13 @@ export function ParamControl({ param: p, value, onChange, owner, label = p.label
       );
     case 'flags': {
       const flags = typeof value === 'object' ? value : {};
+      // A mute flag is the only one needed while tuning (Level's "off at minimum" is for remote controls).
+      const shown = p.flags.includes('mute') ? ['mute'] : p.flags;
       return (
         <div className="rl-cell">
           <span className="rl-label">{label}</span>
           <div className="app-row">
-            {p.flags.map((f) =>
+            {shown.map((f) =>
               f === 'mute' ? (
                 <MuteButton key={f} muted={flags[f] === true} onChange={(on) => onChange({ ...flags, [f]: on })} target={owner} />
               ) : (
