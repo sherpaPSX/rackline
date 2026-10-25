@@ -25,7 +25,9 @@ const MAX_FREQ = 20_000;
 const FREQ = logScale(MIN_FREQ, MAX_FREQ);
 
 const shortHz = (hz: number) => (hz >= 1000 ? `${Math.round(hz / 100) / 10}k` : String(Math.round(hz * 10) / 10));
-const shortDb = (db: number) => (Math.abs(db) < 0.05 ? '0' : `${db > 0 ? '+' : '−'}${Math.abs(db).toFixed(1)}`);
+// At most four characters ("−1.5", "+12") so neighbouring readouts never touch.
+const shortDb = (db: number) =>
+  Math.abs(db) < 0.05 ? '0' : `${db > 0 ? '+' : '−'}${Math.abs(db).toFixed(Math.abs(db) >= 9.95 ? 0 : 1)}`;
 
 /**
  * Fixed-frequency EQ: the summed curve with one fader per band, each fader

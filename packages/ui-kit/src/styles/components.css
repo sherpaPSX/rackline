@@ -10,7 +10,10 @@
 .rl-value {
   font: 400 12px/1.2 var(--rl-font-value);
   font-variant-numeric: tabular-nums;
-  min-width: 8ch;
+  /* Fixed width (fits "2000.0 ms") so changing values never shift the layout. */
+  box-sizing: content-box;
+  width: 9ch;
+  white-space: nowrap;
   text-align: center;
   color: var(--rl-fg);
 }
@@ -322,8 +325,10 @@
   align-items: center;
   justify-content: center;
   height: var(--rl-control-h);
-  min-width: 10ch;
+  /* Fixed width (fits "2000.0 ms") so changing values never shift the layout. */
+  width: calc(9ch + 2 * var(--rl-s2) + 2px);
   padding: 0 var(--rl-s2);
+  white-space: nowrap;
   font: 400 14px/1 var(--rl-font-value);
   font-variant-numeric: tabular-nums;
   color: var(--rl-fg);
@@ -335,7 +340,6 @@
   outline: none;
 }
 input.rl-vbox {
-  width: 10ch;
   cursor: text;
   border-color: var(--rl-accent);
 }
@@ -556,6 +560,8 @@ button.rl-module-name:hover {
   top: 0;
   transform: translateX(-50%);
   display: grid;
+  /* The column never grows with the readout, so faders keep their width. */
+  grid-template-columns: minmax(0, 1fr);
   justify-items: center;
   gap: var(--rl-s1);
 }
@@ -578,6 +584,7 @@ button.rl-module-name:hover {
   white-space: nowrap;
 }
 .rl-geq-value {
+  white-space: nowrap;
   font: 400 10px/1.2 var(--rl-font-value);
   font-variant-numeric: tabular-nums;
   color: var(--rl-fg);
@@ -598,7 +605,7 @@ button.rl-value:disabled {
   cursor: default;
 }
 .rl-value-input {
-  box-sizing: border-box;
+  box-sizing: content-box;
   width: 9ch;
   padding: 2px 4px;
   font: 400 12px/1.2 var(--rl-font-value);
