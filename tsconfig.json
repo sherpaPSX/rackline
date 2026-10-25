@@ -4,6 +4,7 @@
     { "path": "packages/protocol" },
     { "path": "packages/protocol/test" },
     { "path": "packages/model" },
+    { "path": "packages/model/test" },
     { "path": "packages/api" },
     { "path": "packages/server" },
     { "path": "packages/ui-kit" },
