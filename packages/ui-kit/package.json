@@ -5,8 +5,28 @@
   "description": "Rackline UI component library (React)",
   "license": "MIT",
   "type": "module",
+  "sideEffects": [
+    "*.css"
+  ],
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./styles.css": "./src/styles/index.css"
   },
-  "dependencies": {}
+  "scripts": {
+    "gallery": "node scripts/gallery.mjs"
+  },
+  "dependencies": {
+    "@fontsource/barlow-semi-condensed": "5.3.0",
+    "@fontsource/jetbrains-mono": "5.3.0"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "esbuild": "0.28.2",
+    "react": "19.3.0",
+    "react-dom": "19.3.0"
+  }
 }

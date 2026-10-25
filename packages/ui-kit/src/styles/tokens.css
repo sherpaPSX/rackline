@@ -1,0 +1,84 @@
+/*
+ * Rackline design tokens. Dark first; light theme via prefers-color-scheme or
+ * data-theme="light" on <html>. Color carries meaning, never decoration:
+ * accent = on/selected, warn = attention, danger = signal cut or at risk,
+ * band-1..6 = identity of a rack or crossover band.
+ */
+:root {
+  --rl-bg: #16181b;
+  --rl-panel: #1e2125;
+  --rl-well: #111316;
+  --rl-line: #2c3036;
+  --rl-fg: #e2e5e8;
+  --rl-dim: #a7aeb7;
+  --rl-accent: #5cc8d6;
+  --rl-warn: #e3b341;
+  --rl-danger: #e0605a;
+  --rl-on-accent: #0d1315;
+  --rl-on-danger: #ffffff;
+
+  --rl-band-1: #5cc8d6;
+  --rl-band-2: #d98a4e;
+  --rl-band-3: #7fb069;
+  --rl-band-4: #a68bd9;
+  --rl-band-5: #d9748f;
+  --rl-band-6: #c9b458;
+
+  --rl-font-label: 'Barlow Semi Condensed', 'Arial Narrow', system-ui, sans-serif;
+  --rl-font-value: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+
+  --rl-s1: 4px;
+  --rl-s2: 8px;
+  --rl-s3: 12px;
+  --rl-s4: 16px;
+  --rl-s5: 24px;
+  --rl-s6: 32px;
+  --rl-radius: 3px;
+  --rl-control-h: 30px;
+  --rl-touch-h: 44px;
+  --rl-fader-h: 160px;
+
+  color-scheme: dark;
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme='dark']) {
+    --rl-bg: #e6e8ea;
+    --rl-panel: #f3f4f5;
+    --rl-well: #d4d7db;
+    --rl-line: #c2c6cb;
+    --rl-fg: #15181b;
+    --rl-dim: #4a5159;
+    --rl-accent: #1c8fa0;
+    --rl-warn: #a8780f;
+    --rl-danger: #c13f39;
+    --rl-on-accent: #ffffff;
+    --rl-band-1: #1c8fa0;
+    --rl-band-2: #c06f30;
+    --rl-band-3: #5a9145;
+    --rl-band-4: #7f62bd;
+    --rl-band-5: #b84f6c;
+    --rl-band-6: #8f7d1f;
+    color-scheme: light;
+  }
+}
+
+:root[data-theme='light'] {
+  --rl-bg: #e6e8ea;
+  --rl-panel: #f3f4f5;
+  --rl-well: #d4d7db;
+  --rl-line: #c2c6cb;
+  --rl-fg: #15181b;
+  --rl-dim: #4a5159;
+  --rl-accent: #1c8fa0;
+  --rl-warn: #a8780f;
+  --rl-danger: #c13f39;
+  --rl-on-accent: #ffffff;
+  --rl-band-1: #1c8fa0;
+  --rl-band-2: #c06f30;
+  --rl-band-3: #5a9145;
+  --rl-band-4: #7f62bd;
+  --rl-band-5: #b84f6c;
+  --rl-band-6: #8f7d1f;
+  color-scheme: light;
+}
