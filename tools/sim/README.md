@@ -19,5 +19,16 @@ python3 -I tools/sim/fake_rpm.py      # data and log in tools/sim/.data/
 - `parse_cfg.py FILE` prints the block table of a config file; it is the
   reference for the TypeScript parser in `@rackline/protocol`.
 
+## Rackline core against the simulator
+
+```sh
+python3 -I tools/sim/fake_rpm.py
+pnpm --filter @rackline/server start --connect 127.0.0.1
+```
+
+The core connects over loopback (no alias needed), downloads `.data/tftp/file`
+(put a configuration there first, e.g. one uploaded by Drag Net), reads all
+values and serves the WebSocket API on `ws://127.0.0.1:5180`.
+
 Running Drag Net itself under Wine is described in the `rpm-simulator` skill.
 Never commit Drag Net or any Rane files.

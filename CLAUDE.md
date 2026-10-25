@@ -15,6 +15,7 @@ pnpm install
 pnpm check          # typecheck + lint + test; must pass before every PR
 pnpm test:watch
 python3 -I tools/sim/fake_rpm.py   # fake RPM 26z, see tools/sim/README.md
+pnpm --filter @rackline/server start --connect 127.0.0.1   # core on ws://127.0.0.1:5180
 ```
 
 ## Packages and boundaries
