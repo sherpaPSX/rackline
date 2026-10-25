@@ -3,7 +3,7 @@ import { useState } from 'react';
 import type { ReactNode } from 'react';
 import {
   EqCurve,
-  Fader,
+  GraphicEq,
   Icon,
   Knob,
   ModuleCard,
@@ -93,30 +93,16 @@ export function PeqSpecimen() {
 }
 
 const OCTAVES = [63, 125, 250, 500, 1000, 2000, 4000, 8000, 16_000];
-const GEQ_GAIN = linearScale(-12, 12);
 
 export function SystemEqSpecimen({ touch }: { touch: boolean }) {
   const [gains, setGains] = useState([2, 1, 0, -1.5, 0, 0.5, -2, 1, 2.5]);
-  const set = (i: number, g: number) => setGains((gs) => gs.map((x, j) => (j === i ? Math.round(g * 10) / 10 : x)));
-  const filters: Filter[] = OCTAVES.map((freq, i) => ({ kind: 'peak', freq, gainDb: gains[i] ?? 0, q: 1.41 }));
   return (
-    <div className="stack">
-      <EqCurve
-        label="System EQ response"
-        dbRange={[-12, 12]}
-        lines={[{ id: 'sum', filters, fill: true }]}
-        handles={OCTAVES.map((freq, i) => ({ id: String(i), freq, gainDb: gains[i] ?? 0, label: '', name: formatHz(freq), fixedFreq: true }))}
-        onMove={(id, m) => set(Number(id), m.gainDb)}
-      />
-      <div className="geq">
-        {OCTAVES.map((f, i) => (
-          <div className="geq-band" key={f}>
-            <Fader label={`System EQ ${formatHz(f)}`} valueDb={gains[i] ?? 0} onChange={(g) => set(i, g)} scale={GEQ_GAIN} touch={touch} />
-            <span className="rl-label">{f >= 1000 ? `${f / 1000}k` : f}</span>
-          </div>
-        ))}
-      </div>
-    </div>
+    <GraphicEq
+      label="System EQ"
+      bands={OCTAVES.map((freq, i) => ({ freq, gainDb: gains[i] ?? 0 }))}
+      onChange={(i, g) => setGains((gs) => gs.map((x, j) => (j === i ? g : x)))}
+      touch={touch}
+    />
   );
 }
 

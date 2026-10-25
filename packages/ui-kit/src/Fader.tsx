@@ -12,11 +12,13 @@ export interface FaderProps {
   defaultDb?: number;
   scale?: ValueScale;
   /** Larger cap for touch screens (44 px target). */
-  touch?: boolean;
+  touch?: boolean | undefined;
   color?: string;
   /** Usually a `Meter`, drawn right of the fader at the same height. */
   meter?: ReactNode;
   disabled?: boolean;
+  /** Hide the dB readout when the caller shows the value elsewhere. */
+  hideValue?: boolean;
 }
 
 const DEFAULT_SCALE = faderScale();
@@ -31,6 +33,7 @@ export function Fader({
   color,
   meter,
   disabled = false,
+  hideValue = false,
 }: FaderProps) {
   const { active, position, props } = useDragValue<HTMLDivElement>(valueDb, onChange, {
     scale,
@@ -64,9 +67,11 @@ export function Fader({
         </div>
         {meter}
       </div>
-      <span className="rl-value" data-active={active || undefined}>
-        {text}
-      </span>
+      {!hideValue && (
+        <span className="rl-value" data-active={active || undefined}>
+          {text}
+        </span>
+      )}
     </div>
   );
 }

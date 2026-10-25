@@ -47,9 +47,6 @@ h2::after{content:"";flex:1;height:1px;background:var(--rl-line)}
 .strips{display:flex;flex-wrap:wrap;gap:var(--rl-s2)}
 .strip{display:grid;justify-items:center;gap:var(--rl-s3);padding:var(--rl-s3) var(--rl-s2);background:var(--rl-bg);border:1px solid var(--rl-line);border-top:3px solid;border-radius:var(--rl-radius);width:112px}
 .stack{display:grid;gap:var(--rl-s4)}
-.geq{display:grid;grid-template-columns:repeat(9,minmax(0,1fr));gap:var(--rl-s1);justify-items:center}
-.geq-band{display:grid;justify-items:center;gap:var(--rl-s1)}
-.geq .rl-fader-row+.rl-value{font-size:11px;min-width:0}
 .mini-curve{width:200px}
 .strip-name{font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
 </style>

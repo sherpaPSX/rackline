@@ -484,3 +484,43 @@ input.rl-vbox {
 .rl-module[data-off] .rl-module-name {
   color: var(--rl-dim);
 }
+
+/* Graphic EQ: faders aligned under their points on the curve */
+.rl-geq {
+  display: grid;
+  gap: var(--rl-s3);
+}
+.rl-geq-faders {
+  position: relative;
+  height: calc(var(--rl-fader-h) + 44px);
+}
+.rl-geq-band {
+  position: absolute;
+  top: 0;
+  /* Slightly less than one octave of the plot, so neighbours never overlap. */
+  width: calc((100% - 44px) * 0.09);
+  transform: translateX(-50%);
+  display: grid;
+  justify-items: center;
+  gap: var(--rl-s1);
+}
+.rl-geq-band > .rl-cell {
+  width: 100%;
+  justify-items: stretch;
+}
+.rl-geq .rl-fader-row {
+  justify-content: center;
+}
+.rl-geq .rl-fader {
+  flex: 0 1 36px;
+  width: auto;
+  min-width: 0;
+}
+.rl-geq .rl-fader[data-touch] {
+  flex-basis: 48px;
+}
+.rl-geq-value {
+  font: 400 10px/1.2 var(--rl-font-value);
+  font-variant-numeric: tabular-nums;
+  color: var(--rl-fg);
+}

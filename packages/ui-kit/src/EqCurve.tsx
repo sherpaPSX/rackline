@@ -50,7 +50,8 @@ export interface EqCurveProps {
   compact?: boolean;
 }
 
-const PAD = { left: 34, right: 10, top: 10, bottom: 20 };
+/** Plot insets in px; exported so controls below the plot can line up with its frequency axis. */
+export const EQ_PLOT_PAD = { left: 34, right: 10, top: 10, bottom: 20 };
 const PAD_COMPACT = { left: 0, right: 0, top: 2, bottom: 2 };
 const POINTS = 240;
 /** Width used before the first measurement (and for server rendering). */
@@ -120,7 +121,7 @@ export function EqCurve({
   const dragging = useRef<string | null>(null);
   const W = useWidth(svg);
   const H = height ?? (compact ? 56 : 220);
-  const pad = compact ? PAD_COMPACT : PAD;
+  const pad = compact ? PAD_COMPACT : EQ_PLOT_PAD;
   const plotW = W - pad.left - pad.right;
   const plotH = H - pad.top - pad.bottom;
   const [minDb, maxDb] = dbRange;
