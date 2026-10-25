@@ -26,6 +26,8 @@ export interface EqHandle {
   name: string;
   /** Only gain can be dragged (fixed-frequency graphic EQ). */
   fixedFreq?: boolean | undefined;
+  /** Band switched off: drawn dim and dashed, still movable. */
+  off?: boolean | undefined;
 }
 
 export interface HandleMove {
@@ -240,12 +242,13 @@ export function EqCurve({
       {handles.map((h) => {
         const cx = x(h.freq);
         const cy = y(h.gainDb);
-        const text = `${formatHz(h.freq)}, ${formatDb(h.gainDb)}`;
+        const text = `${formatHz(h.freq)}, ${formatDb(h.gainDb)}${h.off ? ', off' : ''}`;
         return (
           <g
             key={h.id}
             className="rl-eq-handle"
             data-selected={h.id === selectedId || undefined}
+            data-off={h.off || undefined}
             tabIndex={interactive ? 0 : undefined}
             role={interactive ? 'slider' : undefined}
             aria-label={h.name}

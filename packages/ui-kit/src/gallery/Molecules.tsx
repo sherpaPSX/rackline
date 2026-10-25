@@ -23,6 +23,7 @@ import type { EqCurveLine, Filter } from '../index.js';
 type BandType = 'peak' | 'lowShelf' | 'highShelf';
 
 interface Band {
+  on: boolean;
   type: BandType;
   freq: number;
   gainDb: number;
@@ -38,6 +39,8 @@ function limiterInput(): number {
   return -10 + 5 * Math.sin(t * 1.1) + 4 * Math.abs(Math.sin(t * 5.3));
 }
 
+const active = (bands: readonly Band[]) => bands.filter((b) => b.on).map(toFilter);
+
 const FREQ = logScale(20, 20_000);
 /** RPM Level block range; 0 dB stays at 12 o'clock. */
 const LEVEL = centeredScale(-30, 16);
@@ -46,11 +49,15 @@ const Q = logScale(0.3, 16);
 
 function usePeq() {
   const [bands, setBands] = useState<Band[]>([
-    { type: 'lowShelf', freq: 80, gainDb: 3, q: 0.7 },
-    { type: 'peak', freq: 250, gainDb: -4, q: 2 },
-    { type: 'peak', freq: 1200, gainDb: 1.5, q: 1.4 },
-    { type: 'peak', freq: 3500, gainDb: -2.5, q: 3 },
-    { type: 'highShelf', freq: 10_000, gainDb: 2, q: 0.7 },
+    { on: true, type: 'lowShelf', freq: 80, gainDb: 3, q: 0.7 },
+    { on: true, type: 'peak', freq: 250, gainDb: -4, q: 2 },
+    { on: true, type: 'peak', freq: 1200, gainDb: 1.5, q: 1.4 },
+    { on: true, type: 'peak', freq: 3500, gainDb: -2.5, q: 3 },
+    { on: true, type: 'highShelf', freq: 10_000, gainDb: 2, q: 0.7 },
+    // The band count is fixed by the DSP layout; spare bands stay off until needed.
+    { on: false, type: 'peak', freq: 500, gainDb: 0, q: 1.4 },
+    { on: false, type: 'peak', freq: 2000, gainDb: 0, q: 1.4 },
+    { on: false, type: 'peak', freq: 6000, gainDb: 0, q: 1.4 },
   ]);
   const [selected, setSelected] = useState(1);
   const update = (i: number, patch: Partial<Band>) => setBands((bs) => bs.map((b, j) => (j === i ? { ...b, ...patch } : b)));
@@ -63,20 +70,39 @@ function PeqEditor({ peq, on = true, side = false }: { peq: ReturnType<typeof us
   const band = bands[selected];
   const lines: EqCurveLine[] = on
     ? [
-        ...(band ? [{ id: 'band', filters: [toFilter(band)], color: 'var(--rl-warn)', secondary: true }] : []),
-        { id: 'total', filters: bands.map(toFilter), fill: true },
+        ...(band?.on ? [{ id: 'band', filters: [toFilter(band)], color: 'var(--rl-warn)', secondary: true }] : []),
+        { id: 'total', filters: active(bands), fill: true },
       ]
     : [{ id: 'flat', filters: [] }];
   return (
     <div className={side ? 'peq-side' : 'stack'}>
-      <EqCurve
-        label="Parametric EQ response"
-        lines={lines}
-        handles={bands.map((b, i) => ({ id: String(i), freq: b.freq, gainDb: b.gainDb, label: String(i + 1), name: `Filter ${i + 1}` }))}
-        selectedId={String(selected)}
-        onSelect={(id) => setSelected(Number(id))}
-        onMove={(id, m) => update(Number(id), m)}
-      />
+      <div className="peq-graph">
+        <EqCurve
+          label="Parametric EQ response"
+          lines={lines}
+          handles={bands.map((b, i) => ({ id: String(i), freq: b.freq, gainDb: b.gainDb, label: String(i + 1), name: `Filter ${i + 1}`, off: !b.on }))}
+          selectedId={String(selected)}
+          onSelect={(id) => setSelected(Number(id))}
+          onMove={(id, m) => update(Number(id), m)}
+        />
+        <div className="peq-bands" role="group" aria-label="Filters on or off">
+          {bands.map((b, i) => (
+            <ToggleButton
+              key={i}
+              square
+              pressed={b.on}
+              aria-label={`Filter ${i + 1} on`}
+              data-selected={i === selected || undefined}
+              onChange={(v) => {
+                update(i, { on: v });
+                setSelected(i);
+              }}
+            >
+              {i + 1}
+            </ToggleButton>
+          ))}
+        </div>
+      </div>
       {band && (
         <div className={side ? 'peq-controls' : 'row wide'}>
           <Segmented
@@ -178,7 +204,7 @@ export function RackSpecimen({ touch }: { touch: boolean }) {
         onExpandedChange={setPeqOpen}
         summary={
           <div className="mini-curve">
-            <EqCurve compact label="Speaker PEQ" lines={[{ id: 't', filters: on['peq'] ? peq.bands.map(toFilter) : [], fill: true }]} />
+            <EqCurve compact label="Speaker PEQ" lines={[{ id: 't', filters: on['peq'] ? active(peq.bands) : [], fill: true }]} />
           </div>
         }
       >

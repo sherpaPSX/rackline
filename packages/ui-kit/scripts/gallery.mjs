@@ -52,7 +52,11 @@ h2::after{content:"";flex:1;height:1px;background:var(--rl-line)}
 .lim-meters{display:flex;gap:var(--rl-s2);--rl-meter-h:120px}
 .lim-meters .rl-meter{width:8px}
 .peq-side{display:flex;flex-wrap:wrap;gap:var(--rl-s3) var(--rl-s4);align-items:center}
-.peq-side>.rl-eq{flex:1 1 280px;min-width:0}
+.peq-side>.peq-graph{flex:1 1 280px;min-width:0}
+.peq-graph{display:grid;gap:var(--rl-s2)}
+.peq-bands{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,36px);gap:3px;padding-left:34px}
+.peq-bands .rl-btn{min-width:0;padding:0}
+.peq-bands .rl-btn[data-selected]{outline:2px solid var(--rl-fg);outline-offset:1px}
 .peq-controls{display:grid;grid-template-columns:repeat(2,auto);gap:var(--rl-s3) var(--rl-s4);justify-items:center}
 .peq-controls>.rl-seg{grid-column:1/-1}
 @media (max-width:600px){.peq-controls{grid-template-columns:repeat(3,auto);flex:1;justify-content:space-around}}

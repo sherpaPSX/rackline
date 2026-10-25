@@ -67,6 +67,19 @@ describe('EqCurve and cards', () => {
     expect(html).toContain(`aria-valuetext="250 Hz, ${formatDb(-4)}"`);
   });
 
+  it('EqCurve marks a switched-off handle', () => {
+    const html = renderToStaticMarkup(
+      createElement(EqCurve, {
+        label: 'PEQ',
+        lines: [],
+        handles: [{ id: '6', freq: 500, gainDb: 0, label: '6', name: 'Filter 6', off: true }],
+        onMove: noop,
+      }),
+    );
+    expect(html).toContain('data-off="true"');
+    expect(html).toContain(', off"');
+  });
+
   it('RackCard hides its modules when collapsed', () => {
     const rack = (expanded: boolean) =>
       renderToStaticMarkup(

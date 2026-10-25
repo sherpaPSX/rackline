@@ -412,6 +412,13 @@ input.rl-vbox {
 .rl-eq-handle[data-selected] text {
   fill: var(--rl-on-accent);
 }
+.rl-eq-handle[data-off] {
+  opacity: 0.5;
+}
+.rl-eq-handle[data-off] circle {
+  stroke: var(--rl-dim);
+  stroke-dasharray: 3 2;
+}
 .rl-eq-handle:focus-visible circle {
   stroke: var(--rl-fg);
   stroke-width: 3;
