@@ -230,24 +230,30 @@ block table).
 
 ### Conversions
 
+Ranges below come from the Drag Net 4.2 help and the RPM 26z data sheet;
+the registry in `@rackline/model` clamps to them.
+
 | Quantity | Conversion |
 |---|---|
-| Levels (Mixer, Level, Output Trim, Input User Trim, Generator Level, Limiter Threshold) | dB = (raw − 192) / 2, raw 0 = −96 dB (Level: Off). Data sheet ranges: output trim +16 … −30 dB in ½ dB steps, user line gain ±15 dB in 1 dB steps |
+| Levels (Mixer, Level, Output Trim, Input User Trim, Generator Level, Limiter Threshold) | dB = (raw − 192) / 2, raw 0 = −96 dB (Level: Off). Ranges: Level, output trim, mixer output −30 … +16 dB; mixer input −30 … 0 dB; generator −40 … 0 dB; limiter threshold −40 … 0 dBFS; user line gain ±15 dB |
 | Digital/analog input trim | dB = raw − 96 (0 = −100 dB); range +16 … −20 dB, 1 dB steps (data sheet) |
-| Compressor threshold | dBFS = raw − 96, max 32 |
-| PEQ gain | dB = (raw − 120) / 4 |
-| PEQ bandwidth | octaves = 0.025 · (raw + 1) |
-| Frequency (PEQ, crossover, generator) | raw = Hz (2 bytes) |
+| Compressor threshold | dBFS = raw − 96, max 32 (help says −40 … 0 dBFS in ½ dB steps: conflict, unresolved) |
+| PEQ gain | dB = (raw − 120) / 4, −15 … +12 dB |
+| PEQ bandwidth | octaves = 0.025 · (raw + 1); raw 12 = default 0.325 oct. Help says 200 non-linear steps 0.015 … 4 oct and Lukas's config has raw 206 (5.2 oct): conflict, unresolved |
+| Frequency (PEQ, crossover, generator) | raw = Hz (2 bytes), 20 … 20 000 Hz; Horn EQ 2 … 5 kHz |
 | Delay | ms = raw / 48 (samples at 48 kHz, 2 bytes) |
 | Attack (0–15) | 0.5, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 25, 50, 75, 100 ms |
 | Release (0–14) | 1, 5, 10, 25, 50, 75, 100, 250, 500, 750, 1000, 2000, 3000, 4000, 5000 ms |
 | Ratio (0–28) | 1.0, 1.1 … 1.9, 2, 2.2, 2.4, 2.6, 2.8, 3, 3.25, 3.5, 3.75, 4, 4.5, 5, 6, 8, 10, 12, 15, 20, ∞ : 1 |
 
-**Enums:** PEQ type 0 Band, 1 Low Shelf, 2 Hi Shelf, 3 (used in Lukas's
-presets, name unverified; probably Low Cut), 4 Hi Cut, 5 Horn EQ,
-6 All-Pass. Crossover type 0 Off, 1 LR12, 2 LR24, 4 BW18, 5 BW24, 6 Bessel12,
-8 Bessel24. Input gain select 0 Pro, 1 +12 dB Consumer, 2 User. Generator
-0 Pink, 1 Sine. Level Mute/Opt bit0 mute, bit1 off at minimum.
+**Enums:** PEQ type 0 Band, 1 Low Shelf, 2 Hi Shelf, 3 Low Cut (BW 2nd
+order), 4 Hi Cut (BW 2nd order), 5 Horn EQ, 6 All-Pass 1st order, 7 All-Pass
+2nd order. Crossover type 0 Off, 1 LR12, 2 LR24, 3 BW12, 4 BW18, 5 BW24,
+6 Bessel12, 7 Bessel18, 8 Bessel24, 9 1st order. Codes 3 and 7 (PEQ) and
+3, 7, 9 (crossover) come from the order of Drag Net's filter type lists,
+which matches every simulator-verified code; not verified directly. Input
+gain select 0 Pro, 1 +12 dB Consumer, 2 User. Generator 0 Pink, 1 Sine.
+Level Mute/Opt bit0 mute, bit1 off at minimum.
 
 ### Indexes
 
@@ -270,8 +276,11 @@ idx 2 (LowUpper: type 3, freq 4, invert 5?; MidLower 8; MidUpper 12;
 HighLower 16), outputs in order High, Mid, Low. 0x0601 = 2-band PEQ,
 0x0603 = 4-band PEQ (same 5-per-band layout).
 
-- **PEQ block types:** 0x0600 + filters − 1 (seen: 2, 4 and 9 filters). The
-  other sizes (1–15) are assumed to follow the pattern (unverified).
+- **PEQ block types:** 0x0600 + filters − 1 (seen: 2, 3, 4, 5, 6, 8, 9, 12
+  and 15 filters in Lukas's config and the Drag Net templates).
+- **Other block types in the Drag Net templates** (parameters not mapped
+  yet): 0x0201 Mix 3×1, 0x0210 Select 1 of 2, 0x0211 Select 1 of 3,
+  0x0817 Matrix Mixer 6×6.
 - **2-way output order:** High, Low, inferred from Lukas's config (the
   second output, low-pass 120 Hz, feeds SUB FLEX; the first is unconnected).
 - **Unknown indexes:** the index before each crossover filter group (2-way:

@@ -24,27 +24,43 @@ const linear = (unit: Unit, offset: number, divisor: number, rawMin: number, raw
 });
 
 /**
- * Mixer, Level, Output Trim, Input User Trim, Generator Level, Limiter
- * Threshold: dB = (raw − 192) / 2, raw 0 = −96 dB. The upper end is the byte
- * range; the limits Drag Net offers are unverified.
+ * Levels (mixer, Level block, output trim, input user gain, generator level,
+ * limiter threshold): dB = (raw − 192) / 2, raw 0 = −96 dB. Each parameter
+ * has its own range from the Drag Net help, in ½ dB steps.
  */
-export const LEVEL = linear('dB', 192, 2, 0, 255);
+export const levelRange = (minDb: number, maxDb: number, unit: Unit = 'dB'): Linear =>
+  linear(unit, 192, 2, 192 + 2 * minDb, 192 + 2 * maxDb);
+
+/** Level block, mixer output level, output trim: −30 … +16 dB. */
+export const LEVEL = levelRange(-30, 16);
+/** Mixer input level: −30 … 0 dB. */
+export const MIX_INPUT_LEVEL = levelRange(-30, 0);
+/** Signal generator level: −40 … 0 dB. */
+export const GENERATOR_LEVEL = levelRange(-40, 0);
+/** Limiter threshold: −40 … 0 dBFS. */
+export const LIMITER_THRESHOLD = levelRange(-40, 0, 'dBFS');
 /**
  * Analog/digital input trim: dB = raw − 96. The RPM 26z data sheet gives
  * +16 to −20 dB in 1 dB steps (raw 76..112); Drag Net shows raw 0 as −100 dB.
  */
 export const INPUT_TRIM = linear('dB', 96, 1, 76, 112);
-/** Analog input user-defined line gain: ±15 dB in 1 dB steps (data sheet), stored like LEVEL. */
-export const USER_GAIN = linear('dB', 192, 2, 162, 222);
-/** Output trim: +16 to −30 dB in ½ dB steps (data sheet), stored like LEVEL. */
-export const OUTPUT_TRIM = linear('dB', 192, 2, 132, 224);
-/** Compressor threshold: dBFS = raw − 96, max 32 dBFS. */
+/** Analog input user-defined line gain: ±15 dB (data sheet). */
+export const USER_GAIN = levelRange(-15, 15);
+/**
+ * Compressor threshold: dBFS = raw − 96, max 32 dBFS (simulator). The Drag
+ * Net help says −40 … 0 dBFS in ½ dB steps, which does not fit this
+ * conversion; unresolved, so the range stays wide.
+ */
 export const COMPRESSOR_THRESHOLD = linear('dBFS', 96, 1, 0, 128);
-/** PEQ gain: dB = (raw − 120) / 4. Limits unverified (byte range). */
-export const PEQ_GAIN = linear('dB', 120, 4, 0, 255);
-/** PEQ bandwidth: octaves = 0.025 · (raw + 1). */
+/** PEQ gain: dB = (raw − 120) / 4, −15 … +12 dB in ¼ dB steps (Drag Net help). */
+export const PEQ_GAIN = linear('dB', 120, 4, 60, 168);
+/**
+ * PEQ bandwidth: octaves = 0.025 · (raw + 1) (simulator; raw 12 = the
+ * default 0.325 oct). The Drag Net help describes 200 non-linear steps from
+ * 0.015 to 4 octaves, which does not fit; unresolved, so the range stays wide.
+ */
 export const PEQ_BANDWIDTH = linear('oct', -1, 40, 0, 255);
-/** Frequency of PEQ, crossover and generator: raw = Hz. */
+/** Frequency of PEQ, crossover and generator: raw = Hz, 20 … 20 000 Hz (Horn EQ filters: 2 … 5 kHz). */
 export const FREQUENCY = linear('Hz', 0, 1, 20, 20000);
 /** Delay: raw = samples at 48 kHz, max 1365 ms. */
 export const DELAY = linear('ms', 0, 48, 0, 65520);
