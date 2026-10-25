@@ -8,6 +8,7 @@
     { "path": "packages/api" },
     { "path": "packages/api/test" },
     { "path": "packages/server" },
+    { "path": "packages/server/test" },
     { "path": "packages/ui-kit" },
     { "path": "packages/ui" },
     { "path": "packages/desktop" }
