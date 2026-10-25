@@ -97,6 +97,26 @@ Every message is JSON validated by a zod schema on both sides
 - There is no message that changes the DSP layout or the device's network
   settings.
 
+## Core (`@rackline/server`)
+
+- `Core` holds the state and applies intents. It talks to the device through
+  a small `Device` interface (`openRpm` on real sockets, an in-memory fake in
+  tests).
+- **Connect:** read device info, download the configuration over TFTP, build
+  racks, read every known parameter of every block and the current preset.
+- **Set a parameter:** the value is rounded and clamped by the registry,
+  broadcast at once and written to the device at most every 30 ms per
+  parameter (the last value always goes out). A failed write marks the device
+  unreachable; the next reload corrects any value that did not stick.
+- **Recall a preset:** write `04 01 fc00`, then read all values back. With an
+  `.r26` open and no device, the file's preset values are applied instead.
+- **Liveness:** every 2 s the core reads the current preset. No reply →
+  `unreachable` (state kept); first reply after that → full reload; a preset
+  changed elsewhere → values re-read.
+- `ControlClient` refuses every system-object write except the preset
+  recall, so network settings (`fe03`) cannot be written from the core.
+- Not yet: meters, storing presets, saving `.r26` files.
+
 ## Tooling
 
 - TypeScript (strict), pnpm workspaces, ESLint (typescript-eslint strict), Vitest.
