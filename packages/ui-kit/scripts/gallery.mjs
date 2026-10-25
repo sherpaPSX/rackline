@@ -1,3 +1,4 @@
+/* global URL, console */
 // Builds the ui-kit specimen page into one self-contained file: dist/gallery.html
 import { build } from 'esbuild';
 import { mkdir, writeFile } from 'node:fs/promises';
