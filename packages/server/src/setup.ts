@@ -1,4 +1,4 @@
-import type { ModuleInfo, ParamInfo, ParamValue, Setup, Values } from '@rackline/api';
+import type { ModuleInfo, ParamInfo, ParamValue, Setup, StepValue, Values } from '@rackline/api';
 import {
   buildRacks,
   decodeParam,
@@ -62,6 +62,8 @@ export function moduleInfo(def: ModuleDef): ModuleInfo {
   };
 }
 
+const stepValue = (s: number): StepValue => (Number.isFinite(s) ? s : s > 0 ? 'inf' : '-inf');
+
 function paramInfo(param: ParamDef): ParamInfo {
   const base = { key: param.key, label: param.label };
   switch (param.kind) {
@@ -70,7 +72,7 @@ function paramInfo(param: ParamDef): ParamInfo {
       return { ...base, kind: 'number', unit: c.unit, min: fromRaw(c, c.rawMin), max: fromRaw(c, c.rawMax), step: 1 / c.divisor };
     }
     case 'steps':
-      return { ...base, kind: 'steps', unit: param.unit, steps: param.steps.map((s) => (Number.isFinite(s) ? s : 'inf')) };
+      return { ...base, kind: 'steps', unit: param.unit, steps: param.steps.map(stepValue) };
     case 'enum':
       return { ...base, kind: 'enum', options: Object.entries(param.options).map(([value, label]) => ({ value: Number(value), label })) };
     case 'bool':

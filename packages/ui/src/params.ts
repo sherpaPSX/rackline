@@ -34,6 +34,10 @@ export function formatNumber(unit: NumberParam['unit'], value: number, step = 0.
       return formatHz(value);
     case 'ms':
       return formatMs(value);
+    case 's':
+      return `${value} s`;
+    case 'dB/s':
+      return `${value} dB/s`;
     case 'oct':
       return `${value.toFixed(2)} oct`;
     case 'ratio':
@@ -44,6 +48,7 @@ export function formatNumber(unit: NumberParam['unit'], value: number, step = 0.
 function formatStep(unit: StepsParam['unit'], step: StepValue | undefined): string {
   if (step === undefined) return '–';
   if (step === 'inf') return unit === 'ratio' ? '∞:1' : '∞';
+  if (step === '-inf') return 'Off';
   return formatNumber(unit, step);
 }
 

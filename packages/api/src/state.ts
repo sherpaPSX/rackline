@@ -14,11 +14,14 @@ import { z } from 'zod';
 export const ParamValue = z.union([z.number(), z.boolean(), z.record(z.string(), z.boolean())]);
 export type ParamValue = z.infer<typeof ParamValue>;
 
-export const Unit = z.enum(['dB', 'dBFS', 'Hz', 'ms', 'oct', 'ratio']);
+export const Unit = z.enum(['dB', 'dBFS', 'Hz', 'ms', 's', 'dB/s', 'oct', 'ratio']);
 export type Unit = z.infer<typeof Unit>;
 
-/** `inf` stands for ∞ (compressor ratio), which JSON cannot carry as a number. */
-export const StepValue = z.union([z.number(), z.literal('inf')]);
+/**
+ * `inf` stands for ∞ (compressor ratio, AGC hold) and `-inf` for Off (graphic
+ * EQ tone level), which JSON cannot carry as numbers.
+ */
+export const StepValue = z.union([z.number(), z.literal('inf'), z.literal('-inf')]);
 export type StepValue = z.infer<typeof StepValue>;
 
 const paramBase = {

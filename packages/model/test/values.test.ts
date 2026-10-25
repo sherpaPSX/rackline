@@ -117,7 +117,8 @@ describe('encodeParam', () => {
     expect(encodeParam(param(0x0200, 'input1Level'), 6)).toEqual({ ok: true, value: 192 });
     expect(encodeParam(param(0x0700, 'level'), -50)).toEqual({ ok: true, value: 112 });
     expect(encodeParam(param(0x0501, 'threshold'), -45)).toEqual({ ok: true, value: 112 });
-    expect(encodeParam(param(0x0500, 'threshold'), 40)).toEqual({ ok: true, value: 128 });
+    expect(encodeParam(param(0x0500, 'threshold'), 40)).toEqual({ ok: true, value: 96 });
+    expect(encodeParam(param(0x0500, 'threshold'), -45)).toEqual({ ok: true, value: 56 });
     // Data sheet ranges: input trim +16..−20 dB, output trim +16..−30 dB, user gain ±15 dB.
     expect(encodeParam(param(0x0105, 'trim'), 30)).toEqual({ ok: true, value: 112 });
     expect(encodeParam(param(0x0103, 'trim'), -100)).toEqual({ ok: true, value: 76 });
