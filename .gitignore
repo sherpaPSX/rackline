@@ -1,0 +1,15 @@
+node_modules/
+dist/
+out/
+release/
+*.tsbuildinfo
+coverage/
+.DS_Store
+.env*
+# simulator runtime data
+tools/sim/.data/
+# never commit Rane software (installers, binaries)
+*.exe
+*.dll
+*.msi
+dn*.zip
