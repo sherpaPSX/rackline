@@ -235,7 +235,7 @@ the registry in `@rackline/model` clamps to them.
 
 | Quantity | Conversion |
 |---|---|
-| Levels (Mixer, Level, Output Trim, Input User Trim, Generator Level, Limiter Threshold) | dB = (raw − 192) / 2, raw 0 = −96 dB (Level: Off). Ranges: Level, output trim, mixer output −30 … +16 dB; mixer input −30 … 0 dB; generator −40 … 0 dB; limiter threshold −40 … 0 dBFS; user line gain ±15 dB |
+| Levels (Mixer, Matrix, Level, Output Trim, Input User Trim, Generator Level, Limiter Threshold) | dB = (raw − 192) / 2, raw 0 = −96 dB (Level: Off). Ranges: Level, output trim, mixer output −30 … +16 dB; mixer input and matrix crosspoint −30 … 0 dB; matrix input −60 … 0 dB (help ranges; Drag Net shows −96 … −88.5 dB for raw 0 … 15 on every matrix and mixer level); generator −40 … 0 dB; limiter threshold −40 … 0 dBFS; user line gain ±15 dB |
 | Digital/analog input trim | dB = raw − 96 (0 = −100 dB); range +16 … −20 dB, 1 dB steps (data sheet) |
 | Compressor threshold, S-C compressor threshold and knee, AGC target and threshold, noise compensator gains, threshold and coupling | dB(FS) = raw − 96 in 1 dB steps (raw 0 shown as −100). Drag Net's own display for raw 0..127 confirms 1 dB steps; the help's "½ dB" for the compressor threshold is wrong. Compressor threshold −40 … 0 dBFS, S-C knee 0 … 20 dB, AGC target −50 … −5 dBFS, AGC threshold −30 … 0 dB (help) |
 | Graphic EQ band, input and output gain | dB = (raw − 120) / 4, ±12 dB (raw 72..168) |
@@ -272,7 +272,10 @@ Level Mute/Opt bit0 mute, bit1 off at minimum.
 | Analog Input 0x0105 | 2 Gain Sel, 3 User Trim, 4 Trim, 5 Mute |
 | Analog Output 0x0106 | 2 Trim, 3 Mute, 4 Invert |
 | Level 0x0180 | 2 Level, 3 Mute/Opt, 5 Min, 6 Max |
-| Mixer 2×1 0x0200 | 2/4 input level, 3/5 mute, 6 output, 7 output mute |
+| Mix N×1 0x0200 + N − 2 | input k: 2k level, 2k + 1 mute; 2N + 2 output level, 2N + 3 output mute (sampled N = 2, 3, 10) |
+| Select 1 of N 0x0210 + N − 2 | 2 selected input − 1 (sampled N = 2, 3, 10) |
+| Matrix N×N 0x0801 (2×2), 0x0817 (6×6) | 2 … N + 1 slider view per output, N + 2 slider view inputs; crosspoints output-major from N + 3: out o, in i at N + 3 + 2(N(o − 1) + i − 1) level, + 1 mute; then per input from N + 3 + 2N²: level, solo, mute, invert; then per output the same; then view inputs, view outputs, auto-cancel |
+| Meter 0x0400 | no parameters |
 | Delay 0x0301 | 2 Delay |
 | Compressor 0x0500 | 2 Threshold, 3 Attack, 4 Release, 5 Ratio |
 | Limiter 0x0501 | 2 Threshold, 3 Attack, 4 Release |
@@ -296,9 +299,11 @@ HighLower 16), outputs in order High, Mid, Low. 0x0601 = 2-band PEQ,
   Mono S-C Compressor, 0x050a Stereo S-C Compressor, 0x0613 30-band GEQ,
   0x0a01 Feedback Suppressor (15 bands), 0x0801 Matrix Mixer 2×2 (0x0817 =
   6×6 from a template), 0x0b0c Auto Mixer/Ducker 4×4, 0x0400 Meter, Mix N×1
-  = 0x0200 + N − 2, Select 1 of N = 0x0210 + N − 2 (N = 2…10). Parameters
-  of Matrix, Auto Mixer, Feedback Suppressor, Meter, Mix and Select are not
-  mapped yet.
+  = 0x0200 + N − 2, Select 1 of N = 0x0210 + N − 2 (N = 2…10; block types
+  and layouts sampled for N = 2, 3 and 10, the others follow the pattern,
+  unverified). Block types of the other matrix sizes (4, 8, 10) are
+  unknown. Parameters of Auto Mixer and Feedback Suppressor are not mapped
+  yet.
 - **How the indexes and conversions were found:** a configuration with 32
   copies of each module is served by the simulator (no DSP limit applies
   there), every parameter gets a different raw value, and Drag Net's

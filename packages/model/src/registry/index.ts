@@ -9,7 +9,8 @@ import { compressor, limiter, monoSideChainCompressor, stereoSideChainCompressor
 import { generator } from './generator.js';
 import { graphicEq } from './geq.js';
 import { levelModule } from './level.js';
-import { mix2x1 } from './mixer.js';
+import { meter } from './meter.js';
+import { MIXERS } from './mixer.js';
 import { peq, PEQ_MAX_FILTERS } from './peq.js';
 import type { ModuleDef } from './types.js';
 
@@ -24,7 +25,8 @@ export const MODULES: readonly ModuleDef[] = [
   digitalInput,
   analogOutput,
   levelModule,
-  mix2x1,
+  ...MIXERS,
+  meter,
   delay,
   compressor,
   limiter,

@@ -30,9 +30,9 @@ From the Drag Net 4.2 palette for RPM 26z. "Mapped" = parameters known for our U
 
 | Module | Purpose | Mapped |
 |---|---|---|
-| Mix N × 1 | sum several signals (e.g. L+R to mono sub) | 2×1 yes |
-| Matrix Mixer | any input to any output with a level at each point | no |
-| Select 1 of N | source switch (e.g. analog / AES) | no |
+| Mix N × 1 | sum several signals (e.g. L+R to mono sub) | yes (2–10) |
+| Matrix Mixer | any input to any output with a level at each point | 2×2, 6×6 (other sizes: block type unknown) |
+| Select 1 of N | source switch (e.g. analog / AES) | yes (2–10) |
 | Auto Mixer / Ducker | automatic mic mixing, music ducking | no |
 
 Splitting one signal to several blocks needs no module: one output can feed
@@ -43,7 +43,7 @@ several inputs.
 | Module | Purpose | Mapped |
 |---|---|---|
 | Signal Generator | pink noise / sine for tuning | yes |
-| Meter | metering point anywhere in the chain | no |
+| Meter | metering point anywhere in the chain | yes (no parameters) |
 | Label | Drag Net annotation only | – |
 | Preset Recall, VIP/VOP | presets and external contact control | presets yes |
 

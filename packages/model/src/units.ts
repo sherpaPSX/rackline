@@ -35,6 +35,8 @@ export const levelRange = (minDb: number, maxDb: number, unit: Unit = 'dB'): Lin
 export const LEVEL = levelRange(-30, 16);
 /** Mixer input level: −30 … 0 dB. */
 export const MIX_INPUT_LEVEL = levelRange(-30, 0);
+/** Matrix mixer input level: −60 … 0 dB. */
+export const MATRIX_INPUT_LEVEL = levelRange(-60, 0);
 /** Signal generator level: −40 … 0 dB. */
 export const GENERATOR_LEVEL = levelRange(-40, 0);
 /** Limiter threshold: −40 … 0 dBFS. */
