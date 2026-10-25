@@ -1,6 +1,5 @@
 /* Gallery specimens for the EQ curve and rack/module cards. Not part of the public API. */
 import { useState } from 'react';
-import type { ReactNode } from 'react';
 import {
   EqCurve,
   GraphicEq,
@@ -10,6 +9,7 @@ import {
   MuteButton,
   RackCard,
   Segmented,
+  ToggleButton,
   formatDb,
   formatHz,
   formatMs,
@@ -134,26 +134,16 @@ export function CrossoverSpecimen() {
 export function RackSpecimen({ touch }: { touch: boolean }) {
   const [expanded, setExpanded] = useState(true);
   const [muted, setMuted] = useState(false);
-  const [open, setOpen] = useState<string | null>(null);
+  const [peqOpen, setPeqOpen] = useState(false);
   const [on, setOn] = useState<Record<string, boolean>>({ peq: true, delay: true, limiter: true, level: true });
   const [delay, setDelay] = useState(4.2);
   const [threshold, setThreshold] = useState(-6);
+  const [attack, setAttack] = useState(5);
+  const [release, setRelease] = useState(200);
   const [level, setLevel] = useState(-2);
+  const [invert, setInvert] = useState(false);
   const peq = usePeq();
-
-  const card = (id: string, name: string, summary: ReactNode, body: ReactNode) => (
-    <ModuleCard
-      key={id}
-      name={name}
-      on={on[id] ?? true}
-      onOnChange={(v) => setOn((o) => ({ ...o, [id]: v }))}
-      expanded={open === id}
-      onExpandedChange={(e) => setOpen(e ? id : null)}
-      summary={summary}
-    >
-      {body}
-    </ModuleCard>
-  );
+  const power = (id: string) => ({ on: on[id] ?? true, onOnChange: (v: boolean) => setOn((o) => ({ ...o, [id]: v })) });
 
   return (
     <RackCard
@@ -169,32 +159,36 @@ export function RackSpecimen({ touch }: { touch: boolean }) {
         </>
       }
     >
-      {card(
-        'peq',
-        'Speaker PEQ',
-        <div className="mini-curve">
-          <EqCurve compact label="Speaker PEQ" lines={[{ id: 't', filters: on['peq'] ? peq.bands.map(toFilter) : [], fill: true }]} />
-        </div>,
-        <PeqEditor peq={peq} on={on['peq'] ?? true} />,
-      )}
-      {card(
-        'delay',
-        'Delay',
-        <Knob size={44} label="Time" value={delay} onChange={setDelay} format={formatMs} scale={linearScale(0, 100)} defaultValue={0} />,
-        <Knob label="Time" value={delay} onChange={setDelay} format={formatMs} scale={linearScale(0, 100)} defaultValue={0} />,
-      )}
-      {card(
-        'limiter',
-        'Limiter',
-        <Knob size={44} label="Threshold" value={threshold} onChange={setThreshold} format={formatDb} scale={linearScale(-30, 0)} defaultValue={0} color="var(--rl-warn)" />,
-        <Knob label="Threshold" value={threshold} onChange={setThreshold} format={formatDb} scale={linearScale(-30, 0)} defaultValue={0} color="var(--rl-warn)" />,
-      )}
-      {card(
-        'level',
-        'Level',
-        <Knob size={44} label="Gain" value={level} onChange={setLevel} format={formatDb} scale={linearScale(-20, 10)} defaultValue={0} bipolar />,
-        <Knob label="Gain" value={level} onChange={setLevel} format={formatDb} scale={linearScale(-20, 10)} defaultValue={0} bipolar />,
-      )}
+      <ModuleCard
+        name="Speaker PEQ"
+        {...power('peq')}
+        expanded={peqOpen}
+        onExpandedChange={setPeqOpen}
+        summary={
+          <div className="mini-curve">
+            <EqCurve compact label="Speaker PEQ" lines={[{ id: 't', filters: on['peq'] ? peq.bands.map(toFilter) : [], fill: true }]} />
+          </div>
+        }
+      >
+        <PeqEditor peq={peq} on={on['peq'] ?? true} />
+      </ModuleCard>
+      <ModuleCard name="Delay" {...power('delay')}>
+        <Knob size={44} label="Time" value={delay} onChange={setDelay} format={formatMs} scale={linearScale(0, 100)} defaultValue={0} />
+      </ModuleCard>
+      <ModuleCard name="Limiter" {...power('limiter')}>
+        <Knob size={44} label="Threshold" value={threshold} onChange={setThreshold} format={formatDb} scale={linearScale(-30, 0)} defaultValue={0} color="var(--rl-warn)" />
+        <Knob size={44} label="Attack" value={attack} onChange={setAttack} format={formatMs} scale={logScale(0.5, 100)} defaultValue={5} />
+        <Knob size={44} label="Release" value={release} onChange={setRelease} format={formatMs} scale={logScale(10, 2000)} defaultValue={200} />
+      </ModuleCard>
+      <ModuleCard name="Level" {...power('level')}>
+        <Knob size={44} label="Gain" value={level} onChange={setLevel} format={formatDb} scale={linearScale(-20, 10)} defaultValue={0} bipolar />
+        <div className="rl-cell">
+          <span className="rl-label">Polarity</span>
+          <ToggleButton pressed={invert} onChange={setInvert} square aria-label="Invert polarity" touch={touch}>
+            Ø
+          </ToggleButton>
+        </div>
+      </ModuleCard>
     </RackCard>
   );
 }

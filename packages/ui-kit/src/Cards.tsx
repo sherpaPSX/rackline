@@ -40,28 +40,48 @@ export interface ModuleCardProps {
   name: string;
   on: boolean;
   onOnChange: (on: boolean) => void;
-  expanded: boolean;
-  onExpandedChange: (expanded: boolean) => void;
-  /** Compact form: 2–4 key controls or a small curve. */
-  summary: ReactNode;
-  /** Expanded form: every parameter, each with exactly one editor. */
+  /** Every parameter, each with exactly one editor. Small modules show only this. */
   children: ReactNode;
+  /**
+   * Compact form for big modules (PEQ, crossover): a small curve or 2–4 key
+   * controls. With a summary the card expands sideways to show `children`.
+   */
+  summary?: ReactNode;
+  expanded?: boolean | undefined;
+  onExpandedChange?: ((expanded: boolean) => void) | undefined;
   /** Shown only while editing the layout. */
   onRemove?: (() => void) | undefined;
 }
 
-/** One processing module (PEQ, delay, limiter …) in compact or expanded form. */
-export function ModuleCard({ name, on, onOnChange, expanded, onExpandedChange, summary, children, onRemove }: ModuleCardProps) {
+/**
+ * One processing module (PEQ, delay, limiter …). Small modules always show
+ * all their controls; big ones show a summary and expand to the right, in
+ * place, like a device in a DAW chain.
+ */
+export function ModuleCard({ name, on, onOnChange, children, summary, expanded = false, onExpandedChange, onRemove }: ModuleCardProps) {
+  const expandable = summary !== undefined && onExpandedChange !== undefined;
+  const open = !expandable || expanded;
   return (
-    <div className="rl-module" data-off={!on || undefined} data-expanded={expanded || undefined}>
+    <div className="rl-module" data-off={!on || undefined} data-expanded={(expandable && expanded) || undefined}>
       <div className="rl-module-head">
         <IconButton icon="power" label={on ? `Bypass ${name}` : `Enable ${name}`} pressed={on} onClick={() => onOnChange(!on)} />
-        <button type="button" className="rl-module-name" onClick={() => onExpandedChange(!expanded)} aria-expanded={expanded}>
-          {name}
-        </button>
+        {expandable ? (
+          <button type="button" className="rl-module-name" onClick={() => onExpandedChange(!expanded)} aria-expanded={expanded}>
+            {name}
+          </button>
+        ) : (
+          <span className="rl-module-name">{name}</span>
+        )}
         {onRemove && <IconButton icon="close" label={`Remove ${name}`} onClick={onRemove} />}
+        {expandable && (
+          <IconButton
+            icon={expanded ? 'collapse' : 'expand'}
+            label={expanded ? `Collapse ${name}` : `Expand ${name}`}
+            onClick={() => onExpandedChange(!expanded)}
+          />
+        )}
       </div>
-      <div className="rl-module-body">{expanded ? children : summary}</div>
+      <div className="rl-module-body">{open ? children : summary}</div>
     </div>
   );
 }

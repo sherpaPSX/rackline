@@ -166,7 +166,7 @@ function Gallery() {
         <Outputs touch={touch} />
       </Section>
 
-      <Section title="Rack card" note="One rack, modules in signal order. Click a module name to expand it in place, the power icon bypasses it. The header keeps level and mute visible when the rack is collapsed.">
+      <Section title="Rack card" note="One rack, modules left to right in signal order. Small modules show all their controls; the PEQ shows its curve and expands to the right (click its name or the arrow). The power icon bypasses a module. Level and mute stay in the header when the rack is collapsed.">
         <RackSpecimen touch={touch} />
       </Section>
 

@@ -389,6 +389,7 @@ input.rl-vbox {
 
 /* Rack card */
 .rl-rack {
+  min-width: 0;
   background: var(--rl-panel);
   border: 1px solid var(--rl-line);
   border-left: 4px solid var(--rl-rack, var(--rl-line));
@@ -424,23 +425,30 @@ input.rl-vbox {
   gap: var(--rl-s2);
 }
 .rl-rack-chain {
+  /* Signal flows left to right; the chain scrolls sideways instead of wrapping. */
   display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
+  align-items: stretch;
   gap: var(--rl-s2);
+  overflow-x: auto;
   padding: 0 var(--rl-s3) var(--rl-s3);
+  scrollbar-width: thin;
 }
 
 /* Module card */
 .rl-module {
-  flex: 0 1 auto;
-  min-width: 0;
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  min-width: var(--rl-module-w, 176px);
   background: var(--rl-bg);
   border: 1px solid var(--rl-line);
   border-radius: var(--rl-radius);
 }
 .rl-module[data-expanded] {
-  flex-basis: 100%;
+  width: min(560px, 100%);
+}
+.rl-module[data-expanded] .rl-module-body {
+  display: block;
 }
 .rl-module-head {
   display: flex;
@@ -451,6 +459,8 @@ input.rl-vbox {
   border-bottom: 1px solid var(--rl-line);
 }
 .rl-module-name {
+  display: flex;
+  align-items: center;
   flex: 1;
   min-width: 0;
   height: 28px;
@@ -463,17 +473,22 @@ input.rl-vbox {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+button.rl-module-name {
   cursor: pointer;
 }
-.rl-module-name:hover {
+button.rl-module-name:hover {
   color: var(--rl-accent);
 }
 .rl-module-name:focus-visible {
   outline: 2px solid var(--rl-accent);
 }
 .rl-module-body {
+  flex: 1;
   display: flex;
   flex-wrap: wrap;
+  align-content: center;
+  justify-content: center;
   align-items: flex-end;
   gap: var(--rl-s3) var(--rl-s4);
   padding: var(--rl-s3);

@@ -31,6 +31,7 @@ const page = `<!doctype html>
 *{box-sizing:border-box}
 body{margin:0;background:var(--rl-bg);color:var(--rl-fg);font:14px var(--rl-font-label);padding-block:var(--rl-s6);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 main{max-width:1000px;margin:0 auto;display:grid;gap:var(--rl-s6)}
+main>*{min-width:0}
 h1{font-size:22px;font-weight:600;margin:0}
 .sub{color:var(--rl-dim);max-width:70ch;line-height:1.45}
 h2{font:600 12px var(--rl-font-label);text-transform:uppercase;letter-spacing:.14em;color:var(--rl-dim);margin:0 0 var(--rl-s3);display:flex;gap:var(--rl-s2);align-items:center}
