@@ -117,6 +117,21 @@ Every message is JSON validated by a zod schema on both sides
   recall, so network settings (`fe03`) cannot be written from the core.
 - Not yet: meters, storing presets, saving `.r26` files.
 
+## UI client (`@rackline/ui`)
+
+- `CoreClient` keeps the `AppState` in sync over the WebSocket API and
+  reconnects every second when the core goes away.
+- Edits are **optimistic**: the value is rounded and clamped like the core
+  stores it, shown at once and sent as `setParam`. The core echoes every
+  stored value; echoes of values this window sent are dropped while a newer
+  local value is on its way, so a dragged fader never jumps back. Any other
+  broadcast (another window, the device) wins.
+- **Undo/redo** covers value changes made in this window. One drag of one
+  control (moves less than 1 s apart) and a linked L+R edit are one step.
+  A new `state` (new setup, preset recall) clears the history.
+- View helpers (`racks.ts`) derive band strips, input pairs and rack detail
+  lines from the API's JSON only.
+
 ## Tooling
 
 - TypeScript (strict), pnpm workspaces, ESLint (typescript-eslint strict), Vitest.

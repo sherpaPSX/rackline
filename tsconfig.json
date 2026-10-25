@@ -11,6 +11,7 @@
     { "path": "packages/server/test" },
     { "path": "packages/ui-kit" },
     { "path": "packages/ui" },
+    { "path": "packages/ui/test" },
     { "path": "packages/desktop" }
   ]
 }
