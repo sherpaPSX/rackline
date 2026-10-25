@@ -8,5 +8,17 @@
   "exports": {
     ".": "./src/index.ts"
   },
-  "dependencies": { "@rackline/api": "workspace:*", "@rackline/model": "workspace:*", "@rackline/protocol": "workspace:*" }
+  "scripts": {
+    "start": "tsx src/cli.ts"
+  },
+  "dependencies": {
+    "@rackline/api": "workspace:*",
+    "@rackline/model": "workspace:*",
+    "@rackline/protocol": "workspace:*",
+    "ws": "8.18.3"
+  },
+  "devDependencies": {
+    "@types/ws": "8.18.1",
+    "tsx": "4.23.15"
+  }
 }
