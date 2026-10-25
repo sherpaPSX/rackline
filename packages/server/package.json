@@ -1,0 +1,12 @@
+{
+  "name": "@rackline/server",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Device state owner and WebSocket API server, runs without Electron",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": { "@rackline/api": "workspace:*", "@rackline/model": "workspace:*", "@rackline/protocol": "workspace:*" }
+}

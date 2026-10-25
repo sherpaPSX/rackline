@@ -1,0 +1,12 @@
+{
+  "name": "@rackline/api",
+  "version": "0.0.0",
+  "private": true,
+  "description": "WebSocket API contract shared by server and UI (zod schemas)",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": { "zod": "4.6.7" }
+}

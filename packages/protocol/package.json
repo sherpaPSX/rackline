@@ -1,0 +1,12 @@
+{
+  "name": "@rackline/protocol",
+  "version": "0.0.0",
+  "private": true,
+  "description": "RPM network protocol: discovery, parameter frames, TFTP, config file parsing",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {}
+}

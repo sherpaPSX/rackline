@@ -1,0 +1,12 @@
+{
+  "files": [],
+  "references": [
+    { "path": "packages/protocol" },
+    { "path": "packages/model" },
+    { "path": "packages/api" },
+    { "path": "packages/server" },
+    { "path": "packages/ui-kit" },
+    { "path": "packages/ui" },
+    { "path": "packages/desktop" }
+  ]
+}
