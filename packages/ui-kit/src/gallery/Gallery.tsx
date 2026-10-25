@@ -24,6 +24,7 @@ import {
   logScale,
 } from '../index.js';
 import type { IconName } from '../index.js';
+import { CrossoverSpecimen, PeqSpecimen, RackSpecimen, SystemEqSpecimen } from './Molecules.js';
 
 const COLORS = ['bg', 'panel', 'well', 'line', 'fg', 'dim', 'accent', 'warn', 'danger'] as const;
 const BANDS = [1, 2, 3, 4, 5, 6] as const;
@@ -111,7 +112,7 @@ function Gallery() {
       <header>
         <h1>Rackline UI kit</h1>
         <p className="sub">
-          Atoms taken over from Console UI Atoms, now React components in packages/ui-kit. Drag up and down, Shift for
+          Atoms taken over from Console UI Atoms, plus EQ curves and rack cards, as React components in packages/ui-kit. Drag up and down, Shift for
           fine control, double click for the default, arrow keys. The mouse wheel works only on a focused control.
         </p>
         <div className="row">
@@ -163,6 +164,22 @@ function Gallery() {
 
       <Section title="Outputs: fader, meter, mute" note="Your six outputs. 0 dB sits at 3/4 of the travel (the line). Mute is red when the signal is cut.">
         <Outputs touch={touch} />
+      </Section>
+
+      <Section title="Rack card" note="One rack, modules in signal order. Click a module name to expand it in place, the power icon bypasses it. The header keeps level and mute visible when the rack is collapsed.">
+        <RackSpecimen touch={touch} />
+      </Section>
+
+      <Section title="Parametric EQ" note="Drag a point: sideways = frequency, up/down = gain. The dashed line is the selected filter alone. Double click a point for 0 dB; arrow keys on a focused point.">
+        <PeqSpecimen />
+      </Section>
+
+      <Section title="System EQ" note="Nine octave faders, 63 Hz to 16 kHz, with the summed curve. Points on the curve move only up and down.">
+        <SystemEqSpecimen touch={touch} />
+      </Section>
+
+      <Section title="Crossover">
+        <CrossoverSpecimen />
       </Section>
 
       <Section title="Knobs">

@@ -11,6 +11,7 @@ const PATHS = {
   ),
   collapse: <path d="M10 4 6 8l4 4" />,
   expand: <path d="m6 4 4 4-4 4" />,
+  expandDown: <path d="m4 6 4 4 4-4" />,
   close: <path d="m4.5 4.5 7 7M11.5 4.5l-7 7" />,
   plus: <path d="M8 3v10M3 8h10" />,
   grip: (

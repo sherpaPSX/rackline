@@ -1,7 +1,7 @@
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
-import { Fader, Knob, MuteButton, Segmented, formatDb, formatHz, logScale } from './index.js';
+import { EqCurve, Fader, Knob, MuteButton, RackCard, Segmented, formatDb, formatHz, logScale } from './index.js';
 
 const noop = () => undefined;
 
@@ -41,5 +41,29 @@ describe('controls render accessible markup', () => {
     );
     expect(html.match(/aria-checked="true"/g)).toHaveLength(1);
     expect(html).toMatch(/aria-checked="true"[^>]*>24 dB\/oct/);
+  });
+});
+
+describe('EqCurve and cards', () => {
+  it('EqCurve labels its handles with frequency and gain', () => {
+    const html = renderToStaticMarkup(
+      createElement(EqCurve, {
+        label: 'PEQ',
+        lines: [{ id: 'sum', filters: [{ kind: 'peak', freq: 250, gainDb: -4, q: 2 }] }],
+        handles: [{ id: '1', freq: 250, gainDb: -4, label: '1', name: 'Filter 1' }],
+        onMove: noop,
+      }),
+    );
+    expect(html).toContain('aria-label="Filter 1"');
+    expect(html).toContain(`aria-valuetext="250 Hz, ${formatDb(-4)}"`);
+  });
+
+  it('RackCard hides its modules when collapsed', () => {
+    const rack = (expanded: boolean) =>
+      renderToStaticMarkup(
+        createElement(RackCard, { name: 'Subbass', color: 'red', expanded, onExpandedChange: noop, children: createElement('i', null, 'module') }),
+      );
+    expect(rack(true)).toContain('module');
+    expect(rack(false)).not.toContain('module');
   });
 });
