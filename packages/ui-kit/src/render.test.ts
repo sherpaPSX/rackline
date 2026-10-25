@@ -1,7 +1,7 @@
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
-import { EqCurve, Fader, Knob, Meter, MuteButton, RackCard, Segmented, formatDb, formatHz, logScale } from './index.js';
+import { ConfirmButton, EqCurve, Fader, Knob, Meter, MuteButton, RackCard, Segmented, formatDb, formatHz, logScale } from './index.js';
 
 const noop = () => undefined;
 
@@ -27,6 +27,12 @@ describe('controls render accessible markup', () => {
     expect(gr).toContain('data-reduction="true"');
     const h = renderToStaticMarkup(createElement(Meter, { readLevel: () => -20, floorDb: -40, markDb: -10, horizontal: true }));
     expect(h).toContain('left:75%');
+  });
+
+  it('ConfirmButton renders both labels so its width never changes', () => {
+    const html = renderToStaticMarkup(createElement(ConfirmButton, { label: 'Flat', confirmLabel: 'Sure?', onConfirm: noop }));
+    expect(html).toContain('>Flat</span>');
+    expect(html).toContain('aria-hidden="true">Sure?</span>');
   });
 
   it('MuteButton is pressed and named after its target', () => {

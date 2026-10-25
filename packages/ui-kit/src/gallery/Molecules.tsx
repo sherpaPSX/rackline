@@ -1,6 +1,7 @@
 /* Gallery specimens for the EQ curve and rack/module cards. Not part of the public API. */
 import { useState } from 'react';
 import {
+  ConfirmButton,
   EqCurve,
   GraphicEq,
   Icon,
@@ -61,12 +62,13 @@ function usePeq() {
   ]);
   const [selected, setSelected] = useState(1);
   const update = (i: number, patch: Partial<Band>) => setBands((bs) => bs.map((b, j) => (j === i ? { ...b, ...patch } : b)));
-  return { bands, selected, setSelected, update };
+  const flatten = () => setBands((bs) => bs.map((b) => ({ ...b, gainDb: 0 })));
+  return { bands, selected, setSelected, update, flatten };
 }
 
 /** `side` puts the band controls right of the curve, like a device in a rack. */
 function PeqEditor({ peq, on = true, side = false }: { peq: ReturnType<typeof usePeq>; on?: boolean; side?: boolean }) {
-  const { bands, selected, setSelected, update } = peq;
+  const { bands, selected, setSelected, update, flatten } = peq;
   const band = bands[selected];
   const lines: EqCurveLine[] = on
     ? [
@@ -85,22 +87,25 @@ function PeqEditor({ peq, on = true, side = false }: { peq: ReturnType<typeof us
           onSelect={(id) => setSelected(Number(id))}
           onMove={(id, m) => update(Number(id), m)}
         />
-        <div className="peq-bands" role="group" aria-label="Filters on or off">
-          {bands.map((b, i) => (
-            <ToggleButton
-              key={i}
-              square
-              pressed={b.on}
-              aria-label={`Filter ${i + 1} on`}
-              data-selected={i === selected || undefined}
-              onChange={(v) => {
-                update(i, { on: v });
-                setSelected(i);
-              }}
-            >
-              {i + 1}
-            </ToggleButton>
-          ))}
+        <div className="peq-strip">
+          <div className="peq-bands" role="group" aria-label="Filters on or off">
+            {bands.map((b, i) => (
+              <ToggleButton
+                key={i}
+                square
+                pressed={b.on}
+                aria-label={`Filter ${i + 1} on`}
+                data-selected={i === selected || undefined}
+                onChange={(v) => {
+                  update(i, { on: v });
+                  setSelected(i);
+                }}
+              >
+                {i + 1}
+              </ToggleButton>
+            ))}
+          </div>
+          <ConfirmButton label="Flat" confirmLabel="Sure?" onConfirm={flatten} />
         </div>
       </div>
       {band && (
@@ -134,12 +139,17 @@ const OCTAVES = [31.5, 63, 125, 250, 500, 1000, 2000, 4000, 8000, 16_000];
 export function SystemEqSpecimen({ touch }: { touch: boolean }) {
   const [gains, setGains] = useState([3, 2, 1, 0, -1.5, 0, 0.5, -2, 1, 2.5]);
   return (
-    <GraphicEq
-      label="System EQ"
-      bands={OCTAVES.map((freq, i) => ({ freq, gainDb: gains[i] ?? 0 }))}
-      onChange={(i, g) => setGains((gs) => gs.map((x, j) => (j === i ? g : x)))}
-      touch={touch}
-    />
+    <div className="stack">
+      <div className="eq-tools">
+        <ConfirmButton label="Flat" confirmLabel="Sure?" onConfirm={() => setGains((gs) => gs.map(() => 0))} touch={touch} />
+      </div>
+      <GraphicEq
+        label="System EQ"
+        bands={OCTAVES.map((freq, i) => ({ freq, gainDb: gains[i] ?? 0 }))}
+        onChange={(i, g) => setGains((gs) => gs.map((x, j) => (j === i ? g : x)))}
+        touch={touch}
+      />
+    </div>
   );
 }
 

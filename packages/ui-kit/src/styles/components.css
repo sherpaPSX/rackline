@@ -349,6 +349,17 @@ input.rl-vbox {
   color: var(--rl-accent);
 }
 
+/* Both labels in one cell: the wider one sets the width, only one is visible. */
+.rl-confirm {
+  display: inline-grid;
+}
+.rl-confirm > span {
+  grid-area: 1 / 1;
+}
+.rl-confirm > span[aria-hidden] {
+  visibility: hidden;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .rl-btn:active {
     transform: none;
