@@ -237,14 +237,23 @@ the registry in `@rackline/model` clamps to them.
 |---|---|
 | Levels (Mixer, Level, Output Trim, Input User Trim, Generator Level, Limiter Threshold) | dB = (raw − 192) / 2, raw 0 = −96 dB (Level: Off). Ranges: Level, output trim, mixer output −30 … +16 dB; mixer input −30 … 0 dB; generator −40 … 0 dB; limiter threshold −40 … 0 dBFS; user line gain ±15 dB |
 | Digital/analog input trim | dB = raw − 96 (0 = −100 dB); range +16 … −20 dB, 1 dB steps (data sheet) |
-| Compressor threshold | dBFS = raw − 96, max 32 (help says −40 … 0 dBFS in ½ dB steps: conflict, unresolved) |
+| Compressor threshold, S-C compressor threshold and knee, AGC target and threshold, noise compensator gains, threshold and coupling | dB(FS) = raw − 96 in 1 dB steps (raw 0 shown as −100). Drag Net's own display for raw 0..127 confirms 1 dB steps; the help's "½ dB" for the compressor threshold is wrong. Compressor threshold −40 … 0 dBFS, S-C knee 0 … 20 dB, AGC target −50 … −5 dBFS, AGC threshold −30 … 0 dB (help) |
+| Graphic EQ band, input and output gain | dB = (raw − 120) / 4, ±12 dB (raw 72..168) |
+| Graphic EQ low/mid/high tone | table of 64: −60 … −10 dB in 3.125 dB steps (raw 0..16), −10 … 0 dB in 0.625 dB steps (16..32), 0 … +6 dB in 31 steps (32..63); raw 0 = Off for low and high |
+| Graphic EQ low cut | Hz = 15 · 2^(4·raw/63), raw 0..63 (15 … 240 Hz) |
+| Rates (S-C attack/release, AGC gain increase/decrease/normalize) | dB/s = raw |
+| Noise compensator times | s = raw |
+| AGC ratio | x:1 = raw / 10 |
+| AGC gain hold | raw 0..30, 31 = infinite; Drag Net shows every raw 0..30 as "0 s", seconds = raw is guessed from the help |
+| S-C compressor ratio | 1.0 … 10.0 in 0.1 steps (raw 0..90), then 11, 12 … (raw 91 = 11, 127 = 47) |
+| Noise compensator ratio (0–14) | 0.1, 0.2 … 0.9, 1, 1.5, 2, 2.5, 3, 4 : 1 |
 | PEQ gain | dB = (raw − 120) / 4, −15 … +12 dB |
 | PEQ bandwidth | octaves = 0.025 · (raw + 1); raw 12 = default 0.325 oct. Help says 200 non-linear steps 0.015 … 4 oct and Lukas's config has raw 206 (5.2 oct): conflict, unresolved |
 | Frequency (PEQ, crossover, generator) | raw = Hz (2 bytes), 20 … 20 000 Hz; Horn EQ 2 … 5 kHz |
 | Delay | ms = raw / 48 (samples at 48 kHz, 2 bytes) |
 | Attack (0–15) | 0.5, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 25, 50, 75, 100 ms |
 | Release (0–14) | 1, 5, 10, 25, 50, 75, 100, 250, 500, 750, 1000, 2000, 3000, 4000, 5000 ms |
-| Ratio (0–28) | 1.0, 1.1 … 1.9, 2, 2.2, 2.4, 2.6, 2.8, 3, 3.25, 3.5, 3.75, 4, 4.5, 5, 6, 8, 10, 12, 15, 20, ∞ : 1 |
+| Ratio (0–28) | 1.0, 1.1 … 1.9, 2, 2.2, 2.4, 2.6, 2.8, 3, 3.25, 3.5, 3.75, 4, 4.5, 5, 6, 8, 10, 12, 15, 20, ∞ : 1 (Drag Net shows ∞ as 10000 : 1) |
 
 **Enums:** PEQ type 0 Band, 1 Low Shelf, 2 Hi Shelf, 3 Low Cut (BW 2nd
 order), 4 Hi Cut (BW 2nd order), 5 Horn EQ, 6 All-Pass 1st order, 7 All-Pass
@@ -267,6 +276,10 @@ Level Mute/Opt bit0 mute, bit1 off at minimum.
 | Delay 0x0301 | 2 Delay |
 | Compressor 0x0500 | 2 Threshold, 3 Attack, 4 Release, 5 Ratio |
 | Limiter 0x0501 | 2 Threshold, 3 Attack, 4 Release |
+| AGC 0x0502 | 2 Bypass, 3 Target, 4 Threshold, 5 Ratio, 6 Gain Incr, 7 Gain Decr, 8 Gain Hold, 9 Gain Norm |
+| Ambient Noise Comp 0x0503 | 2 Min Gain, 3 Max Gain, 4 Gain Increase Time, 5 Gain Decrease Time, 6 Threshold, 7 Gain Ratio, 9 Acoustic Coupling, 11 Mode (0 Paging, 1 Continuous program), 12 Bypass, 13 Program Mute, 25 Freeze Gain |
+| Mono S-C Compressor 0x0509, Stereo S-C Compressor 0x050a | 2 Threshold, 3 Ratio, 4 Attack, 5 Release, 6 Knee, 7 Bypass |
+| 30-band Graphic EQ 0x0613 | 2..31 band 25 Hz … 20 kHz, 32 Low, 33 Mid, 34 High tone, 35 Low Cut, 36 High Cut, 37 Input, 38 Output, 39 Bypass, 40 Range (0 ±12, 1 ±6 dB), 41 EQ Type (0 Perfect-Q, 1 Proportional-Q) |
 | 9-band PEQ 0x0608 | band n (1–9): Enable 5n−3, Type 5n−2, Freq 5n−1, BW 5n, Gain 5n+1 |
 | 2-way Crossover 0x060f | LP: 3 Type, 4 Freq, 5 Invert; HP: 7 Type, 8 Freq, 9 Invert |
 | Generator 0x0700 | 2 Sine, 3 Level, 4 Freq, 5 Mute |
@@ -278,9 +291,20 @@ HighLower 16), outputs in order High, Mid, Low. 0x0601 = 2-band PEQ,
 
 - **PEQ block types:** 0x0600 + filters − 1 (seen: 2, 3, 4, 5, 6, 8, 9, 12
   and 15 filters in Lukas's config and the Drag Net templates).
-- **Other block types in the Drag Net templates** (parameters not mapped
-  yet): 0x0201 Mix 3×1, 0x0210 Select 1 of 2, 0x0211 Select 1 of 3,
-  0x0817 Matrix Mixer 6×6.
+- **Block types from Drag Net's palette** (dragged into a configuration and
+  saved): 0x0500 Compressor, 0x0502 AGC, 0x0503 Ambient Noise Comp, 0x0509
+  Mono S-C Compressor, 0x050a Stereo S-C Compressor, 0x0613 30-band GEQ,
+  0x0a01 Feedback Suppressor (15 bands), 0x0801 Matrix Mixer 2×2 (0x0817 =
+  6×6 from a template), 0x0b0c Auto Mixer/Ducker 4×4, 0x0400 Meter, Mix N×1
+  = 0x0200 + N − 2, Select 1 of N = 0x0210 + N − 2 (N = 2…10). Parameters
+  of Matrix, Auto Mixer, Feedback Suppressor, Meter, Mix and Select are not
+  mapped yet.
+- **How the indexes and conversions were found:** a configuration with 32
+  copies of each module is served by the simulator (no DSP limit applies
+  there), every parameter gets a different raw value, and Drag Net's
+  "Generate Report" lists name, index, size, raw and displayed value. Past
+  the end of a lookup table Drag Net shows memory garbage, which marks the
+  table length.
 - **2-way output order:** High, Low, inferred from Lukas's config (the
   second output, low-pass 120 Hz, feeds SUB FLEX; the first is unconnected).
 - **Unknown indexes:** the index before each crossover filter group (2-way:

@@ -28,3 +28,12 @@ export function psxRecords(blockId: number): { index: number; value: number }[] 
   const preset = psxProject().presets.find((p) => p.number === 0);
   return (preset?.params ?? []).filter((r) => r.target === 'block' && r.instance === blockId);
 }
+
+/** One parameter value as Drag Net's report shows it: block type, index, raw value, displayed text. */
+export type DisplaySample = [blockType: number, index: number, raw: number, display: string];
+
+/** Raw → display pairs from Drag Net reports of configurations served by the simulator. */
+export function dragNetDisplaySamples(): DisplaySample[] {
+  const parsed = JSON.parse(readFileSync(path('dragnet-display-samples.json'), 'utf8')) as { rows: DisplaySample[] };
+  return parsed.rows;
+}
