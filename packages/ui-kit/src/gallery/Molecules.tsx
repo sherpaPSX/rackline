@@ -5,6 +5,7 @@ import {
   GraphicEq,
   Icon,
   Knob,
+  Meter,
   ModuleCard,
   MuteButton,
   RackCard,
@@ -29,6 +30,12 @@ interface Band {
 
 const toFilter = (b: Band): Filter =>
   b.type === 'peak' ? { kind: 'peak', freq: b.freq, gainDb: b.gainDb, q: b.q } : { kind: b.type, freq: b.freq, gainDb: b.gainDb };
+
+/** Fake programme peaks in dBFS for the limiter meters. */
+function limiterInput(): number {
+  const t = performance.now() / 1000;
+  return -10 + 5 * Math.sin(t * 1.1) + 4 * Math.abs(Math.sin(t * 5.3));
+}
 
 const FREQ = logScale(20, 20_000);
 const GAIN = linearScale(-15, 15);
@@ -180,6 +187,16 @@ export function RackSpecimen({ touch }: { touch: boolean }) {
         <Knob size={44} label="Threshold" value={threshold} onChange={setThreshold} format={formatDb} scale={linearScale(-30, 0)} defaultValue={0} color="var(--rl-warn)" />
         <Knob size={44} label="Attack" value={attack} onChange={setAttack} format={formatMs} scale={logScale(0.5, 100)} defaultValue={5} />
         <Knob size={44} label="Release" value={release} onChange={setRelease} format={formatMs} scale={logScale(10, 2000)} defaultValue={200} />
+        <div className="lim-meters">
+          <div className="rl-cell">
+            <span className="rl-label">In</span>
+            <Meter readLevel={limiterInput} floorDb={-40} markDb={threshold} warnDb={threshold} hotDb={0} />
+          </div>
+          <div className="rl-cell">
+            <span className="rl-label">GR</span>
+            <Meter reduction floorDb={-20} readLevel={() => (on['limiter'] === false ? 0 : Math.max(0, limiterInput() - threshold))} />
+          </div>
+        </div>
       </ModuleCard>
       <ModuleCard name="Level" {...power('level')}>
         <Knob size={44} label="Gain" value={level} onChange={setLevel} format={formatDb} scale={linearScale(-20, 10)} defaultValue={0} bipolar />

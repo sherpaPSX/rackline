@@ -1,7 +1,7 @@
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
-import { EqCurve, Fader, Knob, MuteButton, RackCard, Segmented, formatDb, formatHz, logScale } from './index.js';
+import { EqCurve, Fader, Knob, Meter, MuteButton, RackCard, Segmented, formatDb, formatHz, logScale } from './index.js';
 
 const noop = () => undefined;
 
@@ -18,6 +18,13 @@ describe('controls render accessible markup', () => {
     const html = renderToStaticMarkup(createElement(Fader, { label: 'Subbass', valueDb: 0, onChange: noop }));
     expect(html).toContain(`aria-valuetext="${formatDb(0)}"`);
     expect(html).toContain('--rl-pos:0.75');
+  });
+
+  it('Meter draws the threshold mark at its level', () => {
+    const html = renderToStaticMarkup(createElement(Meter, { readLevel: () => -20, floorDb: -40, markDb: -10 }));
+    expect(html).toContain('bottom:75%');
+    const gr = renderToStaticMarkup(createElement(Meter, { readLevel: () => 3, reduction: true }));
+    expect(gr).toContain('data-reduction="true"');
   });
 
   it('MuteButton is pressed and named after its target', () => {

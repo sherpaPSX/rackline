@@ -135,7 +135,7 @@
 .rl-meter {
   position: relative;
   width: 6px;
-  height: var(--rl-fader-h);
+  height: var(--rl-meter-h, var(--rl-fader-h));
   background: var(--rl-well);
   border-radius: 2px;
   overflow: hidden;
@@ -152,7 +152,20 @@
       var(--rl-warn) var(--rl-warn-at) var(--rl-hot-at),
       var(--rl-danger) var(--rl-hot-at)
     )
-    bottom / 100% var(--rl-fader-h) no-repeat;
+    bottom / 100% var(--rl-meter-h, var(--rl-fader-h)) no-repeat;
+}
+.rl-meter[data-reduction] b {
+  top: 0;
+  bottom: auto;
+  background: var(--rl-warn);
+}
+.rl-meter i {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  margin-bottom: -1px;
+  background: var(--rl-fg);
 }
 
 /* Buttons */

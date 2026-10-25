@@ -49,6 +49,8 @@ h2::after{content:"";flex:1;height:1px;background:var(--rl-line)}
 .strip{display:grid;justify-items:center;gap:var(--rl-s3);padding:var(--rl-s3) var(--rl-s2);background:var(--rl-bg);border:1px solid var(--rl-line);border-top:3px solid;border-radius:var(--rl-radius);width:112px}
 .stack{display:grid;gap:var(--rl-s4)}
 .mini-curve{width:200px}
+.lim-meters{display:flex;gap:var(--rl-s2);--rl-meter-h:120px}
+.lim-meters .rl-meter{width:8px}
 .peq-side{display:flex;flex-wrap:wrap;gap:var(--rl-s3) var(--rl-s4);align-items:center}
 .peq-side>.rl-eq{flex:1 1 280px;min-width:0}
 .peq-controls{display:grid;grid-template-columns:repeat(2,auto);gap:var(--rl-s3) var(--rl-s4);justify-items:center}
