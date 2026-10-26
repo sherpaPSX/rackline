@@ -3,6 +3,9 @@ import type { ParamDef } from './types.js';
 
 /** Small builders so module files read like the index tables in docs/protocol.md. */
 
+/** from … to, inclusive. */
+export const range = (from: number, to: number): number[] => Array.from({ length: to - from + 1 }, (_, k) => from + k);
+
 export const num = (index: number, key: string, label: string, conversion: Linear, size: 1 | 2 = 1): ParamDef => ({
   index,
   key,

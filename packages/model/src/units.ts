@@ -4,7 +4,7 @@
  * See docs/protocol.md §4 "Conversions".
  */
 
-export type Unit = 'dB' | 'dBFS' | 'Hz' | 'ms' | 's' | 'dB/s' | 'oct' | 'ratio';
+export type Unit = 'dB' | 'dBFS' | 'Hz' | 'ms' | 's' | 'h' | 'dB/s' | 'oct' | 'ratio';
 
 /** A linear conversion `value = (raw - offset) / divisor`, plus the raw range of the parameter. */
 export interface Linear {
@@ -71,6 +71,8 @@ export const PEQ_GAIN = linear('dB', 120, 4, 60, 168);
  * survive a read-modify-write. The help's "0.015 … 4 octaves" does not match.
  */
 export const PEQ_BANDWIDTH = linear('oct', -1, 40, 0, 255);
+/** Feedback suppressor max attenuation: dB = (raw − 120) / 4 like PEQ gain; −30 … 0 dB is a guess. */
+export const FBS_MAX_ATTENUATION = linear('dB', 120, 4, 0, 120);
 /** Graphic EQ band, input and output gain: dB = (raw − 120) / 4, ±12 dB in ¼ dB steps. */
 export const GEQ_GAIN = linear('dB', 120, 4, 72, 168);
 /** A rate in dB per second, raw = dB/s (AGC, side-chain compressor attack and release). */

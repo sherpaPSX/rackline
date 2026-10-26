@@ -14,7 +14,7 @@ import { z } from 'zod';
 export const ParamValue = z.union([z.number(), z.boolean(), z.record(z.string(), z.boolean())]);
 export type ParamValue = z.infer<typeof ParamValue>;
 
-export const Unit = z.enum(['dB', 'dBFS', 'Hz', 'ms', 's', 'dB/s', 'oct', 'ratio']);
+export const Unit = z.enum(['dB', 'dBFS', 'Hz', 'ms', 's', 'h', 'dB/s', 'oct', 'ratio']);
 export type Unit = z.infer<typeof Unit>;
 
 /**
