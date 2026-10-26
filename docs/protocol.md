@@ -248,7 +248,7 @@ the registry in `@rackline/model` clamps to them.
 | S-C compressor ratio | 1.0 … 10.0 in 0.1 steps (raw 0..90), then 11, 12 … (raw 91 = 11, 127 = 47) |
 | Noise compensator ratio (0–14) | 0.1, 0.2 … 0.9, 1, 1.5, 2, 2.5, 3, 4 : 1 |
 | PEQ gain | dB = (raw − 120) / 4, −15 … +12 dB |
-| PEQ bandwidth | octaves = 0.025 · (raw + 1); raw 12 = default 0.325 oct. Help says 200 non-linear steps 0.015 … 4 oct and Lukas's config has raw 206 (5.2 oct): conflict, unresolved |
+| PEQ bandwidth | octaves = 0.025 · (raw + 1) for raw 0 … 80 (0.025 … 2.025 oct); raw 12 = default 0.325 oct. Drag Net 4.21 shows 2.025 oct for every raw above 80, also for Lukas's own values (raw 149 … 223, served live by the simulator with type Band). What the DSP does above raw 80 is **unverified** (needs hardware). The help's 0.015 … 4 oct does not match Drag Net's display |
 | Frequency (PEQ, crossover, generator) | raw = Hz (2 bytes), 20 … 20 000 Hz; Horn EQ 2 … 5 kHz |
 | Delay | ms = raw / 48 (samples at 48 kHz, 2 bytes) |
 | Attack (0–15) | 0.5, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 25, 50, 75, 100 ms |
