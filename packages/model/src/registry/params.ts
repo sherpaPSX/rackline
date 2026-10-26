@@ -1,4 +1,4 @@
-import { LEVEL, type Linear } from '../units.js';
+import { LEVEL, type Linear, type Unit } from '../units.js';
 import type { ParamDef } from './types.js';
 
 /** Small builders so module files read like the index tables in docs/protocol.md. */
@@ -31,7 +31,7 @@ export const choice = (index: number, key: string, label: string, options: Recor
   options,
 });
 
-export const steps = (index: number, key: string, label: string, unit: 'ms' | 'ratio', values: readonly number[]): ParamDef => ({
+export const steps = (index: number, key: string, label: string, unit: Unit, values: readonly number[]): ParamDef => ({
   index,
   key,
   label,

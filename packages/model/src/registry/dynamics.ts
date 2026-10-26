@@ -1,5 +1,5 @@
-import { ATTACK_MS, COMPRESSOR_THRESHOLD, LIMITER_THRESHOLD, RATIO, RELEASE_MS } from '../units.js';
-import { num, steps } from './params.js';
+import { ATTACK_MS, COMPRESSOR_THRESHOLD, dbRange, LIMITER_THRESHOLD, rate, RATIO, RELEASE_MS, SC_RATIO } from '../units.js';
+import { bool, num, steps } from './params.js';
 import type { ModuleDef } from './types.js';
 
 export const compressor: ModuleDef = {
@@ -30,3 +30,33 @@ export const limiter: ModuleDef = {
   compact: ['threshold'],
   dspPercent: 2.3,
 };
+
+/**
+ * Side-chain compressors (ducking): mono 0x0509 (inputs In, S-C), stereo
+ * 0x050a (In 1, S-C 1, In 2, S-C 2). Drag Net shows attack and release in
+ * dB/s (raw = dB/s); its help speaks of 0.5 … 100 ms and 1 ms … 5 s, so the
+ * help describes another unit and the range is not known. Knee 0 … 20 dB
+ * (help) as dB = raw − 96.
+ */
+function sideChainCompressor(blockType: number, name: string): ModuleDef {
+  return {
+    blockType,
+    name,
+    role: 'processing',
+    evidence: 'simulator',
+    params: [
+      num(2, 'threshold', 'Threshold', COMPRESSOR_THRESHOLD),
+      steps(3, 'ratio', 'Ratio', 'ratio', SC_RATIO),
+      num(4, 'attack', 'Attack', rate(0, 255)),
+      num(5, 'release', 'Release', rate(0, 255)),
+      num(6, 'knee', 'Knee', dbRange(0, 20)),
+      bool(7, 'bypass', 'Bypass'),
+    ],
+    compact: ['threshold', 'ratio'],
+    // Not measured; assumed like the compressor.
+    dspPercent: 3,
+  };
+}
+
+export const monoSideChainCompressor = sideChainCompressor(0x0509, 'Mono S-C Compressor');
+export const stereoSideChainCompressor = sideChainCompressor(0x050a, 'Stereo S-C Compressor');
