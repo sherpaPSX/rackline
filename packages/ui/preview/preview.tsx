@@ -6,7 +6,12 @@ import { App } from '../src/app/App.js';
 import { CoreContext } from '../src/app/core-context.js';
 import { CoreClient } from '../src/core-client.js';
 import type { OpenSocket } from '../src/core-client.js';
-import state from '../test/fixtures/psx-rcf-final-state.json';
+import { AppState } from '@rackline/api';
+import psx from '../test/fixtures/psx-rcf-final-state.json';
+import { withInputSelect } from '../test/select-demo.js';
+
+// The ANALOG rack gets an input Select (analog 1/2 or digital A/B) to show the source picker.
+const state = withInputSelect(AppState.parse(psx));
 
 // Preview only: an in-page fake core that echoes every edit, loaded with PSX_RCF_FINAL.r26.
 const fake: OpenSocket = (_url, h) => {

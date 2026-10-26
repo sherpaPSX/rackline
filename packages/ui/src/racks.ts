@@ -138,15 +138,16 @@ export function channelName(setup: Setup, blockId: number): string | undefined {
 /**
  * Names of a rack's channels, so stereo controls say which physical
  * channel they edit: the outputs it feeds, else the inputs it comes from
- * (traced back through other racks), else L / R.
+ * (traced back through other racks and the selected input of a Select),
+ * else L / R.
  */
-export function rackChannelNames(setup: Setup, rack: Rack): string[] {
+export function rackChannelNames(setup: Setup, rack: Rack, values: Values = {}): string[] {
   const trace = (r: Rack, channel: number, depth: number): string | undefined => {
     const c = r.channels[channel];
     if (!c || depth > setup.racks.length) return undefined;
     const out = c.outputIds[0];
     if (out !== undefined) return channelName(setup, out);
-    const tap = c.sources.length === 1 ? c.sources[0] : undefined;
+    const tap = c.sources.length === 1 ? c.sources[0] : selectedSource(setup, c, values);
     if (tap?.kind === 'input') return channelName(setup, tap.blockId);
     if (tap?.kind === 'rack' || tap?.kind === 'band') {
       const from = setup.racks.find((x) => x.id === tap.rackId);
@@ -177,28 +178,65 @@ export interface FlowLink {
   color?: string;
 }
 
-const tapKey = (t: Tap): string => (t.kind === 'input' || t.kind === 'generator' ? `${t.kind}` : `${t.kind}:${t.rackId}:${t.kind === 'band' ? t.band : ''}`);
+type Channel = Rack['channels'][number];
+
+/** Whether a block is a Select 1 of N: its input is picked, not summed. */
+export const isSelect = (setup: Setup, blockId: number | undefined): boolean =>
+  blockId !== undefined && moduleOf(setup, blockId)?.name.startsWith('Select') === true;
+
+/** The `input` value that picks source `i` of a channel's Select. */
+const selectValue = (c: Channel, i: number): number => c.mixerInputs?.[i] ?? i;
+
+function selectedSource(setup: Setup, c: Channel, values: Values): Tap | undefined {
+  if (!isSelect(setup, c.mixerId)) return undefined;
+  const picked = valueOf(values, c.mixerId ?? -1, 'input');
+  return c.sources.find((_, i) => selectValue(c, i) === picked) ?? c.sources[0];
+}
+
+/** One link for the same tap on every channel: "In 1+2", "ANALOG", "Delay · High". */
+function linkOf(setup: Setup, group: readonly Tap[]): FlowLink {
+  const tap = group[0];
+  if (tap === undefined) return { text: 'no source' };
+  if (tap.kind === 'input' || tap.kind === 'generator') {
+    const names = group.map((t) => (t.kind === 'input' || t.kind === 'generator' ? channelName(setup, t.blockId) : undefined));
+    return { text: names.every((n) => n !== undefined) ? joinChannels(names as string[]) : tapText(setup, tap) };
+  }
+  const from = setup.racks.find((r) => r.id === tap.rackId);
+  const band = tap.kind === 'band' ? from?.crossover?.bands[tap.band]?.name : undefined;
+  return { text: band === undefined ? (from?.name ?? tap.rackId) : `${from?.name ?? tap.rackId} · ${band}`, rackId: tap.rackId, color: rackColor(setup, tap.rackId) };
+}
+
+const tapKey = (t: Tap): string => (t.kind === 'input' || t.kind === 'generator' ? t.kind : `${t.kind}:${t.rackId}:${t.kind === 'band' ? t.band : ''}`);
 
 /** Where a rack's signal comes from: "In 1+2", "ANALOG", "Delay · High"; summed sources start with "Σ". */
 export function flowSources(setup: Setup, rack: Rack): FlowLink[] {
-  const taps = rack.channels.flatMap((c) => c.sources);
   const summed = rack.channels.some((c) => c.sources.length > 1);
   const groups = new Map<string, Tap[]>();
-  for (const t of taps) groups.set(tapKey(t), [...(groups.get(tapKey(t)) ?? []), t]);
+  for (const t of rack.channels.flatMap((c) => c.sources)) groups.set(tapKey(t), [...(groups.get(tapKey(t)) ?? []), t]);
   return [...groups.values()].map((group) => {
-    const tap = group[0] as Tap;
-    let link: FlowLink;
-    if (tap.kind === 'input' || tap.kind === 'generator') {
-      const ids = group.map((t) => (t.kind === 'input' || t.kind === 'generator' ? t.blockId : -1));
-      const names = ids.map((id) => channelName(setup, id));
-      link = { text: names.every((n) => n !== undefined) ? joinChannels(names as string[]) : tapText(setup, tap) };
-    } else {
-      const from = setup.racks.find((r) => r.id === tap.rackId);
-      const band = tap.kind === 'band' ? from?.crossover?.bands[tap.band]?.name : undefined;
-      link = { text: band === undefined ? (from?.name ?? tap.rackId) : `${from?.name ?? tap.rackId} · ${band}`, rackId: tap.rackId, color: rackColor(setup, tap.rackId) };
-    }
+    const link = linkOf(setup, group);
     return summed ? { ...link, text: `Σ ${link.text}` } : link;
   });
+}
+
+/** A rack whose channels start with a Select: the engineer picks its source. */
+export interface SourceChoice {
+  /** The Select block of every channel; all are set together. */
+  blockIds: number[];
+  /** `value` is the Select's `input` parameter. */
+  options: { value: number; link: FlowLink }[];
+}
+
+export function sourceChoice(setup: Setup, rack: Rack): SourceChoice | undefined {
+  const [first] = rack.channels;
+  if (first === undefined || !rack.channels.every((c) => isSelect(setup, c.mixerId))) return undefined;
+  return {
+    blockIds: rack.channels.map((c) => c.mixerId ?? -1),
+    options: first.sources.map((_, i) => ({
+      value: selectValue(first, i),
+      link: linkOf(setup, rack.channels.flatMap((c) => c.sources[i] ?? [])),
+    })),
+  };
 }
 
 const feeds = (r: Rack, test: (t: Tap) => boolean) => r.channels.some((c) => c.sources.some(test));

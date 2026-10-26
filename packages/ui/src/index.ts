@@ -14,6 +14,7 @@ export {
   flowSources,
   flowTargets,
   inputStrips,
+  isSelect,
   joinChannels,
   moduleOf,
   outputIdsOf,
@@ -22,7 +23,8 @@ export {
   rackColor,
   rackDetail,
   rackTree,
+  sourceChoice,
   sourceText,
   valueOf,
 } from './racks.js';
-export type { BandStrip, FlowLink, InputStrip } from './racks.js';
+export type { BandStrip, FlowLink, InputStrip, SourceChoice } from './racks.js';

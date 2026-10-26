@@ -5,13 +5,13 @@ import { Button, MuteButton, RackCard } from '@rackline/ui-kit';
 import { useCoreClient } from '../app/core-context.js';
 import { peqBands } from '../curves.js';
 import { formatParam } from '../params.js';
-import { anyMuted, blockById, channelName, flowBands, flowSources, flowTargets, inputStrips, moduleOf, outputIdsOf, rackChannelNames, rackColor, rackTree, valueOf } from '../racks.js';
+import { anyMuted, blockById, channelName, flowBands, flowSources, flowTargets, inputStrips, moduleOf, outputIdsOf, rackChannelNames, rackColor, rackTree, sourceChoice, valueOf } from '../racks.js';
 import { CrossoverModule } from '../modules/CrossoverModule.js';
 import { GenericModule } from '../modules/GenericModule.js';
 import type { ModuleViewProps } from '../modules/GenericModule.js';
 import { OutputPolarity } from '../modules/OutputPolarity.js';
 import { PeqModule } from '../modules/PeqModule.js';
-import { FlowBands, FlowEnd } from './FlowChips.js';
+import { FlowBands, FlowEnd, SourcePicker } from './FlowChips.js';
 
 function ModuleView(props: ModuleViewProps) {
   return peqBands(props.module).length > 0 ? <PeqModule {...props} /> : <GenericModule {...props} />;
@@ -35,7 +35,8 @@ function RackView({ rack, setup, values }: { rack: Rack; setup: Setup; values: V
   const client = useCoreClient();
   const [expanded, setExpanded] = useState(true);
   const outputs = outputIdsOf(rack);
-  const names = rackChannelNames(setup, rack);
+  const names = rackChannelNames(setup, rack, values);
+  const choice = sourceChoice(setup, rack);
   const outputModule = outputs[0] === undefined ? undefined : moduleOf(setup, outputs[0]);
   const trim = outputModule?.params.find((p) => p.key === 'trim');
   const muted = anyMuted(values, outputs);
@@ -73,8 +74,8 @@ function RackView({ rack, setup, values }: { rack: Rack; setup: Setup; values: V
         )
       }
     >
-      <FlowEnd label="From" links={flowSources(setup, rack)} />
-      {mixerId !== undefined && mixerModule && (
+      {choice ? <SourcePicker choice={choice} values={values} owner={rack.name} /> : <FlowEnd label="From" links={flowSources(setup, rack)} />}
+      {!choice && mixerId !== undefined && mixerModule && (
         <ModuleView module={mixerModule} blockIds={[mixerId]} values={values} rackName={rack.name} title="Sum" />
       )}
       {rack.modules.map((m, i) => {

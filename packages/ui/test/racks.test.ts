@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { anyMuted, bandStrips, channelName, rackChannelNames, channelsAgree, flowBands, flowSources, flowTargets, inputStrips, joinChannels, pairName, rackColor, rackDetail, rackTree } from '../src/index.js';
+import { anyMuted, bandStrips, channelName, rackChannelNames, channelsAgree, flowBands, flowSources, flowTargets, inputStrips, isSelect, sourceChoice, joinChannels, pairName, rackColor, rackDetail, rackTree } from '../src/index.js';
 import { psxState } from './fixtures.js';
+import { withInputSelect } from './select-demo.js';
 
 const state = psxState();
 const setup = state.setup;
@@ -86,3 +87,33 @@ describe('rack views of PSX_RCF_FINAL', () => {
     expect(anyMuted(state.values, [13, 14])).toBe(false);
   });
 });
+
+describe('a rack that picks its input with a Select', () => {
+  const demo = withInputSelect(state);
+  const s = demo.setup;
+  if (!s) throw new Error('no setup');
+  const analog = s.racks.find((r) => r.name === 'ANALOG');
+  if (!analog) throw new Error('no ANALOG');
+
+  it('offers each source as one choice for both channels', () => {
+    expect(isSelect(s, 901)).toBe(true);
+    expect(isSelect(s, 37)).toBe(false);
+    expect(sourceChoice(s, analog)).toEqual({
+      blockIds: [901, 902],
+      options: [
+        { value: 0, link: { text: 'In 1+2' } },
+        { value: 1, link: { text: 'In A+B' } },
+      ],
+    });
+    expect(sourceChoice(setup, rack('ANALOG mono'))).toBeUndefined();
+  });
+
+  it('names channels after the selected input, down the chain', () => {
+    const delay = s.racks.find((r) => r.name === 'Delay');
+    if (!delay) throw new Error('no Delay');
+    expect(rackChannelNames(s, analog, demo.values)).toEqual(['In 1', 'In 2']);
+    const digital = { ...demo.values, '901': { input: 1 }, '902': { input: 1 } };
+    expect(rackChannelNames(s, delay, digital)).toEqual(['In A', 'In B']);
+  });
+});
+

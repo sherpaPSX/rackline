@@ -528,6 +528,10 @@
               }
             ],
             "mixerId": 37,
+            "mixerInputs": [
+              0,
+              1
+            ],
             "outputIds": []
           }
         ],
@@ -1544,7 +1548,7 @@
       },
       {
         "blockType": 512,
-        "name": "Mix 2 \u00d7 1",
+        "name": "Mix 2 × 1",
         "role": "mixer",
         "evidence": "simulator",
         "params": [

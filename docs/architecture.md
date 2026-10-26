@@ -139,7 +139,13 @@ Every message is JSON validated by a zod schema on both sides
   (the RPM has no bypass). Stereo modules edit both channels linked (one
   quiet "1+2" button) or one when they differ (amber 1+2 / 1 / 2);
   channels are named by their physical inputs/outputs: 1+2, A+B, 5+6.
-  Level's min/max/off-at-min are hidden while tuning),
+  Level's min/max/off-at-min are hidden while tuning; each chain starts
+  with where its signal comes from and ends with its outputs, the racks it
+  feeds or its crossover bands, as chips that jump to that rack; racks are a
+  tree, indented under the rack that feeds them. A rack that starts with a
+  Select 1 of N per channel gets a source picker instead (all channels
+  switch together; a parameter, no dropout). `mixerInputs` in the API maps
+  each source to its Select input, so unconnected inputs are skipped right),
   **Files** (find/connect a device, open `.r26`, recall presets).
 - Curves are drawn from the option labels the core sends (`curves.ts`);
   Low/High cut as 2nd-order Butterworth and Horn EQ/all-pass as flat are
@@ -147,7 +153,9 @@ Every message is JSON validated by a zod schema on both sides
 - `pnpm --filter @rackline/ui dev` runs the UI against a core on
   `ws://127.0.0.1:5180` (`?core=` overrides); `pnpm --filter @rackline/ui
   preview` builds one self-contained HTML file with a fake in-page core on
-  `PSX_RCF_FINAL.r26`, for review.
+  `PSX_RCF_FINAL.r26`, for review. The preview adds an input Select to the
+  ANALOG rack (`test/select-demo.ts`) to show the source picker; Lukas's file
+  has none.
 
 ## Tooling
 

@@ -323,3 +323,10 @@ button.app-flow-chip:focus-visible {
   color: var(--rl-dim);
   opacity: 0.7;
 }
+
+.app-source[data-differ] .rl-seg {
+  outline: 1px solid var(--rl-warn);
+}
+.app-source {
+  max-width: none;
+}

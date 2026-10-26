@@ -53,6 +53,7 @@ describe('racks from Lukas config (PSX_RCF_FINAL.r26)', () => {
           { kind: 'rack', rackId: system?.id, channel: 1 },
         ],
         mixerId: 0x25,
+        mixerInputs: [0, 1],
         outputIds: [],
       },
     ]);
@@ -104,6 +105,27 @@ const analogIn = (channel: number, wire: number): Partial<ConfigBlock> => ({ blo
 const out = (channel: number, wire: number): Partial<ConfigBlock> => ({ blockType: 0x0106, kind: 0x54, channel, name: `Out ${channel}`, inputs: [wire], outputs: [0x10 + channel] });
 
 describe('rack building rules', () => {
+  it('keeps the mixer input of every source, so a Select with an unconnected input maps to the right wire', () => {
+    const layout = buildRacks(
+      table([
+        analogIn(1, 0x101),
+        analogIn(2, 0x102),
+        analogIn(3, 0x103),
+        analogIn(4, 0x104),
+        { blockType: 0x0211, name: 'Select L', inputs: [0x101, 0, 0x103], outputs: [0x105] }, // 5: Select 1 of 3
+        { blockType: 0x0211, name: 'Select R', inputs: [0x102, 0, 0x104], outputs: [0x106] }, // 6
+        out(1, 0x105),
+        out(2, 0x106),
+      ]),
+    );
+    expect(layout.racks.map((r) => r.channels)).toEqual([
+      [
+        { sources: [{ kind: 'input', blockId: 1 }, { kind: 'input', blockId: 3 }], mixerId: 5, mixerInputs: [0, 2], outputIds: [7] },
+        { sources: [{ kind: 'input', blockId: 2 }, { kind: 'input', blockId: 4 }], mixerId: 6, mixerInputs: [0, 2], outputIds: [8] },
+      ],
+    ]);
+  });
+
   it('gives an output fed straight from an input a rack without modules', () => {
     const layout = buildRacks(table([analogIn(1, 0x101), out(1, 0x101), out(2, 0x101)]));
     expect(layout.racks).toEqual([
