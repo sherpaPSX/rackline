@@ -276,6 +276,8 @@ Level Mute/Opt bit0 mute, bit1 off at minimum.
 | Select 1 of N 0x0210 + N − 2 | 2 selected input − 1 (sampled N = 2, 3, 10) |
 | Matrix N×N 0x0801 (2×2), 0x0817 (6×6) | 2 … N + 1 slider view per output, N + 2 slider view inputs; crosspoints output-major from N + 3: out o, in i at N + 3 + 2(N(o − 1) + i − 1) level, + 1 mute; then per input from N + 3 + 2N²: level, solo, mute, invert; then per output the same; then view inputs, view outputs, auto-cancel |
 | Meter 0x0400 | no parameters |
+| Auto Mixer/Ducker 0x0b0c (4×4) | 2 … 5 slider view per output; crosspoints output-major from 6: level, assign; per input 7 slots from 38: detect threshold (dBFS = raw − 96), hold-off (s = raw), priority (raw − 1), duck depth (dB = raw − 96), ramp-back (s = raw), detect mode (always shown "Forced", coding unknown), one unnamed; 66 … 73 output level, mute; 74/75 view; 76 NOM mode; 77 … 80 gate depth per input (raw 0 = Off, else dB = raw − 96) |
+| Feedback Suppressor 0x0a01 (15) | 2 mode (0 speech, 1 music), 3 dynamic level, 4 release rate (table, 0 … 10 dB/s), 5 max attenuation (dB = (raw − 120)/4), 6 new filter BW (PEQ BW), 7 cycle clear, 8 timeout clear, 9 timeout (0.1 … 0.9, 1 … 7 h for raw 0 … 15; table end unknown), 11 threshold (level), 12 freeze, 15 last changed, 18 target gain, 19 gain margin (levels); filter n: 5n + 26 enable, type, freq (2 bytes), BW, gain (PEQ layout) |
 | Delay 0x0301 | 2 Delay |
 | Compressor 0x0500 | 2 Threshold, 3 Attack, 4 Release, 5 Ratio |
 | Limiter 0x0501 | 2 Threshold, 3 Attack, 4 Release |
@@ -302,8 +304,11 @@ HighLower 16), outputs in order High, Mid, Low. 0x0601 = 2-band PEQ,
   = 0x0200 + N − 2, Select 1 of N = 0x0210 + N − 2 (N = 2…10; block types
   and layouts sampled for N = 2, 3 and 10, the others follow the pattern,
   unverified). Block types of the other matrix sizes (4, 8, 10) are
-  unknown. Parameters of Auto Mixer and Feedback Suppressor are not mapped
-  yet.
+  unknown. Auto Mixer (4×4) and Feedback Suppressor (15) were sampled for
+  raw 0 … 63 and 0 … 15 only (Drag Net failed to write larger feedback
+  suppressor reports); their ranges are partly from the help, partly
+  unverified. Other Auto Mixer sizes (2–8 × 2–8) and 5/10-band feedback
+  suppressors have unknown block types.
 - **How the indexes and conversions were found:** a configuration with 32
   copies of each module is served by the simulator (no DSP limit applies
   there), every parameter gets a different raw value, and Drag Net's

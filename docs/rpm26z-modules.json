@@ -3069,6 +3069,7 @@
   "Ověřeno proti Drag Netu 4.2 se simulátorem, na skutečném RPM zatím ne.",
   "Delay: raw = počet vzorků při 48 kHz.",
   "Level Mute/Opt: bit0 mute, bit1 off na minimu.",
-  "Mix N x 1 = 0x0200 + N - 2, Select 1 of N = 0x0210 + N - 2 (N = 2..10, sampled for 2, 3, 10). Matrix 2 x 2 = 0x0801, 6 x 6 = 0x0817; other matrix sizes unknown."
+  "Mix N x 1 = 0x0200 + N - 2, Select 1 of N = 0x0210 + N - 2 (N = 2..10, sampled for 2, 3, 10). Matrix 2 x 2 = 0x0801, 6 x 6 = 0x0817; other matrix sizes unknown.",
+  "Auto Mixer/Ducker 4x4 = 0x0b0c and Feedback Suppressor 15 = 0x0a01: see docs/protocol.md section 4 for indexes; sampled raw 0..63 / 0..15 only."
  ]
 }

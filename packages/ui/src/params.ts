@@ -36,6 +36,8 @@ export function formatNumber(unit: NumberParam['unit'], value: number, step = 0.
       return formatMs(value);
     case 's':
       return `${value} s`;
+    case 'h':
+      return `${value} h`;
     case 'dB/s':
       return `${value} dB/s`;
     case 'oct':

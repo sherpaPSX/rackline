@@ -23,9 +23,9 @@ const PEQ_BASE_TYPE = 0x0600;
 /** Filter counts seen in real samples (Lukas's config, Drag Net templates); the others follow the same pattern. */
 const SEEN_FILTER_COUNTS = [2, 3, 4, 5, 6, 8, 9, 12, 15];
 
-/** Filter n (1-based) uses indexes 5n−3 … 5n+1. */
-function filterParams(n: number): ParamDef[] {
-  const i = 5 * n;
+/** Filter n (1-based) uses indexes 5n−3 … 5n+1, shifted by `offset` (the feedback suppressor's filters start at 31). */
+export function filterParams(n: number, offset = 0): ParamDef[] {
+  const i = 5 * n + offset;
   return [
     bool(i - 3, `band${n}Enable`, `Filter ${n} on`),
     choice(i - 2, `band${n}Type`, `Filter ${n} type`, PEQ_FILTER_TYPES),

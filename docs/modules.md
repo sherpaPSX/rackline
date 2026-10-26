@@ -24,7 +24,7 @@ From the Drag Net 4.2 palette for RPM 26z. "Mapped" = parameters known for our U
 | Mono / Stereo S-C Compressor | side-chain compression (ducking) | optional | yes |
 | AGC | automatic gain control | installs | yes (max/min gain not found) |
 | Ambient Noise Comp | level follows room noise, needs a sense mic | installs | yes |
-| Feedback Suppressor | automatic feedback suppression | mics | no |
+| Feedback Suppressor | automatic feedback suppression | mics | 15 bands (ranges partly unverified) |
 
 ## Routing
 
@@ -33,7 +33,7 @@ From the Drag Net 4.2 palette for RPM 26z. "Mapped" = parameters known for our U
 | Mix N × 1 | sum several signals (e.g. L+R to mono sub) | yes (2–10) |
 | Matrix Mixer | any input to any output with a level at each point | 2×2, 6×6 (other sizes: block type unknown) |
 | Select 1 of N | source switch (e.g. analog / AES) | yes (2–10) |
-| Auto Mixer / Ducker | automatic mic mixing, music ducking | no |
+| Auto Mixer / Ducker | automatic mic mixing, music ducking | 4×4 (detect mode not decoded) |
 
 Splitting one signal to several blocks needs no module: one output can feed
 several inputs.

@@ -1,12 +1,11 @@
 import { LEVEL, MATRIX_INPUT_LEVEL, MIX_INPUT_LEVEL } from '../units.js';
-import { bool, choice, level, num } from './params.js';
+import { bool, choice, level, num, range } from './params.js';
 import type { ModuleDef, ParamDef } from './types.js';
 
 /** Mix and Select come in 2 to 10 inputs; the size is fixed at compile time. */
 export const MIX_MAX_INPUTS = 10;
 /** Mix and Select sizes whose block type and layout were sampled with the simulator. */
 export const SAMPLED_SIZES = [2, 3, 10];
-const range = (from: number, to: number): number[] => Array.from({ length: to - from + 1 }, (_, k) => from + k);
 
 /**
  * Mix N × 1: block type 0x0200 + N − 2. Input k uses indexes 2k (level) and
