@@ -252,7 +252,29 @@ body {
   }
 }
 
-/* System: signal flow in the rack header */
+/* System: fixed inputs (top) and outputs (bottom) */
+.app-io {
+  padding: var(--rl-s3);
+  background: var(--rl-panel);
+  border: 1px solid var(--rl-line);
+  border-radius: var(--rl-radius);
+}
+.app-io-tiles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--rl-s2);
+}
+.app-io-tile {
+  display: grid;
+  grid-template-rows: 1fr auto;
+  gap: var(--rl-s1);
+  scroll-margin-top: 72px;
+}
+.app-io-flow .app-note {
+  margin: 0;
+}
+
+/* System: signal flow */
 .app-rack {
   /* A rack fed by another rack sits one step in, so the screen reads as the signal tree. */
   margin-left: calc(var(--app-depth, 0) * var(--rl-s5));
@@ -267,14 +289,17 @@ body {
   white-space: normal;
   overflow: visible;
 }
-.app-rack-flow {
+.app-rack-flow,
+.app-flow-line {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: var(--rl-s1) 6px;
 }
+.app-rack-flow {
+  column-gap: var(--rl-s3);
+}
 .app-flow-label {
-  margin-left: var(--rl-s2);
   font: 600 11px var(--rl-font-label);
   text-transform: uppercase;
   letter-spacing: 0.14em;
@@ -306,16 +331,6 @@ button.app-flow-chip:hover {
 button.app-flow-chip:focus-visible {
   outline: 2px solid var(--rl-accent);
   outline-offset: 1px;
-}
-/* A Select target: dim while it plays another rack, accent while it plays this one. */
-.app-flow-chip[aria-pressed='false'] {
-  color: var(--rl-dim);
-  border-style: dashed;
-  border-left-style: solid;
-}
-.app-flow-chip[aria-pressed='true'] {
-  border-color: var(--rl-accent);
-  border-left-color: var(--app-flow);
 }
 .app-source .rl-select {
   height: 26px;

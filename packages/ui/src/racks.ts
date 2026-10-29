@@ -170,18 +170,18 @@ export function joinChannels(names: readonly string[]): string {
     : names.join(' + ');
 }
 
-/** One end of a connection shown in the rack header; `rackId` makes it jump to that rack. */
+/** One end of a connection shown in a header; `anchor` is the element id it jumps to. */
 export interface FlowLink {
   text: string;
-  rackId?: string;
+  /** `rack-<rack id>`, `in-<first block id>` or `out-<first block id>`. */
+  anchor?: string;
   /** Color of the rack it leads to or comes from. */
   color?: string;
-  /**
-   * The target rack picks its source with a Select: setting its blocks to
-   * `value` makes it play this rack. Without it the wiring is fixed.
-   */
-  select?: { blockIds: number[]; value: number };
 }
+
+export const rackAnchor = (rackId: string): string => `rack-${rackId}`;
+export const inputAnchor = (blockIds: readonly number[]): string => `in-${blockIds[0] ?? 0}`;
+export const outputAnchor = (blockIds: readonly number[]): string => `out-${blockIds[0] ?? 0}`;
 
 type Channel = Rack['channels'][number];
 
@@ -203,12 +203,15 @@ function linkOf(setup: Setup, group: readonly Tap[]): FlowLink {
   const tap = group[0];
   if (tap === undefined) return { text: 'no source' };
   if (tap.kind === 'input' || tap.kind === 'generator') {
-    const names = group.map((t) => (t.kind === 'input' || t.kind === 'generator' ? channelName(setup, t.blockId) : undefined));
-    return { text: names.every((n) => n !== undefined) ? joinChannels(names as string[]) : tapText(setup, tap) };
+    const ids = group.map((t) => (t.kind === 'input' || t.kind === 'generator' ? t.blockId : -1));
+    const names = ids.map((id) => channelName(setup, id));
+    const text = names.every((n) => n !== undefined) ? joinChannels(names as string[]) : tapText(setup, tap);
+    const strip = inputStrips(setup).find((st) => st.blockIds.some((id) => ids.includes(id)));
+    return strip ? { text, anchor: inputAnchor(strip.blockIds) } : { text };
   }
   const from = setup.racks.find((r) => r.id === tap.rackId);
   const band = tap.kind === 'band' ? from?.crossover?.bands[tap.band]?.name : undefined;
-  return { text: band === undefined ? (from?.name ?? tap.rackId) : `${from?.name ?? tap.rackId} · ${band}`, rackId: tap.rackId, color: rackColor(setup, tap.rackId) };
+  return { text: band === undefined ? (from?.name ?? tap.rackId) : `${from?.name ?? tap.rackId} · ${band}`, anchor: rackAnchor(tap.rackId), color: rackColor(setup, tap.rackId) };
 }
 
 const tapKey = (t: Tap): string => (t.kind === 'input' || t.kind === 'generator' ? t.kind : `${t.kind}:${t.rackId}:${t.kind === 'band' ? t.band : ''}`);
@@ -244,64 +247,100 @@ export function sourceChoice(setup: Setup, rack: Rack): SourceChoice | undefined
   };
 }
 
-/** A link to rack `r`, fed by `test`; picks `r`'s Select when it has one. */
-function targetLink(setup: Setup, r: Rack, text: string, test: (t: Tap) => boolean): FlowLink | undefined {
-  const [first] = r.channels;
-  const i = first?.sources.findIndex(test) ?? -1;
-  if (first === undefined || (i < 0 && !r.channels.some((c) => c.sources.some(test)))) return undefined;
-  const link: FlowLink = { text, rackId: r.id, color: rackColor(setup, r.id) };
-  const choice = i < 0 ? undefined : sourceChoice(setup, r);
-  return choice ? { ...link, select: { blockIds: choice.blockIds, value: selectValue(first, i) } } : link;
+const feeds = (r: Rack, test: (t: Tap) => boolean): boolean => r.channels.some((c) => c.sources.some(test));
+
+/**
+ * A rack that only picks which rack plays into some outputs: a Select per
+ * channel feeding outputs directly. It is shown as the source of those
+ * outputs, not as a rack.
+ */
+export const isOutputSelect = (setup: Setup, rack: Rack): boolean =>
+  rack.modules.length === 0 && rack.crossover === undefined && outputIdsOf(rack).length > 0 && sourceChoice(setup, rack) !== undefined;
+
+/** One physical output tile: a stereo pair fed by one rack, or a single output. */
+export interface OutputStrip {
+  name: string;
+  blockIds: number[];
+  /** The rack playing into it, if any. */
+  rackId?: string;
+}
+
+/** Physical outputs in channel order, paired when one stereo rack feeds them. */
+export function outputStrips(setup: Setup): OutputStrip[] {
+  const strips: OutputStrip[] = [];
+  const fed = new Set<number>();
+  for (const r of setup.racks) {
+    const ids = outputIdsOf(r);
+    if (ids.length === 0) continue;
+    ids.forEach((id) => fed.add(id));
+    const paired = r.channels.length > 1 && r.channels.every((c) => c.outputIds.length === 1);
+    for (const blockIds of paired ? [ids] : ids.map((id) => [id])) {
+      strips.push({ name: joinChannels(blockIds.map((id) => channelName(setup, id) ?? `block ${id}`)), blockIds, rackId: r.id });
+    }
+  }
+  for (const id of setup.outputIds) if (!fed.has(id)) strips.push({ name: channelName(setup, id) ?? `block ${id}`, blockIds: [id] });
+  const first = (st: OutputStrip) => Math.min(...st.blockIds.map((id) => blockById(setup, id)?.channel ?? 99));
+  return strips.sort((x, y) => first(x) - first(y));
 }
 
 /**
  * Where a rack's signal goes: its outputs ("Out 5+6"), the racks fed by the
  * end of its chain, and for a crossover each used band ("High → MF\HF").
+ * An output Select it can be switched into counts as that output.
  */
 export function flowTargets(setup: Setup, rack: Rack): FlowLink[] {
-  const outs = outputIdsOf(rack).map((id) => channelName(setup, id));
-  const links: FlowLink[] = outs.length > 0 && outs.every((n) => n !== undefined) ? [{ text: joinChannels(outs as string[]) }] : [];
-  for (const r of setup.racks) {
-    const link = targetLink(setup, r, r.name, (t) => t.kind === 'rack' && t.rackId === rack.id);
-    if (link) links.push(link);
-  }
+  const outputLinks = (r: Rack): FlowLink[] =>
+    outputStrips(setup)
+      .filter((st) => st.rackId === r.id)
+      .map((st) => ({ text: st.name, anchor: outputAnchor(st.blockIds) }));
+  // `prefix` names the crossover band ("High → ").
+  const to = (r: Rack, prefix: string): FlowLink[] =>
+    isOutputSelect(setup, r)
+      ? outputLinks(r).map((l) => ({ ...l, text: prefix + l.text }))
+      : [{ text: prefix + r.name, anchor: rackAnchor(r.id), color: rackColor(setup, r.id) }];
+  const links = outputLinks(rack);
+  for (const r of setup.racks) if (feeds(r, (t) => t.kind === 'rack' && t.rackId === rack.id)) links.push(...to(r, ''));
   (rack.crossover?.bands ?? []).forEach((b, band) => {
     for (const r of setup.racks) {
-      const link = targetLink(setup, r, `${b.name} → ${r.name}`, (t) => t.kind === 'band' && t.rackId === rack.id && t.band === band);
-      if (link) links.push(link);
+      if (feeds(r, (t) => t.kind === 'band' && t.rackId === rack.id && t.band === band)) links.push(...to(r, `${b.name} → `));
     }
   });
   return links;
 }
 
-/** Whether a target's Select currently plays this rack. */
-export const selectsThis = (values: Values, link: FlowLink): boolean =>
-  link.select !== undefined && link.select.blockIds.every((id) => valueOf(values, id, 'input') === link.select?.value);
+/** Racks fed by one input tile (directly or as a Select choice). */
+export function inputTargets(setup: Setup, blockIds: readonly number[]): FlowLink[] {
+  return setup.racks
+    .filter((r) => feeds(r, (t) => t.kind === 'input' && blockIds.includes(t.blockId)))
+    .map((r) => ({ text: r.name, anchor: rackAnchor(r.id), color: rackColor(setup, r.id) }));
+}
 
 /**
  * Racks as a tree in signal order: each rack follows the rack that feeds it,
  * one level deeper, so the screen reads ANALOG → Delay → MF\HF, LF.
- * A rack fed by several racks hangs under the first one.
+ * A rack fed by several racks hangs under the first one. Output Selects
+ * are left out: they show as the source of their outputs.
  */
 export function rackTree(setup: Setup): { rack: Rack; depth: number }[] {
+  const racks = setup.racks.filter((r) => !isOutputSelect(setup, r));
   const parentOf = (r: Rack): string | undefined => {
     for (const t of r.channels.flatMap((c) => c.sources)) if (t.kind === 'rack' || t.kind === 'band') return t.rackId;
     return undefined;
   };
-  const ids = new Set(setup.racks.map((r) => r.id));
+  const ids = new Set(racks.map((r) => r.id));
   const out: { rack: Rack; depth: number }[] = [];
   const seen = new Set<string>();
   const visit = (rack: Rack, depth: number) => {
     if (seen.has(rack.id)) return;
     seen.add(rack.id);
     out.push({ rack, depth });
-    for (const child of setup.racks) if (parentOf(child) === rack.id) visit(child, depth + 1);
+    for (const child of racks) if (parentOf(child) === rack.id) visit(child, depth + 1);
   };
-  for (const r of setup.racks) {
+  for (const r of racks) {
     const parent = parentOf(r);
     if (parent === undefined || !ids.has(parent)) visit(r, 0);
   }
   // Racks caught in a loop have no root; show them flat at the end.
-  for (const r of setup.racks) visit(r, 0);
+  for (const r of racks) visit(r, 0);
   return out;
 }

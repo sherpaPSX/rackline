@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { anyMuted, bandStrips, channelName, rackChannelNames, channelsAgree, flowSources, flowTargets, selectsThis, inputStrips, isSelect, sourceChoice, joinChannels, pairName, rackColor, rackDetail, rackTree } from '../src/index.js';
+import { anyMuted, bandStrips, channelName, rackChannelNames, channelsAgree, flowSources, flowTargets, inputTargets, isOutputSelect, outputStrips, inputStrips, isSelect, sourceChoice, joinChannels, pairName, rackColor, rackDetail, rackTree } from '../src/index.js';
 import { psxState } from './fixtures.js';
 import { withSelects } from './select-demo.js';
 
@@ -28,13 +28,25 @@ describe('rack views of PSX_RCF_FINAL', () => {
     const text = (links: { text: string }[]) => links.map((l) => l.text);
     expect(text(flowSources(setup, rack('ANALOG')))).toEqual(['In 1+2']);
     expect(text(flowSources(setup, rack('ANALOG mono')))).toEqual(['Σ ANALOG']);
-    expect(flowSources(setup, rack('MF\\HF'))).toEqual([{ text: 'Delay · High', rackId: rack('Delay').id, color: 'var(--rl-dim)' }]);
+    expect(flowSources(setup, rack('MF\\HF'))).toEqual([{ text: 'Delay · High', anchor: `rack-${rack('Delay').id}`, color: 'var(--rl-dim)' }]);
+    expect(flowSources(setup, rack('ANALOG'))).toEqual([{ text: 'In 1+2', anchor: 'in-1' }]);
     expect(text(flowTargets(setup, rack('ANALOG')))).toEqual(['Delay', 'ANALOG mono']);
-    expect(flowTargets(setup, rack('MF\\HF'))).toEqual([{ text: 'Out 5+6' }]);
+    expect(flowTargets(setup, rack('MF\\HF'))).toEqual([{ text: 'Out 5+6', anchor: 'out-15' }]);
+    expect(text(inputTargets(setup, [1, 2]))).toEqual(['ANALOG']);
+    expect(inputTargets(setup, [9, 10])).toEqual([]);
     expect(text(flowTargets(setup, rack('Delay')))).toEqual(['High → MF\\HF', 'Mid → LF']);
     expect(text(flowTargets(setup, rack('ANALOG mono')))).toEqual(['High mid → SUB FLEX', 'Low mid → SUB HORN']);
     expect(joinChannels(['In 1', 'In 2'])).toBe('In 1+2');
     expect(joinChannels(['Out 5'])).toBe('Out 5');
+  });
+
+  it('lists physical outputs in channel order, paired by their stereo rack', () => {
+    expect(outputStrips(setup)).toEqual([
+      { name: 'Out 1', blockIds: [11], rackId: rack('SUB HORN').id },
+      { name: 'Out 2', blockIds: [12], rackId: rack('SUB FLEX').id },
+      { name: 'Out 3+4', blockIds: [13, 14], rackId: rack('LF').id },
+      { name: 'Out 5+6', blockIds: [15, 16], rackId: rack('MF\\HF').id },
+    ]);
   });
 
   it('orders racks as a tree, each under the rack that feeds it', () => {
@@ -97,8 +109,8 @@ describe('racks that pick their source with a Select', () => {
     expect(sourceChoice(s, analog)).toEqual({
       blockIds: [901, 902],
       options: [
-        { value: 0, link: { text: 'In 1+2' } },
-        { value: 1, link: { text: 'In A+B' } },
+        { value: 0, link: { text: 'In 1+2', anchor: 'in-1' } },
+        { value: 1, link: { text: 'In A+B', anchor: 'in-9' } },
       ],
     });
     expect(sourceChoice(setup, rack('ANALOG mono'))).toBeUndefined();
@@ -112,19 +124,15 @@ describe('racks that pick their source with a Select', () => {
     expect(rackChannelNames(s, delay, digital)).toEqual(['In A', 'In B']);
   });
 
-  it('lets a rack switch an output Select to itself', () => {
+  it('shows an output Select as the source of its outputs, not as a rack', () => {
     const find = (name: string) => s.racks.find((r) => r.name === name) ?? analog;
     const out = find('Out 5+6');
+    expect(isOutputSelect(s, out)).toBe(true);
+    expect(isOutputSelect(s, find('LF'))).toBe(false);
     expect(sourceChoice(s, out)?.options.map((o) => o.link.text)).toEqual(['MF\\HF', 'LF']);
-    const [toOut56] = flowTargets(s, find('MF\\HF'));
-    expect(toOut56).toEqual({ text: 'Out 5+6', rackId: out.id, color: rackColor(s, out.id), select: { blockIds: [903, 904], value: 0 } });
-    const lfTargets = flowTargets(s, find('LF'));
-    expect(lfTargets.map((l) => [l.text, l.select?.value])).toEqual([
-      ['Out 3+4', undefined],
-      ['Out 5+6', 1],
-    ]);
-    expect(selectsThis(demo.values, toOut56 ?? { text: '' })).toBe(true);
-    expect(selectsThis(demo.values, lfTargets[1] ?? { text: '' })).toBe(false);
+    expect(rackTree(s).map((n) => n.rack.name)).not.toContain('Out 5+6');
+    expect(flowTargets(s, find('MF\\HF'))).toEqual([{ text: 'Out 5+6', anchor: 'out-15' }]);
+    expect(flowTargets(s, find('LF')).map((l) => l.text)).toEqual(['Out 3+4', 'Out 5+6']);
   });
 });
 
