@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { anyMuted, bandStrips, channelName, rackChannelNames, channelsAgree, flowBands, flowSources, flowTargets, inputStrips, isSelect, sourceChoice, joinChannels, pairName, rackColor, rackDetail, rackTree } from '../src/index.js';
+import { anyMuted, bandStrips, channelName, rackChannelNames, channelsAgree, flowSources, flowTargets, selectsThis, inputStrips, isSelect, sourceChoice, joinChannels, pairName, rackColor, rackDetail, rackTree } from '../src/index.js';
 import { psxState } from './fixtures.js';
-import { withInputSelect } from './select-demo.js';
+import { withSelects } from './select-demo.js';
 
 const state = psxState();
 const setup = state.setup;
@@ -31,12 +31,8 @@ describe('rack views of PSX_RCF_FINAL', () => {
     expect(flowSources(setup, rack('MF\\HF'))).toEqual([{ text: 'Delay · High', rackId: rack('Delay').id, color: 'var(--rl-dim)' }]);
     expect(text(flowTargets(setup, rack('ANALOG')))).toEqual(['Delay', 'ANALOG mono']);
     expect(flowTargets(setup, rack('MF\\HF'))).toEqual([{ text: 'Out 5+6' }]);
-    expect(flowBands(setup, rack('ANALOG mono')).map((b) => [b.band, text(b.to)])).toEqual([
-      ['High', []],
-      ['High mid', ['SUB FLEX']],
-      ['Low mid', ['SUB HORN']],
-      ['Low', []],
-    ]);
+    expect(text(flowTargets(setup, rack('Delay')))).toEqual(['High → MF\\HF', 'Mid → LF']);
+    expect(text(flowTargets(setup, rack('ANALOG mono')))).toEqual(['High mid → SUB FLEX', 'Low mid → SUB HORN']);
     expect(joinChannels(['In 1', 'In 2'])).toBe('In 1+2');
     expect(joinChannels(['Out 5'])).toBe('Out 5');
   });
@@ -88,8 +84,8 @@ describe('rack views of PSX_RCF_FINAL', () => {
   });
 });
 
-describe('a rack that picks its input with a Select', () => {
-  const demo = withInputSelect(state);
+describe('racks that pick their source with a Select', () => {
+  const demo = withSelects(state);
   const s = demo.setup;
   if (!s) throw new Error('no setup');
   const analog = s.racks.find((r) => r.name === 'ANALOG');
@@ -114,6 +110,21 @@ describe('a rack that picks its input with a Select', () => {
     expect(rackChannelNames(s, analog, demo.values)).toEqual(['In 1', 'In 2']);
     const digital = { ...demo.values, '901': { input: 1 }, '902': { input: 1 } };
     expect(rackChannelNames(s, delay, digital)).toEqual(['In A', 'In B']);
+  });
+
+  it('lets a rack switch an output Select to itself', () => {
+    const find = (name: string) => s.racks.find((r) => r.name === name) ?? analog;
+    const out = find('Out 5+6');
+    expect(sourceChoice(s, out)?.options.map((o) => o.link.text)).toEqual(['MF\\HF', 'LF']);
+    const [toOut56] = flowTargets(s, find('MF\\HF'));
+    expect(toOut56).toEqual({ text: 'Out 5+6', rackId: out.id, color: rackColor(s, out.id), select: { blockIds: [903, 904], value: 0 } });
+    const lfTargets = flowTargets(s, find('LF'));
+    expect(lfTargets.map((l) => [l.text, l.select?.value])).toEqual([
+      ['Out 3+4', undefined],
+      ['Out 5+6', 1],
+    ]);
+    expect(selectsThis(demo.values, toOut56 ?? { text: '' })).toBe(true);
+    expect(selectsThis(demo.values, lfTargets[1] ?? { text: '' })).toBe(false);
   });
 });
 

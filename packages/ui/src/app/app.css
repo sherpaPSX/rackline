@@ -252,7 +252,7 @@ body {
   }
 }
 
-/* System: signal flow */
+/* System: signal flow in the rack header */
 .app-rack {
   /* A rack fed by another rack sits one step in, so the screen reads as the signal tree. */
   margin-left: calc(var(--app-depth, 0) * var(--rl-s5));
@@ -263,16 +263,18 @@ body {
     margin-left: calc(var(--app-depth, 0) * var(--rl-s2));
   }
 }
-.app-flow {
-  flex: none;
+.app-rack .rl-rack-detail {
+  white-space: normal;
+  overflow: visible;
+}
+.app-rack-flow {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  gap: var(--rl-s1);
-  max-width: 180px;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--rl-s1) 6px;
 }
 .app-flow-label {
+  margin-left: var(--rl-s2);
   font: 600 11px var(--rl-font-label);
   text-transform: uppercase;
   letter-spacing: 0.14em;
@@ -281,9 +283,8 @@ body {
 .app-flow-chip {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
   max-width: 100%;
-  height: 26px;
+  height: 24px;
   padding: 0 var(--rl-s2);
   background: var(--rl-bg);
   border: 1px solid var(--rl-line);
@@ -306,27 +307,19 @@ button.app-flow-chip:focus-visible {
   outline: 2px solid var(--rl-accent);
   outline-offset: 1px;
 }
-.app-flow-band {
-  display: flex;
-  align-items: center;
-  gap: var(--rl-s1);
-  max-width: 100%;
-}
-.app-flow-band-name {
-  width: 56px;
-  flex: none;
-  font: 500 12px var(--rl-font-label);
+/* A Select target: dim while it plays another rack, accent while it plays this one. */
+.app-flow-chip[aria-pressed='false'] {
   color: var(--rl-dim);
+  border-style: dashed;
+  border-left-style: solid;
 }
-.app-flow-unused {
-  font: 500 12px var(--rl-font-label);
-  color: var(--rl-dim);
-  opacity: 0.7;
+.app-flow-chip[aria-pressed='true'] {
+  border-color: var(--rl-accent);
+  border-left-color: var(--app-flow);
 }
-
-.app-source[data-differ] .rl-seg {
-  outline: 1px solid var(--rl-warn);
+.app-source .rl-select {
+  height: 26px;
 }
-.app-source {
-  max-width: none;
+.app-source[data-differ] .rl-select {
+  border-color: var(--rl-warn);
 }

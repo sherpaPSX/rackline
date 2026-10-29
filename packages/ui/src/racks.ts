@@ -170,12 +170,17 @@ export function joinChannels(names: readonly string[]): string {
     : names.join(' + ');
 }
 
-/** One end of a connection drawn in the rack chain; `rackId` makes it jump to that rack. */
+/** One end of a connection shown in the rack header; `rackId` makes it jump to that rack. */
 export interface FlowLink {
   text: string;
   rackId?: string;
   /** Color of the rack it leads to or comes from. */
   color?: string;
+  /**
+   * The target rack picks its source with a Select: setting its blocks to
+   * `value` makes it play this rack. Without it the wiring is fixed.
+   */
+  select?: { blockIds: number[]; value: number };
 }
 
 type Channel = Rack['channels'][number];
@@ -239,27 +244,39 @@ export function sourceChoice(setup: Setup, rack: Rack): SourceChoice | undefined
   };
 }
 
-const feeds = (r: Rack, test: (t: Tap) => boolean) => r.channels.some((c) => c.sources.some(test));
+/** A link to rack `r`, fed by `test`; picks `r`'s Select when it has one. */
+function targetLink(setup: Setup, r: Rack, text: string, test: (t: Tap) => boolean): FlowLink | undefined {
+  const [first] = r.channels;
+  const i = first?.sources.findIndex(test) ?? -1;
+  if (first === undefined || (i < 0 && !r.channels.some((c) => c.sources.some(test)))) return undefined;
+  const link: FlowLink = { text, rackId: r.id, color: rackColor(setup, r.id) };
+  const choice = i < 0 ? undefined : sourceChoice(setup, r);
+  return choice ? { ...link, select: { blockIds: choice.blockIds, value: selectValue(first, i) } } : link;
+}
 
-/** Where a rack's chain goes: its outputs ("Out 5+6") and the racks fed by the end of its chain. */
+/**
+ * Where a rack's signal goes: its outputs ("Out 5+6"), the racks fed by the
+ * end of its chain, and for a crossover each used band ("High → MF\HF").
+ */
 export function flowTargets(setup: Setup, rack: Rack): FlowLink[] {
   const outs = outputIdsOf(rack).map((id) => channelName(setup, id));
   const links: FlowLink[] = outs.length > 0 && outs.every((n) => n !== undefined) ? [{ text: joinChannels(outs as string[]) }] : [];
   for (const r of setup.racks) {
-    if (feeds(r, (t) => t.kind === 'rack' && t.rackId === rack.id)) links.push({ text: r.name, rackId: r.id, color: rackColor(setup, r.id) });
+    const link = targetLink(setup, r, r.name, (t) => t.kind === 'rack' && t.rackId === rack.id);
+    if (link) links.push(link);
   }
+  (rack.crossover?.bands ?? []).forEach((b, band) => {
+    for (const r of setup.racks) {
+      const link = targetLink(setup, r, `${b.name} → ${r.name}`, (t) => t.kind === 'band' && t.rackId === rack.id && t.band === band);
+      if (link) links.push(link);
+    }
+  });
   return links;
 }
 
-/** Each crossover band and the racks it feeds; an empty `to` means the band is not used. */
-export function flowBands(setup: Setup, rack: Rack): { band: string; to: FlowLink[] }[] {
-  return (rack.crossover?.bands ?? []).map((b, band) => ({
-    band: b.name,
-    to: setup.racks
-      .filter((r) => feeds(r, (t) => t.kind === 'band' && t.rackId === rack.id && t.band === band))
-      .map((r) => ({ text: r.name, rackId: r.id, color: rackColor(setup, r.id) })),
-  }));
-}
+/** Whether a target's Select currently plays this rack. */
+export const selectsThis = (values: Values, link: FlowLink): boolean =>
+  link.select !== undefined && link.select.blockIds.every((id) => valueOf(values, id, 'input') === link.select?.value);
 
 /**
  * Racks as a tree in signal order: each rack follows the rack that feeds it,

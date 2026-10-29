@@ -5,13 +5,13 @@ import { Button, MuteButton, RackCard } from '@rackline/ui-kit';
 import { useCoreClient } from '../app/core-context.js';
 import { peqBands } from '../curves.js';
 import { formatParam } from '../params.js';
-import { anyMuted, blockById, channelName, flowBands, flowSources, flowTargets, inputStrips, moduleOf, outputIdsOf, rackChannelNames, rackColor, rackTree, sourceChoice, valueOf } from '../racks.js';
+import { anyMuted, blockById, channelName, inputStrips, moduleOf, outputIdsOf, rackChannelNames, rackColor, rackTree, sourceChoice, valueOf } from '../racks.js';
 import { CrossoverModule } from '../modules/CrossoverModule.js';
 import { GenericModule } from '../modules/GenericModule.js';
 import type { ModuleViewProps } from '../modules/GenericModule.js';
 import { OutputPolarity } from '../modules/OutputPolarity.js';
 import { PeqModule } from '../modules/PeqModule.js';
-import { FlowBands, FlowEnd, SourcePicker } from './FlowChips.js';
+import { RackFlow } from './FlowChips.js';
 
 function ModuleView(props: ModuleViewProps) {
   return peqBands(props.module).length > 0 ? <PeqModule {...props} /> : <GenericModule {...props} />;
@@ -46,7 +46,6 @@ function RackView({ rack, setup, values }: { rack: Rack; setup: Setup; values: V
   // The band's Level module carries its output polarity, as in the ui-kit rack; without one, an Output card does.
   const levelIndex = rack.modules.findLastIndex((m) => setup.modules.find((x) => x.blockType === m.blockType)?.params.some((p) => p.key === 'level'));
   const crossover = rack.crossover;
-  const targets = flowTargets(setup, rack);
   const crossoverModules = (crossover?.blockIds[0] ?? []).map((id) => moduleOf(setup, id)).filter((m): m is ModuleInfo => m !== undefined);
   // Racks fed by this rack's crossover bands, so the curve uses their colors.
   const bandColors = (crossover?.bands ?? []).map((_, band) => {
@@ -58,7 +57,7 @@ function RackView({ rack, setup, values }: { rack: Rack; setup: Setup; values: V
     <RackCard
       name={rack.name}
       color={rackColor(setup, rack.id)}
-      detail={rack.channels.length > 1 ? `Stereo · ${names.join(', ')}` : 'Mono'}
+      detail={<RackFlow setup={setup} rack={rack} values={values} />}
       expanded={expanded}
       onExpandedChange={setExpanded}
       actions={
@@ -74,7 +73,6 @@ function RackView({ rack, setup, values }: { rack: Rack; setup: Setup; values: V
         )
       }
     >
-      {choice ? <SourcePicker choice={choice} values={values} owner={rack.name} /> : <FlowEnd label="From" links={flowSources(setup, rack)} />}
       {!choice && mixerId !== undefined && mixerModule && (
         <ModuleView module={mixerModule} blockIds={[mixerId]} values={values} rackName={rack.name} title="Sum" />
       )}
@@ -100,8 +98,6 @@ function RackView({ rack, setup, values }: { rack: Rack; setup: Setup; values: V
       {outputModule && levelIndex < 0 && (
         <ModuleView module={outputModule} blockIds={outputs} values={values} rackName={rack.name} channelNames={names} title="Output" />
       )}
-      {crossover && <FlowBands bands={flowBands(setup, rack)} />}
-      {targets.length > 0 && <FlowEnd label="To" links={targets} />}
     </RackCard>
   );
 }
