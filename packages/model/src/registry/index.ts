@@ -4,8 +4,10 @@ import { crossover2, crossover3 } from './crossover.js';
 import { delay } from './delay.js';
 import { digitalInput } from './digital-input.js';
 import { agc } from './agc.js';
+import { autoMixer4x4 } from './auto-mixer.js';
 import { ambientNoiseCompensator } from './ambient-noise.js';
 import { compressor, limiter, monoSideChainCompressor, stereoSideChainCompressor } from './dynamics.js';
+import { feedbackSuppressor } from './feedback.js';
 import { generator } from './generator.js';
 import { graphicEq } from './geq.js';
 import { levelModule } from './level.js';
@@ -26,6 +28,7 @@ export const MODULES: readonly ModuleDef[] = [
   analogOutput,
   levelModule,
   ...MIXERS,
+  autoMixer4x4,
   meter,
   delay,
   compressor,
@@ -38,6 +41,7 @@ export const MODULES: readonly ModuleDef[] = [
   crossover2,
   crossover3,
   graphicEq,
+  feedbackSuppressor,
   generator,
 ];
 

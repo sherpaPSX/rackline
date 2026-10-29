@@ -7,19 +7,25 @@ import { dragNetParamNames } from './fixtures.js';
 const SAMPLED = [
   ...SAMPLED_SIZES.flatMap((n) => [0x0200 + n - 2, 0x0210 + n - 2]),
   ...Object.values(MATRIX_BLOCK_TYPES),
+  0x0a01,
+  0x0b0c,
 ];
 
-describe('mix, select and matrix layouts match Drag Net (simulator)', () => {
+/** Drag Net parameters deliberately left out: view flags, status values and the undecoded detect mode. */
+const notExposed = (name: string): boolean =>
+  /^(View|Target Gain|Gain Margin|Last Changed|DetectMode)/.test(name);
+
+describe('mix, select, matrix, auto mixer and feedback suppressor layouts match Drag Net (simulator)', () => {
   for (const blockType of SAMPLED) {
     const module = findModule(blockType) as ModuleDef;
     const names = dragNetParamNames(blockType);
 
-    it(`${blockType.toString(16)}: every Drag Net parameter is mapped except the slider view flags`, () => {
+    it(`${blockType.toString(16)}: every Drag Net parameter is mapped except view flags and status values`, () => {
       expect(module).toBeDefined();
       expect(names.size).toBeGreaterThan(0);
       const mapped = new Set(module.params.map((p) => p.index));
       const unmapped = [...names].filter(([index]) => !mapped.has(index)).map(([, name]) => name);
-      expect(unmapped.every((name) => name.startsWith('View'))).toBe(true);
+      expect(unmapped.filter((name) => !notExposed(name))).toEqual([]);
       for (const p of module.params) expect(names.has(p.index), p.key).toBe(true);
     });
   }

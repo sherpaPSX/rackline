@@ -4,7 +4,7 @@
  * See docs/protocol.md §4 "Conversions".
  */
 
-export type Unit = 'dB' | 'dBFS' | 'Hz' | 'ms' | 's' | 'dB/s' | 'oct' | 'ratio';
+export type Unit = 'dB' | 'dBFS' | 'Hz' | 'ms' | 's' | 'h' | 'dB/s' | 'oct' | 'ratio';
 
 /** A linear conversion `value = (raw - offset) / divisor`, plus the raw range of the parameter. */
 export interface Linear {
@@ -64,11 +64,15 @@ export const COMPRESSOR_THRESHOLD = dbRange(-40, 0, 'dBFS');
 /** PEQ gain: dB = (raw − 120) / 4, −15 … +12 dB in ¼ dB steps (Drag Net help). */
 export const PEQ_GAIN = linear('dB', 120, 4, 60, 168);
 /**
- * PEQ bandwidth: octaves = 0.025 · (raw + 1) (simulator; raw 12 = the
- * default 0.325 oct). The Drag Net help describes 200 non-linear steps from
- * 0.015 to 4 octaves, which does not fit; unresolved, so the range stays wide.
+ * PEQ bandwidth: octaves = 0.025 · (raw + 1) for raw 0 … 80 (0.025 … 2.025
+ * oct; Drag Net's display, simulator). Drag Net shows 2.025 for every raw
+ * above 80, yet Lukas's file holds raw up to 223, so what the DSP does above
+ * 80 is unknown (needs hardware). The raw range stays 0 … 255 so those values
+ * survive a read-modify-write. The help's "0.015 … 4 octaves" does not match.
  */
 export const PEQ_BANDWIDTH = linear('oct', -1, 40, 0, 255);
+/** Feedback suppressor max attenuation: dB = (raw − 120) / 4 like PEQ gain; −30 … 0 dB is a guess. */
+export const FBS_MAX_ATTENUATION = linear('dB', 120, 4, 0, 120);
 /** Graphic EQ band, input and output gain: dB = (raw − 120) / 4, ±12 dB in ¼ dB steps. */
 export const GEQ_GAIN = linear('dB', 120, 4, 72, 168);
 /** A rate in dB per second, raw = dB/s (AGC, side-chain compressor attack and release). */
