@@ -99,6 +99,8 @@ export const Rack = z.object({
       /** One source, or several summed by the mixer block `mixerId`. */
       sources: z.array(Tap),
       mixerId: z.number().optional(),
+      /** With a mixer: the mixer input (0-based) of each source; for a Select, its `input` value. */
+      mixerInputs: z.array(z.number()).optional(),
       outputIds: z.array(z.number()),
     }),
   ),

@@ -131,6 +131,33 @@ Every message is JSON validated by a zod schema on both sides
   A new `state` (new setup, preset recall) clears the history.
 - View helpers (`racks.ts`) derive band strips, input pairs and rack detail
   lines from the API's JSON only.
+- Screens: **Show** (fader = trim + mute per input pair and band; band
+  fader = Output Trim of all its outputs), **System / Tune**: the physical inputs on top and the
+  physical outputs at the bottom are fixed tiles (inputs: sensitivity, trim,
+  mute and the racks they feed; outputs: trim, mute, polarity and the rack
+  playing into them); racks sit between them as a signal tree, each indented
+  under the rack that feeds it, and only connect to them. A rack's header
+  shows width, From and To as chips that jump to the rack, input or output,
+  plus a quick band mute. Modules run left to right; PEQ and crossover
+  expand sideways with a curve; limiters show the threshold until expanded;
+  PEQ bypass switches all filters off (the RPM has no bypass). Stereo
+  modules edit both channels linked (one quiet "1+2" button) or one when
+  they differ (amber 1+2 / 1 / 2); channels are named by their physical
+  inputs/outputs (1+2, A+B, 5+6). Wiring is fixed except through Select 1 of
+  N blocks (a parameter, no dropout): a rack starting with a Select picks its
+  source in its header, and a Select in front of outputs is shown as a
+  source picker on the output tile, not as a rack. `mixerInputs` in the API
+  maps each source to its Select input, so unconnected inputs are skipped
+  right),
+  **Files** (find/connect a device, open `.r26`, recall presets).
+- Curves are drawn from the option labels the core sends (`curves.ts`);
+  Low/High cut as 2nd-order Butterworth and Horn EQ/all-pass as flat are
+  guesses.
+- `pnpm --filter @rackline/ui dev` runs the UI against a core on
+  `ws://127.0.0.1:5180` (`?core=` overrides); `pnpm --filter @rackline/ui
+  preview` builds one self-contained HTML file with a fake in-page core on
+  `PSX_RCF_FINAL.r26`, for review. The preview adds demo Selects (input of
+  ANALOG, source of Out 5+6; `test/select-demo.ts`); Lukas's file has none.
 
 ## Tooling
 

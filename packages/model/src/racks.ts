@@ -21,6 +21,8 @@ export interface RackChannel {
   /** One source, or several summed by `mixerId` (a mono sum of a stereo rack is two taps of it). */
   sources: Tap[];
   mixerId?: number;
+  /** With a mixer: the mixer input (0-based) of each source; unconnected inputs have no source. */
+  mixerInputs?: number[];
   /** Output blocks fed by the end of the chain. */
   outputIds: number[];
 }
@@ -75,6 +77,8 @@ interface MonoRack {
   id: string;
   sources: Point[];
   mixer?: ConfigBlock;
+  /** Mixer input of each source. */
+  mixerInputs?: number[];
   modules: ConfigBlock[];
   crossover?: { blocks: ConfigBlock[]; bands: Point[]; names: string[] };
   outputs: ConfigBlock[];
@@ -180,10 +184,15 @@ export function buildRacks(table: BlockTable): RackLayout {
   for (const head of blocks) {
     const r = role.get(head.id);
     if (r === undefined || isSource(r) || r === 'output' || chained.has(head.id)) continue;
-    const rack: MonoRack = { id: `rack-${head.id}`, sources: head.inputs.flatMap((w) => driver(w) ?? []), modules: [], outputs: [] };
+    const fed = head.inputs.flatMap((w, input) => {
+      const p = driver(w);
+      return p === undefined ? [] : [{ p, input }];
+    });
+    const rack: MonoRack = { id: `rack-${head.id}`, sources: fed.map((f) => f.p), modules: [], outputs: [] };
     let block: ConfigBlock | undefined = head;
     if (r === 'mixer') {
       rack.mixer = head;
+      rack.mixerInputs = fed.map((f) => f.input);
       block = next(head);
     }
     while (block !== undefined) {
@@ -387,7 +396,7 @@ function displayOrder(pairs: Pair[], tapOf: (p: Point) => MonoTap, byId: Map<num
       name,
       channels: pair.map((r) => ({
         sources: r.sources.map((p) => toTap(tapOf(p))),
-        ...(r.mixer === undefined ? {} : { mixerId: r.mixer.id }),
+        ...(r.mixer === undefined ? {} : { mixerId: r.mixer.id, mixerInputs: r.mixerInputs ?? [] }),
         outputIds: r.outputs.map((o) => o.id),
       })),
       modules: left.modules.map((m, i) => ({ blockType: m.blockType, blockIds: pair.map((r) => r.modules[i]?.id ?? 0) })),

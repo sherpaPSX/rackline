@@ -42,6 +42,7 @@ function toRack(rack: ModelRack): Setup['racks'][number] {
     channels: rack.channels.map((c) => ({
       sources: c.sources,
       ...(c.mixerId === undefined ? {} : { mixerId: c.mixerId }),
+      ...(c.mixerInputs === undefined ? {} : { mixerInputs: c.mixerInputs }),
       outputIds: c.outputIds,
     })),
     modules: rack.modules,

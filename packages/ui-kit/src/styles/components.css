@@ -630,3 +630,63 @@ button.rl-value:disabled {
   border-radius: var(--rl-radius);
   outline: none;
 }
+
+/* Select */
+.rl-select {
+  height: var(--rl-control-h);
+  padding: 0 var(--rl-s2);
+  font: 600 12px/1 var(--rl-font-label);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--rl-fg);
+  background: var(--rl-well);
+  border: 1px solid var(--rl-line);
+  border-radius: var(--rl-radius);
+  cursor: pointer;
+}
+.rl-select:hover {
+  border-color: var(--rl-dim);
+}
+.rl-select:focus-visible {
+  outline: 2px solid var(--rl-accent);
+  outline-offset: 1px;
+}
+.rl-select:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.rl-select[data-touch] {
+  height: var(--rl-touch-h);
+  font-size: 14px;
+}
+.rl-module-badge {
+  flex: none;
+  padding: 0 var(--rl-s1);
+  font: 600 11px/1 var(--rl-font-label);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--rl-warn);
+}
+.rl-module-head > .rl-module-name:first-child {
+  padding-left: var(--rl-s2);
+}
+
+/* Text field */
+.rl-text {
+  box-sizing: border-box;
+  height: var(--rl-control-h);
+  min-width: 0;
+  padding: 0 var(--rl-s2);
+  font: 400 14px/1 var(--rl-font-value);
+  color: var(--rl-fg);
+  background: var(--rl-well);
+  border: 1px solid var(--rl-line);
+  border-radius: var(--rl-radius);
+}
+.rl-text:focus-visible {
+  outline: none;
+  border-color: var(--rl-accent);
+}
+.rl-text[data-touch] {
+  height: var(--rl-touch-h);
+}
