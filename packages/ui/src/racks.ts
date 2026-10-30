@@ -173,7 +173,7 @@ export function joinChannels(names: readonly string[]): string {
 /** One end of a connection shown in a header; `anchor` is the element id it jumps to. */
 export interface FlowLink {
   text: string;
-  /** `rack-<rack id>`, `in-<first block id>` or `out-<first block id>`. */
+  /** `rack-<rack id>` or `in-<first block id>`. */
   anchor?: string;
   /** Color of the rack it leads to or comes from. */
   color?: string;
@@ -181,7 +181,6 @@ export interface FlowLink {
 
 export const rackAnchor = (rackId: string): string => `rack-${rackId}`;
 export const inputAnchor = (blockIds: readonly number[]): string => `in-${blockIds[0] ?? 0}`;
-export const outputAnchor = (blockIds: readonly number[]): string => `out-${blockIds[0] ?? 0}`;
 
 type Channel = Rack['channels'][number];
 
@@ -283,66 +282,118 @@ export function outputStrips(setup: Setup): OutputStrip[] {
   return strips.sort((x, y) => first(x) - first(y));
 }
 
-/**
- * Where a rack's signal goes: its outputs ("Out 5+6"), the racks fed by the
- * end of its chain, and for a crossover each used band ("High → MF\HF").
- * An output Select it can be switched into counts as that output.
- */
-export function flowTargets(setup: Setup, rack: Rack): FlowLink[] {
-  const outputLinks = (r: Rack): FlowLink[] =>
-    outputStrips(setup)
-      .filter((st) => st.rackId === r.id)
-      .map((st) => ({ text: st.name, anchor: outputAnchor(st.blockIds) }));
-  // `prefix` names the crossover band ("High → ").
-  const to = (r: Rack, prefix: string): FlowLink[] =>
-    isOutputSelect(setup, r)
-      ? outputLinks(r).map((l) => ({ ...l, text: prefix + l.text }))
-      : [{ text: prefix + r.name, anchor: rackAnchor(r.id), color: rackColor(setup, r.id) }];
-  const links = outputLinks(rack);
-  for (const r of setup.racks) if (feeds(r, (t) => t.kind === 'rack' && t.rackId === rack.id)) links.push(...to(r, ''));
-  (rack.crossover?.bands ?? []).forEach((b, band) => {
-    for (const r of setup.racks) {
-      if (feeds(r, (t) => t.kind === 'band' && t.rackId === rack.id && t.band === band)) links.push(...to(r, `${b.name} → `));
+/** A rack that only processes inputs before the first split: it belongs to its input channel. */
+export const isInputRack = (rack: Rack): boolean =>
+  outputIdsOf(rack).length === 0 && rack.channels.every((c) => c.sources.length > 0 && c.sources.every((t) => t.kind === 'input'));
+
+/** The tap a channel plays: its only source, the selected input of a Select, or the first of a sum. */
+function feedOf(setup: Setup, c: Channel | undefined, values: Values): Tap | undefined {
+  if (!c) return undefined;
+  return (c.sources.length > 1 ? selectedSource(setup, c, values) : undefined) ?? c.sources[0];
+}
+
+/** A rack on a speaker's path; `channels[i]` is its channel feeding the speaker's channel i. */
+export interface PathStep {
+  rack: Rack;
+  channels: number[];
+}
+
+/** One row of the System screen: a speaker with its whole chain, from the input channel to the outputs. */
+export interface Speaker {
+  /** Row name: the rack's name, or the output Select's name ("Out 5+6") when the rack is switchable. */
+  name: string;
+  /** The rack playing into the outputs, which names the row (behind an output Select: the selected one). */
+  rack: Rack;
+  /** Rack whose channels end in the outputs: `rack`, or the output Select in front of them. */
+  end: Rack;
+  /** Every rack from the input channel to the outputs, in signal order. */
+  path: PathStep[];
+  /** The input channel's own rack the path starts from, if any. */
+  inputRack?: Rack;
+  /** Where the path starts: "ANALOG", "Σ ANALOG", "In 1+2". */
+  from: FlowLink[];
+  /** The crossover band feeding `rack`, e.g. "High". */
+  band?: string;
+}
+
+function speakerOf(setup: Setup, end: Rack, values: Values): Speaker {
+  let at = end;
+  let channels = end.channels.map((_, i) => i);
+  const path: PathStep[] = isOutputSelect(setup, end) ? [] : [{ rack: end, channels }];
+  let inputRack: Rack | undefined;
+  for (let n = 0; n < setup.racks.length; n++) {
+    const from = at;
+    const taps = channels.map((c) => feedOf(setup, from.channels[c], values));
+    const tap = taps[0];
+    if (tap?.kind !== 'rack' && tap?.kind !== 'band') break;
+    const parent = setup.racks.find((r) => r.id === tap.rackId);
+    if (!parent) break;
+    if (isInputRack(parent)) {
+      inputRack = parent;
+      break;
     }
-  });
-  return links;
-}
-
-/** Racks fed by one input tile (directly or as a Select choice). */
-export function inputTargets(setup: Setup, blockIds: readonly number[]): FlowLink[] {
-  return setup.racks
-    .filter((r) => feeds(r, (t) => t.kind === 'input' && blockIds.includes(t.blockId)))
-    .map((r) => ({ text: r.name, anchor: rackAnchor(r.id), color: rackColor(setup, r.id) }));
+    channels = taps.map((t) => (t && 'channel' in t ? t.channel : 0));
+    path.unshift({ rack: parent, channels });
+    at = parent;
+  }
+  const rack = path[path.length - 1]?.rack ?? end;
+  const tap = feedOf(setup, rack.channels[0], values);
+  const band = tap?.kind === 'band' ? setup.racks.find((r) => r.id === tap.rackId)?.crossover?.bands[tap.band]?.name : undefined;
+  return { name: end.name, rack, end, path, ...(inputRack && { inputRack }), from: flowSources(setup, path[0]?.rack ?? end), ...(band !== undefined && { band }) };
 }
 
 /**
- * Racks as a tree in signal order: each rack follows the rack that feeds it,
- * one level deeper, so the screen reads ANALOG → Delay → MF\HF, LF.
- * A rack fed by several racks hangs under the first one. Output Selects
- * are left out: they show as the source of their outputs.
+ * Speakers in signal order: every rack playing into outputs (directly or
+ * through an output Select) with the racks it is fed through. Racks no
+ * speaker plays through follow at the end, so every value stays tunable.
  */
-export function rackTree(setup: Setup): { rack: Rack; depth: number }[] {
-  const racks = setup.racks.filter((r) => !isOutputSelect(setup, r));
-  const parentOf = (r: Rack): string | undefined => {
-    for (const t of r.channels.flatMap((c) => c.sources)) if (t.kind === 'rack' || t.kind === 'band') return t.rackId;
-    return undefined;
-  };
-  const ids = new Set(racks.map((r) => r.id));
-  const out: { rack: Rack; depth: number }[] = [];
-  const seen = new Set<string>();
-  const visit = (rack: Rack, depth: number) => {
-    if (seen.has(rack.id)) return;
-    seen.add(rack.id);
-    out.push({ rack, depth });
-    for (const child of racks) if (parentOf(child) === rack.id) visit(child, depth + 1);
-  };
-  for (const r of racks) {
-    const parent = parentOf(r);
-    if (parent === undefined || !ids.has(parent)) visit(r, 0);
+export function speakers(setup: Setup, values: Values = {}): Speaker[] {
+  const list = setup.racks.filter((r) => outputIdsOf(r).length > 0).map((r) => speakerOf(setup, r, values));
+  const used = new Set(list.flatMap((s) => s.path.map((p) => p.rack.id)));
+  for (const r of setup.racks) {
+    if (used.has(r.id) || isInputRack(r) || isOutputSelect(setup, r)) continue;
+    const s = speakerOf(setup, r, values);
+    list.push(s);
+    s.path.forEach((p) => used.add(p.rack.id));
   }
-  // Racks caught in a loop have no root; show them flat at the end.
-  for (const r of racks) visit(r, 0);
-  return out;
+  return list;
+}
+
+/** Other speakers whose signal also passes through a rack: editing it changes them too. */
+export const sharedWith = (list: readonly Speaker[], speaker: Speaker, rackId: string): string[] =>
+  list.filter((s) => s !== speaker && s.path.some((p) => p.rack.id === rackId)).map((s) => s.name);
+
+/** One input channel: physical inputs and the rack that processes them before the first split. */
+export interface InputChannel {
+  name: string;
+  strips: InputStrip[];
+  rack?: Rack;
+}
+
+/** Input channels in physical order; an input no rack processes is a channel of its own. */
+export function inputChannels(setup: Setup): InputChannel[] {
+  const strips = inputStrips(setup);
+  const used = new Set<InputStrip>();
+  const list: InputChannel[] = setup.racks.filter(isInputRack).map((rack) => {
+    const own = strips.filter((st) => feeds(rack, (t) => t.kind === 'input' && st.blockIds.includes(t.blockId)));
+    own.forEach((st) => used.add(st));
+    return { name: rack.name, strips: own, rack };
+  });
+  for (const st of strips) if (!used.has(st)) list.push({ name: st.name, strips: [st] });
+  const first = (ch: InputChannel) => Math.min(...ch.strips.map((st) => strips.indexOf(st)));
+  return list.sort((a, b) => first(a) - first(b));
+}
+
+/** Speakers fed from an input channel, through its rack or straight from its inputs. */
+export function inputTargets(setup: Setup, channel: InputChannel, list: readonly Speaker[]): FlowLink[] {
+  const ids = channel.strips.flatMap((st) => st.blockIds);
+  return list
+    .filter((s) =>
+      channel.rack
+        ? s.inputRack === channel.rack
+        : s.inputRack === undefined && feeds(s.path[0]?.rack ?? s.end, (t) => t.kind === 'input' && ids.includes(t.blockId)),
+    )
+    .map((s) => ({ text: s.name, anchor: rackAnchor(s.end.id), color: rackColor(setup, s.end.id) }));
 }
 
 /** Whether every module of a stereo rack holds the same values on both channels. */

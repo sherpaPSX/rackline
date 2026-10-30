@@ -132,25 +132,29 @@ Every message is JSON validated by a zod schema on both sides
 - View helpers (`racks.ts`) derive band strips, input pairs and rack detail
   lines from the API's JSON only.
 - Screens: **Show** (fader = trim + mute per input pair and band; band
-  fader = Output Trim of all its outputs), **System / Tune**: the physical inputs on top and the
-  physical outputs at the bottom are fixed tiles (inputs: sensitivity, trim,
-  mute and the racks they feed; outputs: trim, mute, polarity and the rack
-  playing into them); racks sit between them as a signal tree, each indented
-  under the rack that feeds it, and only connect to them. A rack's header
-  shows width, From and To as chips that jump to the rack, input or output,
-  plus a quick band mute. Modules run left to right; PEQ and crossover
+  fader = Output Trim of all its outputs), **System / Tune**: input
+  channels on top, then one row per speaker. An input channel is a pair of
+  physical inputs (sensitivity, trim, mute) plus the rack that processes
+  them before the first split (`isInputRack`). A speaker row is a rack that
+  plays into outputs with its whole chain from the input channel: the racks
+  it is fed through (delay, sum, crossover), its own modules, then its
+  outputs (trim, polarity, mute). A block other speakers also play through
+  has a dashed outline and "Also plays LF": editing it changes them too.
+  Racks no speaker plays through follow as rows of their own, so every
+  value stays tunable. Headers show width, outputs and From ("ANALOG →
+  High"), plus a quick mute; input channels list the speakers they feed as
+  chips that jump to the row. Modules run left to right; PEQ and crossover
   expand sideways with a curve; limiters show the threshold until expanded;
-  PEQ bypass switches all filters off (the RPM has no bypass). A stereo
-  rack has one link button in its header: linked, it is one chain and every
-  edit sets both channels (an amber "5 ≠ 6" marks a module whose channels
-  still differ); unlinked, it shows one lane per channel. It starts linked
-  when both channels agree; channels are named by their physical
-  inputs/outputs (1+2, A+B, 5+6). Wiring is fixed except through Select 1 of
-  N blocks (a parameter, no dropout): a rack starting with a Select picks its
-  source in its header, and a Select in front of outputs is shown as a
-  source picker on the output tile, not as a rack. `mixerInputs` in the API
-  maps each source to its Select input, so unconnected inputs are skipped
-  right),
+  PEQ bypass switches all filters off (the RPM has no bypass). A stereo row
+  has one link button in its header: linked, it is one chain and every edit
+  sets both channels (an amber "5 ≠ 6" marks a module whose channels still
+  differ); unlinked, it shows one lane per channel. It starts linked when
+  both channels agree; channels are named by their physical inputs/outputs
+  (1+2, A+B, 5+6). Wiring is fixed except through Select 1 of N blocks (a
+  parameter, no dropout): an input channel starting with a Select picks its
+  inputs in its header, and a Select in front of outputs makes the row a
+  switchable speaker ("Out 5+6 from MF\\HF / LF"). `mixerInputs` in the API
+  maps each source to its Select input, so unconnected inputs are skipped),
   **Files** (find/connect a device, open `.r26`, recall presets).
 - Curves are drawn from the option labels the core sends (`curves.ts`);
   Low/High cut as 2nd-order Butterworth and Horn EQ/all-pass as flat are

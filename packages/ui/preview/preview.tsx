@@ -10,8 +10,8 @@ import { AppState } from '@rackline/api';
 import psx from '../test/fixtures/psx-rcf-final-state.json';
 import { withSelects } from '../test/select-demo.js';
 
-// Demo Selects (input of ANALOG, source of Out 5+6) show the source pickers; Lukas's file has none yet.
-const state = withSelects(AppState.parse(psx));
+// Lukas's file with an input Select, so the preview shows picking the source.
+const state = withSelects(AppState.parse(psx), { output: false });
 
 // Preview only: an in-page fake core that echoes every edit, loaded with PSX_RCF_FINAL.r26.
 const fake: OpenSocket = (_url, h) => {
