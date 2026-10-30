@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { anyMuted, bandStrips, channelName, rackChannelNames, channelsAgree, flowSources, flowTargets, inputTargets, isOutputSelect, outputStrips, inputStrips, isSelect, sourceChoice, joinChannels, pairName, rackColor, rackDetail, rackTree } from '../src/index.js';
+import { anyMuted, bandStrips, channelName, rackChannelNames, rackChannelsAgree, channelsAgree, flowSources, flowTargets, inputTargets, isOutputSelect, outputStrips, inputStrips, isSelect, sourceChoice, joinChannels, pairName, rackColor, rackDetail, rackTree } from '../src/index.js';
 import { psxState } from './fixtures.js';
 import { withSelects } from './select-demo.js';
 
@@ -38,6 +38,11 @@ describe('rack views of PSX_RCF_FINAL', () => {
     expect(text(flowTargets(setup, rack('ANALOG mono')))).toEqual(['High mid → SUB FLEX', 'Low mid → SUB HORN']);
     expect(joinChannels(['In 1', 'In 2'])).toBe('In 1+2');
     expect(joinChannels(['Out 5'])).toBe('Out 5');
+  });
+
+  it('tells which stereo racks hold equal values on both channels', () => {
+    const agree = (name: string) => rackChannelsAgree(setup, rack(name), state.values);
+    expect([agree('ANALOG'), agree('Delay'), agree('MF\\HF'), agree('LF'), agree('SUB FLEX')]).toEqual([true, true, false, false, true]);
   });
 
   it('lists physical outputs in channel order, paired by their stereo rack', () => {

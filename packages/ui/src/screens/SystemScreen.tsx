@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import type { CSSProperties } from 'react';
 import type { ModuleInfo, Rack, Setup, Values } from '@rackline/api';
-import { Button, MuteButton, RackCard } from '@rackline/ui-kit';
+import { Button, IconButton, MuteButton, RackCard } from '@rackline/ui-kit';
 import { useCoreClient } from '../app/core-context.js';
 import { peqBands } from '../curves.js';
 import {
@@ -18,6 +18,7 @@ import {
   outputStrips,
   rackAnchor,
   rackChannelNames,
+  rackChannelsAgree,
   rackColor,
   rackTree,
   sourceChoice,
@@ -46,14 +47,16 @@ function UnknownModule({ blockIds, setup }: { blockIds: readonly number[]; setup
   );
 }
 
-function RackView({ rack, setup, values }: { rack: Rack; setup: Setup; values: Values }) {
+function RackView({ rack, setup, values, depth }: { rack: Rack; setup: Setup; values: Values; depth: number }) {
   const client = useCoreClient();
   const [expanded, setExpanded] = useState(true);
+  // Stereo racks start linked when both channels agree; the engineer can split or join them.
+  const [link, setLink] = useState<boolean | null>(null);
+  const stereo = rack.channels.length > 1;
+  const linked = !stereo || (link ?? rackChannelsAgree(setup, rack, values));
   const outputs = outputIdsOf(rack);
   const names = rackChannelNames(setup, rack, values);
   const choice = sourceChoice(setup, rack);
-  const mixerId = rack.channels[0]?.mixerId;
-  const mixerModule = mixerId === undefined ? undefined : moduleOf(setup, mixerId);
   const crossover = rack.crossover;
   const crossoverModules = (crossover?.blockIds[0] ?? []).map((id) => moduleOf(setup, id)).filter((m): m is ModuleInfo => m !== undefined);
   // Racks fed by this rack's crossover bands, so the curve uses their colors.
@@ -62,39 +65,83 @@ function RackView({ rack, setup, values }: { rack: Rack; setup: Setup; values: V
     return fed && rackColor(setup, fed.id);
   });
 
-  return (
-    <RackCard
-      name={rack.name}
-      color={rackColor(setup, rack.id)}
-      detail={<RackFlow setup={setup} rack={rack} values={values} />}
-      expanded={expanded}
-      onExpandedChange={setExpanded}
-      actions={
-        // Quick band mute; trim and polarity live with the outputs.
-        outputs.length > 0 && (
-          <MuteButton
-            muted={anyMuted(values, outputs)}
-            target={rack.name}
-            onChange={(m) => client.setParams(outputs.map((blockId) => ({ blockId, key: 'mute', value: m })))}
+  /** The module chain for some channels: all of them when linked, one per lane when not. */
+  const chain = (channels: readonly number[]) => {
+    const pick = (ids: readonly number[]) => channels.map((c) => ids[c] ?? -1);
+    const laneNames = channels.map((c) => names[c] ?? '');
+    const mixerId = rack.channels[channels[0] ?? 0]?.mixerId;
+    const mixerModule = mixerId === undefined ? undefined : moduleOf(setup, mixerId);
+    return (
+      <>
+        {!choice && mixerId !== undefined && mixerModule && (
+          <ModuleView module={mixerModule} blockIds={[mixerId]} values={values} rackName={rack.name} title="Sum" />
+        )}
+        {rack.modules.map((m) => {
+          const module = setup.modules.find((x) => x.blockType === m.blockType);
+          return module ? (
+            <ModuleView key={m.blockIds.join('-')} module={module} blockIds={pick(m.blockIds)} values={values} rackName={rack.name} channelNames={laneNames} />
+          ) : (
+            <UnknownModule key={m.blockIds.join('-')} blockIds={m.blockIds} setup={setup} />
+          );
+        })}
+        {crossover && (
+          <CrossoverModule
+            blockIds={channels.map((c) => crossover.blockIds[c] ?? [])}
+            modules={crossoverModules}
+            values={values}
+            rackName={rack.name}
+            channelNames={laneNames}
+            bandColors={bandColors}
           />
-        )
-      }
+        )}
+      </>
+    );
+  };
+
+  return (
+    <section
+      id={rackAnchor(rack.id)}
+      className="app-rack"
+      data-split={!linked || undefined}
+      style={{ '--app-depth': depth } as CSSProperties}
     >
-      {!choice && mixerId !== undefined && mixerModule && (
-        <ModuleView module={mixerModule} blockIds={[mixerId]} values={values} rackName={rack.name} title="Sum" />
-      )}
-      {rack.modules.map((m) => {
-        const module = setup.modules.find((x) => x.blockType === m.blockType);
-        return module ? (
-          <ModuleView key={m.blockIds.join('-')} module={module} blockIds={m.blockIds} values={values} rackName={rack.name} channelNames={names} />
-        ) : (
-          <UnknownModule key={m.blockIds.join('-')} blockIds={m.blockIds} setup={setup} />
-        );
-      })}
-      {crossover && (
-        <CrossoverModule blockIds={crossover.blockIds} modules={crossoverModules} values={values} rackName={rack.name} channelNames={names} bandColors={bandColors} />
-      )}
-    </RackCard>
+      <RackCard
+        name={rack.name}
+        color={rackColor(setup, rack.id)}
+        detail={<RackFlow setup={setup} rack={rack} values={values} />}
+        expanded={expanded}
+        onExpandedChange={setExpanded}
+        actions={
+          <>
+            {stereo && (
+              <IconButton
+                icon="link"
+                pressed={linked}
+                label={linked ? `${names.join(' and ')} linked: click to edit them one by one` : `Link ${names.join(' and ')}: edits set both`}
+                onClick={() => setLink(!linked)}
+              />
+            )}
+            {/* Quick band mute; trim and polarity live with the outputs. */}
+            {outputs.length > 0 && (
+              <MuteButton
+                muted={anyMuted(values, outputs)}
+                target={rack.name}
+                onChange={(m) => client.setParams(outputs.map((blockId) => ({ blockId, key: 'mute', value: m })))}
+              />
+            )}
+          </>
+        }
+      >
+        {linked
+          ? chain(rack.channels.map((_, c) => c))
+          : rack.channels.map((_, c) => (
+              <div key={c} className="app-lane">
+                <span className="app-lane-name">{names[c]}</span>
+                {chain([c])}
+              </div>
+            ))}
+      </RackCard>
+    </section>
   );
 }
 
@@ -181,9 +228,7 @@ export function SystemScreen({ setup, values }: { setup: Setup; values: Values }
       </div>
       <InputsView setup={setup} values={values} />
       {rackTree(setup).map(({ rack, depth }) => (
-        <section key={rack.id} id={rackAnchor(rack.id)} className="app-rack" style={{ '--app-depth': depth } as CSSProperties}>
-          <RackView rack={rack} setup={setup} values={values} />
-        </section>
+        <RackView key={rack.id} rack={rack} setup={setup} values={values} depth={depth} />
       ))}
       <OutputsView setup={setup} values={values} />
     </div>

@@ -140,9 +140,11 @@ Every message is JSON validated by a zod schema on both sides
   shows width, From and To as chips that jump to the rack, input or output,
   plus a quick band mute. Modules run left to right; PEQ and crossover
   expand sideways with a curve; limiters show the threshold until expanded;
-  PEQ bypass switches all filters off (the RPM has no bypass). Stereo
-  modules edit both channels linked (one quiet "1+2" button) or one when
-  they differ (amber 1+2 / 1 / 2); channels are named by their physical
+  PEQ bypass switches all filters off (the RPM has no bypass). A stereo
+  rack has one link button in its header: linked, it is one chain and every
+  edit sets both channels (an amber "5 ≠ 6" marks a module whose channels
+  still differ); unlinked, it shows one lane per channel. It starts linked
+  when both channels agree; channels are named by their physical
   inputs/outputs (1+2, A+B, 5+6). Wiring is fixed except through Select 1 of
   N blocks (a parameter, no dropout): a rack starting with a Select picks its
   source in its header, and a Select in front of outputs is shown as a

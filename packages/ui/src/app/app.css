@@ -174,14 +174,13 @@ body {
 }
 
 /* System: modules */
-.app-channels .rl-btn {
-  height: 22px;
-  min-width: 26px;
-  padding: 0 6px;
-  font-size: 11px;
-}
-.app-channels[data-differ] .rl-btn {
-  border-color: var(--rl-warn);
+.app-differ {
+  padding: 1px 6px;
+  border: 1px solid var(--rl-warn);
+  border-radius: var(--rl-radius);
+  color: var(--rl-warn);
+  font: 600 11px var(--rl-font-value);
+  white-space: nowrap;
 }
 .app-mini-curve {
   width: 200px;
@@ -337,4 +336,21 @@ button.app-flow-chip:focus-visible {
 }
 .app-source[data-differ] .rl-select {
   border-color: var(--rl-warn);
+}
+
+/* An unlinked stereo rack: one lane per channel, stacked. */
+.app-rack[data-split] .rl-rack-chain {
+  flex-direction: column;
+}
+.app-lane {
+  display: flex;
+  align-items: stretch;
+  gap: var(--rl-s2);
+}
+.app-lane-name {
+  flex: none;
+  align-self: center;
+  width: 44px;
+  font: 600 12px var(--rl-font-label);
+  color: var(--rl-dim);
 }

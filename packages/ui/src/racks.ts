@@ -344,3 +344,13 @@ export function rackTree(setup: Setup): { rack: Rack; depth: number }[] {
   for (const r of racks) visit(r, 0);
   return out;
 }
+
+/** Whether every module of a stereo rack holds the same values on both channels. */
+export function rackChannelsAgree(setup: Setup, rack: Rack, values: Values): boolean {
+  const keysOf = (blockId: number) => moduleOf(setup, blockId)?.params.map((p) => p.key) ?? [];
+  const groups = [
+    ...rack.modules.map((m) => m.blockIds),
+    ...(rack.crossover?.blockIds[0] ?? []).map((_, s) => rack.crossover?.blockIds.map((chain) => chain[s] ?? -1) ?? []),
+  ];
+  return groups.every((ids) => channelsAgree(values, ids, keysOf(ids[0] ?? -1)));
+}

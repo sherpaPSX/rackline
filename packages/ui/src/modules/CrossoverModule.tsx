@@ -4,7 +4,7 @@ import { EqCurve, ModuleCard } from '@rackline/ui-kit';
 import type { EqCurveLine } from '@rackline/ui-kit';
 import { crossoverBands, crossoverEdges } from '../curves.js';
 import { valueOf } from '../racks.js';
-import { ChannelPicker } from './ChannelPicker.js';
+import { ChannelsBadge } from './ChannelsBadge.js';
 import { ParamControl } from './ParamControl.js';
 import { useLinkedModule } from './linked.js';
 
@@ -46,7 +46,7 @@ function CrossoverStage({
     <div className="app-xover-stage">
       <div className="app-row">
         <span className="rl-label">{module.name}</span>
-        <ChannelPicker linked={linked} owner={owner} />
+        <ChannelsBadge linked={linked} />
       </div>
       <EqCurve
         label={`${owner} bands`}

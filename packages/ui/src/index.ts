@@ -24,6 +24,7 @@ export {
   outputStrips,
   pairName,
   rackChannelNames,
+  rackChannelsAgree,
   rackAnchor,
   rackColor,
   rackDetail,

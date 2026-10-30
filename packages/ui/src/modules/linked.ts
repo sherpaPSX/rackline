@@ -1,10 +1,6 @@
-import { useState } from 'react';
 import type { ParamValue, Values } from '@rackline/api';
 import { channelsAgree, valueOf } from '../racks.js';
 import { useCoreClient } from '../app/core-context.js';
-
-/** Which channel of a stereo module the controls edit: both (linked), left or right. */
-export type ChannelChoice = 'LR' | 'L' | 'R';
 
 export interface LinkedModule {
   /** Blocks of the module, one per channel. */
@@ -12,45 +8,31 @@ export interface LinkedModule {
   stereo: boolean;
   /** Physical names of the channels, e.g. ["In 1", "In 2"]. */
   names: readonly string[];
-  choice: ChannelChoice;
-  setChoice: (choice: ChannelChoice) => void;
-  /** L and R hold different values for some of the keys. */
+  /** The channels hold different values for some of the keys. */
   differ: boolean;
-  /** The block whose values the controls show. */
+  /** The block whose values the controls show: the first channel. */
   shownId: number;
   value: (key: string) => ParamValue | undefined;
-  /** Set values on the chosen channel(s), as one undo step. */
+  /** Set values on every channel, as one undo step. */
   set: (patch: Readonly<Record<string, ParamValue>>) => void;
 }
 
 /**
- * Stereo modules are edited once for both channels. When L and R already
- * differ (as in a saved setup), the controls start on the first channel so nothing is
- * overwritten by surprise; the engineer links them deliberately.
+ * A module edits all the blocks it is given at once. A linked stereo rack
+ * passes both channels; an unlinked rack draws one module per channel
+ * (see SystemScreen), so there is no per-module channel choice.
  */
-export function useLinkedModule(
-  values: Values,
-  blockIds: readonly number[],
-  keys: readonly string[],
-  names: readonly string[] = ['L', 'R'],
-): LinkedModule {
+export function useLinkedModule(values: Values, blockIds: readonly number[], keys: readonly string[], names: readonly string[] = ['L', 'R']): LinkedModule {
   const client = useCoreClient();
   const stereo = blockIds.length > 1;
-  const differ = stereo && !channelsAgree(values, blockIds, keys);
-  const [chosen, setChoice] = useState<ChannelChoice | null>(null);
-  const choice: ChannelChoice = !stereo ? 'LR' : (chosen ?? (differ ? 'L' : 'LR'));
-  const targets = choice === 'LR' ? blockIds : [blockIds[choice === 'L' ? 0 : 1] ?? blockIds[0] ?? 0];
-  const shownId = targets[0] ?? 0;
+  const shownId = blockIds[0] ?? 0;
   return {
     blockIds,
     stereo,
     names,
-    choice,
-    setChoice,
-    differ,
+    differ: stereo && !channelsAgree(values, blockIds, keys),
     shownId,
     value: (key) => valueOf(values, shownId, key),
-    set: (patch) =>
-      client.setParams(targets.flatMap((blockId) => Object.entries(patch).map(([key, value]) => ({ blockId, key, value })))),
+    set: (patch) => client.setParams(blockIds.flatMap((blockId) => Object.entries(patch).map(([key, value]) => ({ blockId, key, value })))),
   };
 }
