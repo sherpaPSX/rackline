@@ -62,7 +62,7 @@ export function moduleInfo(def: ModuleDef): ModuleInfo {
     evidence: def.evidence,
     params: def.params.map(paramInfo),
     compact: [...def.compact],
-    meters: (def.meters ?? []).map((m) => ({ key: m.key, label: m.label, unit: m.unit, reduction: m.reduction })),
+    meters: (def.meters ?? []).map((m) => ({ key: m.key, label: m.label, unit: m.unit, fullScale: m.fullScale, reduction: m.reduction })),
   };
 }
 

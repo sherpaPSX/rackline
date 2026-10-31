@@ -30,6 +30,8 @@ export const limiter: ModuleDef = {
     steps(4, 'release', 'Release', 'ms', RELEASE_MS),
   ],
   compact: ['threshold'],
+  // Guessed like the compressor's; not seen in a Drag Net capture.
+  meters: [reductionMeter(0x8000)],
   dspPercent: 2.3,
 };
 

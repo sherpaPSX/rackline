@@ -99,7 +99,7 @@ describe('server messages', () => {
               evidence: 'simulator',
               params: [{ key: 'ratio', label: 'Ratio', kind: 'steps', unit: 'ratio', steps: [1, 20, 'inf'] }],
               compact: ['ratio'],
-              meters: [{ key: 'reduction', label: 'Gain reduction', unit: 'dB', reduction: true }],
+              meters: [{ key: 'reduction', label: 'Gain reduction', unit: 'dB', fullScale: 0, reduction: true }],
             },
           ],
         },

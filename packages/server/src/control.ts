@@ -28,6 +28,11 @@ export interface ControlOptions {
  */
 const WRITABLE_SYSTEM = [SYSTEM.currentPreset];
 
+const REJECTED = 'device rejected the frame';
+
+/** Whether a read or write failed because the device refused a record (wrong index or size), not because it did not answer. */
+export const isRejection = (error: string): boolean => error.startsWith(REJECTED);
+
 /**
  * Parameter reads and writes to one device over UDP 5000 (docs/protocol.md
  * §2). One frame is in flight at a time; each waits `timeoutMs` for its reply
@@ -85,7 +90,7 @@ export class ControlClient {
     for (let attempt = 0; attempt < this.attempts; attempt++) {
       const reply = await this.sendAndWait(bytes, request);
       if (reply === undefined) continue;
-      if (reply.status !== 0) return fail(`device rejected the frame (status ${reply.status})`);
+      if (reply.status !== 0) return fail(`${REJECTED} (status ${reply.status})`);
       return ok(reply);
     }
     return fail(`no reply from ${this.ip}`);

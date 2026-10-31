@@ -24,6 +24,9 @@ export class FakeDevice implements Device {
   reachable = true;
   closed = false;
   readonly writes: ParamRecord[] = [];
+  /** Records the device refuses, like a real RPM answering a wrong index (status 7). */
+  readonly refused = new Set<string>();
+  readonly reads: ParamRecord[][] = [];
   readonly store = new Map<string, number>();
   presets = new Map<number, ParamRecord[]>();
   private readonly project = psxProject();
@@ -41,12 +44,18 @@ export class FakeDevice implements Device {
     this.store.set(key(address), value);
   }
 
+  refuse(address: ParamAddress): void {
+    this.refused.add(key(address));
+  }
+
   get(address: ParamAddress): number | undefined {
     return this.store.get(key(address));
   }
 
   read(records: readonly ParamRecord[]): Promise<Result<ParamRecord[]>> {
     if (!this.reachable) return Promise.resolve(fail(`no reply from ${this.ip}`));
+    this.reads.push([...records]);
+    if (records.some((r) => this.refused.has(key(r)))) return Promise.resolve(fail('device rejected the frame (status 7)'));
     return Promise.resolve(ok(records.map((r) => ({ ...r, value: this.store.get(key(r)) ?? 0 }))));
   }
 

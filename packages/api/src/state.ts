@@ -62,6 +62,8 @@ export const MeterInfo = z.object({
   label: z.string(),
   /** `dBu` / `dBFS` levels, or `dB` of gain reduction. */
   unit: z.enum(['dBu', 'dBFS', 'dB']),
+  /** Level at full scale (clip), e.g. +24 dBu or 0 dBFS. 0 for gain reduction. */
+  fullScale: z.number(),
   /** Gain reduction: 0 = none, larger = more. */
   reduction: z.boolean(),
 });

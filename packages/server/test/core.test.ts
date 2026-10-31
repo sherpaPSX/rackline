@@ -163,6 +163,23 @@ describe('Core', () => {
     expect(device.writes).toEqual([]);
   });
 
+  it('leaves out the meters of blocks the device refuses and keeps reading the rest', async () => {
+    const { core, device, last } = setup();
+    const limiter = { target: 'block', instance: 46, objectType: 0x0501, index: 0x8000 } as const;
+    device.refuse(limiter);
+    device.set({ target: 'block', instance: 47, objectType: 0x0501, index: 0x8000 }, 3);
+    await core.handle({ type: 'connect', ip: device.ip });
+
+    await vi.advanceTimersByTimeAsync(100); // refused, then each block alone
+    expect(last('meters')).toBeUndefined();
+    await vi.advanceTimersByTimeAsync(100);
+    const levels = last('meters')?.levels;
+    expect(levels?.['46']).toBeUndefined();
+    expect(levels?.['47']).toEqual({ reduction: 3 });
+    expect(levels?.['1']).toEqual({ adc: 0, analog: 24 });
+    expect(device.writes).toEqual([]);
+  });
+
   it('stops reading meters while the device is unreachable and after a disconnect', async () => {
     const { core, device, sent } = setup();
     await core.handle({ type: 'connect', ip: device.ip });

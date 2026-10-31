@@ -9,6 +9,7 @@ export const analogOutput: ModuleDef = {
   evidence: 'simulator',
   params: [level(2, 'trim', 'Trim'), bool(3, 'mute', 'Mute'), bool(4, 'invert', 'Polarity invert')],
   compact: ['trim', 'mute', 'invert'],
+  // The converter level first: the UI shows the first meter where there is room for one.
   meters: [levelMeter(0x8001, 'dac', 'Before D/A', 'dBFS'), levelMeter(0x8002, 'analog', 'Analog out', 'dBu')],
   dspPercent: 0,
 };

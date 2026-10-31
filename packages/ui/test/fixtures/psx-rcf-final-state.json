@@ -700,15 +700,17 @@
         ],
         "meters": [
           {
-            "key": "analog",
-            "label": "Analog in",
-            "unit": "dBu",
-            "reduction": false
-          },
-          {
             "key": "adc",
             "label": "After A/D",
             "unit": "dBFS",
+            "fullScale": 0,
+            "reduction": false
+          },
+          {
+            "key": "analog",
+            "label": "Analog in",
+            "unit": "dBu",
+            "fullScale": 24,
             "reduction": false
           }
         ]
@@ -779,7 +781,15 @@
         "compact": [
           "threshold"
         ],
-        "meters": []
+        "meters": [
+          {
+            "key": "reduction",
+            "label": "Gain reduction",
+            "unit": "dB",
+            "fullScale": 0,
+            "reduction": true
+          }
+        ]
       },
       {
         "blockType": 1552,
@@ -1070,6 +1080,7 @@
             "key": "input",
             "label": "AES3 in",
             "unit": "dBFS",
+            "fullScale": 0,
             "reduction": false
           }
         ]
@@ -1110,12 +1121,14 @@
             "key": "dac",
             "label": "Before D/A",
             "unit": "dBFS",
+            "fullScale": 0,
             "reduction": false
           },
           {
             "key": "analog",
             "label": "Analog out",
             "unit": "dBu",
+            "fullScale": 24,
             "reduction": false
           }
         ]

@@ -806,6 +806,22 @@
         "compact": [
           "trim",
           "mute"
+        ],
+        "meters": [
+          {
+            "key": "adc",
+            "label": "After A/D",
+            "unit": "dBFS",
+            "fullScale": 0,
+            "reduction": false
+          },
+          {
+            "key": "analog",
+            "label": "Analog in",
+            "unit": "dBu",
+            "fullScale": 24,
+            "reduction": false
+          }
         ]
       },
       {
@@ -832,6 +848,15 @@
         "compact": [
           "trim",
           "mute"
+        ],
+        "meters": [
+          {
+            "key": "input",
+            "label": "AES3 in",
+            "unit": "dBFS",
+            "fullScale": 0,
+            "reduction": false
+          }
         ]
       },
       {
@@ -864,6 +889,22 @@
           "trim",
           "mute",
           "invert"
+        ],
+        "meters": [
+          {
+            "key": "dac",
+            "label": "Before D/A",
+            "unit": "dBFS",
+            "fullScale": 0,
+            "reduction": false
+          },
+          {
+            "key": "analog",
+            "label": "Analog out",
+            "unit": "dBu",
+            "fullScale": 24,
+            "reduction": false
+          }
         ]
       },
       {
@@ -912,7 +953,8 @@
         "compact": [
           "level",
           "options"
-        ]
+        ],
+        "meters": []
       },
       {
         "blockType": 512,
@@ -967,7 +1009,8 @@
           "input1Level",
           "input2Level",
           "outputLevel"
-        ]
+        ],
+        "meters": []
       },
       {
         "blockType": 514,
@@ -1050,7 +1093,8 @@
           "input1Level",
           "input2Level",
           "outputLevel"
-        ]
+        ],
+        "meters": []
       },
       {
         "blockType": 2049,
@@ -1219,7 +1263,8 @@
         "compact": [
           "output1Level",
           "output2Level"
-        ]
+        ],
+        "meters": []
       },
       {
         "blockType": 2071,
@@ -2028,7 +2073,8 @@
         "compact": [
           "output1Level",
           "output2Level"
-        ]
+        ],
+        "meters": []
       },
       {
         "blockType": 2828,
@@ -3044,7 +3090,8 @@
         ],
         "compact": [
           "output1Level"
-        ]
+        ],
+        "meters": []
       },
       {
         "blockType": 1024,
@@ -3052,7 +3099,16 @@
         "role": "processing",
         "evidence": "simulator",
         "params": [],
-        "compact": []
+        "compact": [],
+        "meters": [
+          {
+            "key": "level",
+            "label": "Level",
+            "unit": "dBFS",
+            "fullScale": 0,
+            "reduction": false
+          }
+        ]
       },
       {
         "blockType": 769,
@@ -3072,7 +3128,8 @@
         ],
         "compact": [
           "delay"
-        ]
+        ],
+        "meters": []
       },
       {
         "blockType": 1280,
@@ -3177,6 +3234,15 @@
         "compact": [
           "threshold",
           "ratio"
+        ],
+        "meters": [
+          {
+            "key": "reduction",
+            "label": "Gain reduction",
+            "unit": "dB",
+            "fullScale": 0,
+            "reduction": true
+          }
         ]
       },
       {
@@ -3244,6 +3310,15 @@
         ],
         "compact": [
           "threshold"
+        ],
+        "meters": [
+          {
+            "key": "reduction",
+            "label": "Gain reduction",
+            "unit": "dB",
+            "fullScale": 0,
+            "reduction": true
+          }
         ]
       },
       {
@@ -3433,7 +3508,8 @@
         "compact": [
           "threshold",
           "ratio"
-        ]
+        ],
+        "meters": []
       },
       {
         "blockType": 1290,
@@ -3622,7 +3698,8 @@
         "compact": [
           "threshold",
           "ratio"
-        ]
+        ],
+        "meters": []
       },
       {
         "blockType": 1282,
@@ -3733,7 +3810,8 @@
         "compact": [
           "target",
           "bypass"
-        ]
+        ],
+        "meters": []
       },
       {
         "blockType": 1283,
@@ -3853,7 +3931,8 @@
           "minGain",
           "maxGain",
           "bypass"
-        ]
+        ],
+        "meters": []
       },
       {
         "blockType": 1539,
@@ -4146,7 +4225,8 @@
             "step": 0.25
           }
         ],
-        "compact": []
+        "compact": [],
+        "meters": []
       },
       {
         "blockType": 1544,
@@ -4794,7 +4874,8 @@
             "step": 0.25
           }
         ],
-        "compact": []
+        "compact": [],
+        "meters": []
       },
       {
         "blockType": 1551,
@@ -4928,7 +5009,8 @@
         "compact": [
           "lowUpperFreq",
           "highLowerFreq"
-        ]
+        ],
+        "meters": []
       },
       {
         "blockType": 1552,
@@ -5186,7 +5268,8 @@
           "midLowerFreq",
           "midUpperFreq",
           "highLowerFreq"
-        ]
+        ],
+        "meters": []
       },
       {
         "blockType": 1555,
@@ -5806,7 +5889,8 @@
             ]
           }
         ],
-        "compact": []
+        "compact": [],
+        "meters": []
       },
       {
         "blockType": 2561,
@@ -6993,7 +7077,8 @@
         "compact": [
           "mode",
           "freeze"
-        ]
+        ],
+        "meters": []
       },
       {
         "blockType": 1792,
@@ -7044,7 +7129,8 @@
           "signal",
           "level",
           "mute"
-        ]
+        ],
+        "meters": []
       }
     ],
     "dspPercent": 0

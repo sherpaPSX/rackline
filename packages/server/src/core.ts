@@ -9,9 +9,11 @@ import {
   readRecord,
   SYSTEM,
   type BlockTable,
+  type ParamRecord,
   type R26Preset,
   type Result,
 } from '@rackline/protocol';
+import { isRejection } from './control.js';
 import type { Device } from './device.js';
 import { applyRecords, decodeLevels, findParam, fromApiValue, meterReadRecords, paramRecord, toApiValue, toSetup, valueReadRecords } from './setup.js';
 import { Throttle } from './throttle.js';
@@ -58,6 +60,8 @@ export class Core {
   private device: Device | undefined;
   private poll: ReturnType<typeof setTimeout> | undefined;
   private meterTimer: ReturnType<typeof setTimeout> | undefined;
+  /** Meter reads for the loaded device setup, without blocks whose meters the device refused. */
+  private meterRecords: ParamRecord[] = [];
   /** Bumped whenever the device is dropped, so a connect still opening can tell it was overtaken. */
   private generation = 0;
   private readonly throttle: Throttle;
@@ -213,6 +217,7 @@ export class Core {
     this.values = loaded.values;
     this.currentPreset = loaded.preset;
     this.connection = { status: 'online', device: loaded.info };
+    this.meterRecords = meterReadRecords(loaded.table);
   }
 
   private async openProject(fileName: string, text: string): Promise<string | undefined> {
@@ -282,13 +287,36 @@ export class Core {
 
   private async readMeters(device: Device): Promise<void> {
     const table = this.loaded?.table;
-    const records = table === undefined ? [] : meterReadRecords(table);
+    const records = this.meterRecords;
     if (table !== undefined && records.length > 0 && this.connection.status === 'online') {
       const reply = await device.read(records);
       if (device !== this.device) return;
-      if (reply.ok && this.loaded?.table === table) this.emit({ type: 'meters', levels: decodeLevels(table, reply.value) });
+      if (reply.ok) {
+        if (this.loaded?.table === table) this.emit({ type: 'meters', levels: decodeLevels(table, reply.value) });
+      } else if (isRejection(reply.error)) {
+        await this.dropRefusedMeters(device, records);
+        if (device !== this.device) return;
+      }
     }
     this.scheduleMeters(device);
+  }
+
+  /**
+   * One refused record fails the whole frame, and some meter indexes are
+   * guessed (docs/protocol.md "Meters"): read each block's meters alone once
+   * and keep only the blocks the device answers.
+   */
+  private async dropRefusedMeters(device: Device, records: readonly ParamRecord[]): Promise<void> {
+    const blocks = new Map<number, ParamRecord[]>();
+    for (const r of records) blocks.set(r.instance, [...(blocks.get(r.instance) ?? []), r]);
+    const kept: ParamRecord[] = [];
+    for (const group of blocks.values()) {
+      const reply = await device.read(group);
+      if (device !== this.device) return;
+      if (reply.ok) kept.push(...group);
+      else if (!isRejection(reply.error)) return; // not answering: try everything again next time
+    }
+    if (this.meterRecords === records) this.meterRecords = kept;
   }
 
   /** The device stopped answering: keep the state, say so, keep polling. */
