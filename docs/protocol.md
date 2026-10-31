@@ -156,7 +156,7 @@ The file `file` (about 19 kB) has three parts:
    | 2 | platform ID (26 = RPM 26z) |
    | 3 | hardware revision (0) |
    | 4..7 | remaining size = file size − 8 (u32) |
-   | 8..9 | block count + 5 |
+   | 8..9 | block count + 5 in most files; a Drag Net-compiled config with FBS, Automix 4×4, Matrix 2×2 and 6×6 (14 blocks, project said 19) has 20. Meaning unverified, so the parser keeps the value and does not check it (`countField`) |
 
 2. **Block table with wiring.** Each record (u16 big-endian):
 
@@ -201,7 +201,7 @@ Code: `parseBlockTable` / `serializeBlockTable` in `@rackline/protocol`
   end-of-table record as comma-separated decimal bytes (trailing comma),
   followed by 20 more bytes that also start the program part of a downloaded
   config. No compiled DSP code. Header bytes 8–9 = block count + 5 (otherwise
-  Drag Net reports INTERNAL_ERR).
+  Drag Net reports INTERNAL_ERR). The compiled file can differ (see the header table above).
 - `<Presets><Preset Number="n">` (0 and 1–24; empty ones self-closing) hold
   `<Param d="objectType,address,index,size,value"/>`, where `address` is
   record bytes 0..1 (`target << 8 | instance`). So

@@ -13,6 +13,12 @@ export interface ConfigHeader {
   hardwareRevision: number;
   /** Size of the whole file minus the first 8 bytes. */
   remainingSize: number;
+  /**
+   * Header bytes 8..9. Usually the block count + 5, but a config with an FBS,
+   * Automix and two Matrix blocks compiled by Drag Net has 14 blocks and 20
+   * here, so the meaning is unverified and the value is kept as is.
+   */
+  countField: number;
 }
 
 export interface ConfigBlock {
@@ -48,8 +54,6 @@ export interface BlockTable {
   tableEnd: number;
 }
 
-/** Header bytes 8..9 hold the block count plus this constant. */
-const BLOCK_COUNT_BIAS = 5;
 const END_OF_TABLE_TYPE = 0xfd01;
 const RECORD_MARKER = 0x0001;
 /** x, y, reserved, kind, channel (2 bytes each) and the name length byte. */
@@ -117,8 +121,8 @@ function parse(r: Reader): Result<BlockTable> {
     platformId: r.u8(),
     hardwareRevision: r.u8(),
     remainingSize: r.u32(),
+    countField: r.u16(),
   };
-  const blockCount = r.u16() - BLOCK_COUNT_BIAS;
 
   const blocks: ConfigBlock[] = [];
   for (;;) {
@@ -131,9 +135,6 @@ function parse(r: Reader): Result<BlockTable> {
 
     if (blockType === END_OF_TABLE_TYPE) {
       const endRecordExtra = r.take(extraSize).slice();
-      if (blocks.length !== blockCount) {
-        return fail(`header says ${blockCount} blocks, table has ${blocks.length}`);
-      }
       return ok({
         header,
         blocks,
@@ -161,7 +162,11 @@ function parse(r: Reader): Result<BlockTable> {
   }
 }
 
-/** Inverse of `parseBlockTable`: header and block table up to `tableEnd`. */
+/**
+ * Inverse of `parseBlockTable`: header and block table up to `tableEnd`.
+ * Writes `header.countField` unchanged; a caller that adds or removes blocks
+ * must update it (blocks + 5 for files made by the editor's project format).
+ */
 export function serializeBlockTable(table: BlockTable): Uint8Array {
   const out: number[] = [];
   const u8 = (v: number): void => void out.push(v & 0xff);
@@ -173,7 +178,7 @@ export function serializeBlockTable(table: BlockTable): Uint8Array {
   u8(table.header.hardwareRevision);
   u16(table.header.remainingSize >>> 16);
   u16(table.header.remainingSize);
-  u16(table.blocks.length + BLOCK_COUNT_BIAS);
+  u16(table.header.countField);
 
   for (const b of table.blocks) {
     u8(0);

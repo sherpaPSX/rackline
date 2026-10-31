@@ -13,7 +13,7 @@ describe('.r26 project (PSX_RCF_FINAL.r26)', () => {
   it('reads the block table from RawScript, matching the <Block> elements', () => {
     const { header, blocks, configName } = project.blockTable;
     // <Header ScriptRevision="1" PlatformID="26" HardwareRevision="0" RemainingSize="20524"/>
-    expect(header).toEqual({ scriptRevision: 1, platformId: 26, hardwareRevision: 0, remainingSize: 20524 });
+    expect(header).toEqual({ scriptRevision: 1, platformId: 26, hardwareRevision: 0, remainingSize: 20524, countField: 49 });
     expect(configName).toBe('RPM 26z Configuration');
 
     const xmlBlocks = [...text.matchAll(/<Block PID="(\d+)" Btype="(\d+)"/g)].map((m) => [Number(m[1]), Number(m[2])]);
