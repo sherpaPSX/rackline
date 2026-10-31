@@ -120,14 +120,3 @@ export function crossoverBands(module: ModuleInfo, read: Read): CrossoverBand[] 
   bands.push({ name: 'Low', filters: edge('lowUpper', 'lowPass') });
   return bands;
 }
-
-/**
- * The RPM has no PEQ bypass, so bypass switches every filter off. Switching
- * back on restores the filters that were on (`remembered`); without that
- * (bypassed in another window or saved so) it turns on the filters that
- * change level.
- */
-export function peqBypassPatch(bands: readonly PeqBand[], on: boolean, remembered: readonly number[] | undefined): Record<string, boolean> {
-  const restore = remembered ?? bands.filter((b) => peqHasGain(b.typeLabel) && b.gainDb !== 0).map((b) => b.band);
-  return Object.fromEntries(bands.map((b) => [`band${b.band}Enable`, on && restore.includes(b.band)]));
-}
