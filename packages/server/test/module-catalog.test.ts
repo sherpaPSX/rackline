@@ -16,6 +16,8 @@ describe('module catalog (UI gallery fixture)', () => {
 
   it('matches the UI fixture', () => {
     if (process.env.UPDATE_CATALOG) writeFileSync(fixture, json);
-    expect(readFileSync(fixture, 'utf8')).toBe(json);
+    // Math.pow may differ in the last digit between Node versions (GEQ low-cut table), so compare rounded.
+    const rounded = (text: string): unknown => JSON.parse(text, (_k, v: unknown) => (typeof v === 'number' ? Number(v.toPrecision(12)) : v));
+    expect(rounded(readFileSync(fixture, 'utf8'))).toEqual(rounded(json));
   });
 });
