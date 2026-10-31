@@ -11,7 +11,7 @@ describe('config block table (captured RPM26z_01 TFTP config)', () => {
 
   it('reads the header', () => {
     // The full captured file is 19592 bytes = 8 + remainingSize.
-    expect(table.header).toEqual({ scriptRevision: 1, platformId: 26, hardwareRevision: 0, remainingSize: 19584 });
+    expect(table.header).toEqual({ scriptRevision: 1, platformId: 26, hardwareRevision: 0, remainingSize: 19584, countField: 29 });
   });
 
   it('reads all 24 blocks with IDs, types and names', () => {
@@ -51,5 +51,19 @@ describe('config block table (captured RPM26z_01 TFTP config)', () => {
     corrupted[10] = 7;
     expect(parseBlockTable(corrupted).ok).toBe(false);
     expect(parseBlockTable(new Uint8Array(0)).ok).toBe(false);
+  });
+});
+
+describe('config block table with FBS, Automix and Matrix blocks', () => {
+  // Header and table of a config compiled by Drag Net and uploaded to the RPM 26z (2026-10-31).
+  const captured = fixture('fbs-automix-matrix-config-table.bin');
+  const parsed = parseBlockTable(captured);
+
+  it('reads all 14 blocks although bytes 8..9 say 20 (not 14 + 5)', () => {
+    if (!parsed.ok) throw new Error(parsed.error);
+    expect(parsed.value.header.countField).toBe(20);
+    expect(parsed.value.blocks.map((b) => b.blockType).slice(-4)).toEqual([0x0a01, 0x0b0c, 0x0801, 0x0817]);
+    expect(parsed.value.blocks).toHaveLength(14);
+    expect(serializeBlockTable(parsed.value)).toEqual(captured);
   });
 });

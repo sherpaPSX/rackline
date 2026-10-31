@@ -94,7 +94,7 @@ describe('racks from the RPM26z_01 template', () => {
 /** A block table from compact block specs; wires are plain numbers. */
 function table(blocks: Partial<ConfigBlock>[]): BlockTable {
   return {
-    header: { scriptRevision: 1, platformId: 26, hardwareRevision: 0, remainingSize: 0 },
+    header: { scriptRevision: 1, platformId: 26, hardwareRevision: 0, remainingSize: 0, countField: 0 },
     blocks: blocks.map((b, i) => ({ id: i + 1, blockType: 0x0301, x: 0, y: 0, kind: 4, channel: 0, name: `B${i + 1}`, inputs: [], outputs: [], ...b })),
     configName: '',
     endRecordExtra: new Uint8Array(),

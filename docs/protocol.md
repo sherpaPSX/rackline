@@ -2,8 +2,9 @@
 
 State as of 2026-10-24. Read from the code of RaneSock.exe and DragNet.exe and
 verified against a simulator that the original Drag Net (under Wine) treats as
-a real RPM 26z. **Not yet verified on real hardware**, except where a section
-says "seen on hardware" (Lukas's RPM 26z, firmware 2.5.3, 31 Oct 2026).
+a real RPM 26z. **Parameter indexes and sizes of almost all mapped modules were checked on a
+real RPM 26z (§4); the value conversions were not.** Other sections that were
+seen on hardware (Lukas's RPM 26z, firmware 2.5.3, 31 Oct 2026) say so.
 
 Machine-readable parameter map: [rpm26z-modules.json](rpm26z-modules.json).
 
@@ -72,7 +73,7 @@ Record (14 bytes, big-endian):
 | 1 | block instance ID (subtype for system objects) |
 | 2..3 | block type / object ID |
 | 4..5 | parameter index |
-| 6..7 | 0 |
+| 6..7 | 0 in requests; in replies the record status (seen on hardware): 0 OK, 6 wrong block type, 7 no such index, 9 wrong size. The frame status (bytes 1..2) is the first non-zero record status |
 | 8..9 | value size in bytes (1, 2 or 4) |
 | 10..13 | value (right-aligned) |
 
@@ -173,7 +174,7 @@ The file `file` (about 19 kB) has three parts:
    | 2 | platform ID (26 = RPM 26z) |
    | 3 | hardware revision (0) |
    | 4..7 | remaining size = file size − 8 (u32) |
-   | 8..9 | block count + 5 |
+   | 8..9 | block count + 5 in most files; a Drag Net-compiled config with FBS, Automix 4×4, Matrix 2×2 and 6×6 (14 blocks, project said 19) has 20. Meaning unverified, so the parser keeps the value and does not check it (`countField`) |
 
 2. **Block table with wiring.** Each record (u16 big-endian):
 
@@ -218,7 +219,7 @@ Code: `parseBlockTable` / `serializeBlockTable` in `@rackline/protocol`
   end-of-table record as comma-separated decimal bytes (trailing comma),
   followed by 20 more bytes that also start the program part of a downloaded
   config. No compiled DSP code. Header bytes 8–9 = block count + 5 (otherwise
-  Drag Net reports INTERNAL_ERR).
+  Drag Net reports INTERNAL_ERR). The compiled file can differ (see the header table above).
 - `<Presets><Preset Number="n">` (0 and 1–24; empty ones self-closing) hold
   `<Param d="objectType,address,index,size,value"/>`, where `address` is
   record bytes 0..1 (`target << 8 | instance`). So
@@ -232,11 +233,35 @@ Code: `parseR26` in `@rackline/protocol`.
 
 ### Configuration upload sequence (as Drag Net does it)
 
-1. write `04 05 fe00` idx 0 = 0x2a56 (start of transfer)
+Captured from Drag Net 4.21 against the simulator (2026-10-31):
+
+1. reads only: `04 11 fb05`, `04 13 fe03`, `04 08 fc01` (no writes)
 2. TFTP WRQ `file`
-3. write idx 0 = 0 to all blocks, then write all non-default parameter values
-4. write remote-control tables (`fc07`, `fc05`, `fc06`)
-5. write `04 05 fe00` idx 0 = 0x2100 (end of transfer)
+3. write `04 05 fe00` idx 0 = 0x2a56 (2 bytes)
+4. write idx 3 (mute) = 1 on every output block
+5. write remote-control tables (`fc07`, `fc05`, `fc06`)
+6. write `04 05 fe00` idx 0 = 0x2100 (2 bytes)
+7. TFTP RRQ `file`, then write idx 0 = 0 to all blocks and `04 4x e002`,
+   then all parameter values
+
+Seen on hardware (Lukas's RPM 26z, firmware 2.5.3, 31 Oct 2026; steps 2–4
+and 6–7 replayed by a script, step 5 left out):
+
+- The RRQ readback is byte-identical to the uploaded file.
+- **Parameter memory is not cleared.** After an upload, blocks hold values
+  left over from the previous configuration (shifted to other blocks), so
+  every parameter must be written after an upload.
+- **Presets are not kept.** After re-uploading the original file, presets
+  1, 2 and 24 differed in 7, 9 and 12 values. Storing them again with the
+  store sequence (§2) fixed them, and they then survived the next upload.
+- Leaving out step 5 changed 12 values: `e003` idx 1 of `50..57`
+  (65…72 → 0), `fb03` idx 0 (2 → 1), `fc05` idx 62, `fc06` idx 126 and
+  `fc07` idx 0 (191 → 127). Meaning unknown.
+- The end-of-transfer write answered frame status 2 on two of four uploads
+  (0 on the others). The first read 5–12 s after an upload timed out. Once
+  the device returned zeros from `fb05` for a few seconds and answered
+  again after about a minute. The output mutes from step 4 did not always
+  stay set.
 
 Download: TFTP RRQ `file`, then read all parameters of all blocks (from the
 block table).
@@ -265,7 +290,7 @@ the registry in `@rackline/model` clamps to them.
 | S-C compressor ratio | 1.0 … 10.0 in 0.1 steps (raw 0..90), then 11, 12 … (raw 91 = 11, 127 = 47) |
 | Noise compensator ratio (0–14) | 0.1, 0.2 … 0.9, 1, 1.5, 2, 2.5, 3, 4 : 1 |
 | PEQ gain | dB = (raw − 120) / 4, −15 … +12 dB |
-| PEQ bandwidth | octaves = 0.025 · (raw + 1) for raw 0 … 80 (0.025 … 2.025 oct); raw 12 = default 0.325 oct. Drag Net 4.21 shows 2.025 oct for every raw above 80, also for Lukas's own values (raw 149 … 223, served live by the simulator with type Band). What the DSP does above raw 80 is **unverified** (needs hardware). The help's 0.015 … 4 oct does not match Drag Net's display |
+| PEQ bandwidth | octaves = 0.025 · (raw + 1) for raw 0 … 80 (0.025 … 2.025 oct); raw 12 = default 0.325 oct. Drag Net 4.21 shows 2.025 oct for every raw above 80, also for Lukas's own values (raw 149 … 223, served live by the simulator with type Band). Seen on hardware: Lukas's running configuration holds 28 PEQ widths at raw 164 … 222, so the device stores the full range; what the DSP does above raw 80 is **unverified** (needs an acoustic measurement). The help's 0.015 … 4 oct does not match Drag Net's display |
 | Frequency (PEQ, crossover, generator) | raw = Hz (2 bytes), 20 … 20 000 Hz; Horn EQ 2 … 5 kHz |
 | Delay | ms = raw / 48 (samples at 48 kHz, 2 bytes) |
 | Attack (0–15) | 0.5, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 25, 50, 75, 100 ms |
@@ -336,7 +361,35 @@ HighLower 16), outputs in order High, Mid, Low. 0x0601 = 2-band PEQ,
   second output, low-pass 120 Hz, feeds SUB FLEX; the first is unconnected).
 - **Unknown indexes:** the index before each crossover filter group (2-way:
   2, 6; 3-way: 2, 6, 10, 14) is 1 in all samples; Level idx 4 is 255. Not
-  exposed.
+  exposed. Seen on hardware: the 3-way indexes 2, 6, 10, 14 are real
+  1-byte parameters (value 1 on all three crossovers).
+- **Seen on hardware** (Lukas's RPM 26z, firmware 2.5.3, 31 Oct 2026, reads
+  only): all 337 registry parameters of the 35 blocks of the running
+  configuration (10 block types: analog input, digital input, output,
+  Limiter, PEQ with 4, 7 and 9 filters, Delay, 3-way crossover, Mix 2×1)
+  answered at the registry's
+  index and size, with no value outside the registry's raw range. Scanning
+  indexes 0 … 60 found nothing else in use except index 0 (preset tag),
+  index 1 (always 0), the crossover indexes above and the meters at 0x8000+.
+  The device answers only when the requested size matches exactly. 
+- **Seen on hardware, test configurations** (same device and day, with
+  Lukas's OK; his configuration and presets were restored afterwards):
+  three configurations with one block of each other type were uploaded and
+  every registry parameter was read. All answered with status 0 at the
+  registry's index and size: GEQ, Compressor, AGC, Ambient Noise
+  Compensator, Mono and Stereo S-C Compressor, Level, Mix 3×1 and 10×1,
+  Select 1 of 2, 3 and 10, Meter, PEQ with 2, 3, 5, 6, 8, 12 and 15
+  filters, 2-way crossover, Generator, Feedback Suppressor (15), Auto Mixer
+  4×4, Matrix 2×2 and 6×6. Probing up to 8 indexes past the registry found
+  nothing. Indexes that answer inside the registry's range but are not
+  exposed: GEQ 36; Ambient Noise Compensator 8, 10, 14–24 (17 and 22 are
+  2 bytes), 26–29; Level 4; 2-way crossover 2, 6; Feedback Suppressor 10,
+  13–30; Auto Mixer 4×4 2–5, 43, 44, 50, 51, 57, 58, 64, 65, 74, 75;
+  Matrix 2×2 2–4, 29, 30; Matrix 6×6 2–8, 129, 130. Meter 0x0400 answers
+  no index 0 … 9. The values were leftovers (see the upload sequence), so
+  only index and size are verified, not the conversions. Not tested on
+  hardware: Mix 4…9×1, Select 1 of 4…9, PEQ with 1, 10, 11, 13 and 14
+  filters.
 
 Code: the module registry in `@rackline/model` (`findModule`,
 `decodeParam` / `encodeParam`, `decodeBlockValues`) holds these indexes and
