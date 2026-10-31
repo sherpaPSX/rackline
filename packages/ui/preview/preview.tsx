@@ -28,7 +28,8 @@ const fake: OpenSocket = (_url, h) => {
     send: (text) => {
       const m = JSON.parse(text) as { type: string; blockId?: number; key?: string; value?: unknown };
       if (m.type === 'setParam') setTimeout(() => h.message(JSON.stringify({ type: 'param', blockId: m.blockId, key: m.key, value: m.value })), 5);
-      else h.message(JSON.stringify({ type: 'error', message: `Preview: "${m.type}" needs the real app.` }));
+      // The header looks for devices on its own; the preview simply finds none.
+      else if (m.type !== 'discover') h.message(JSON.stringify({ type: 'error', message: `Preview: "${m.type}" needs the real app.` }));
     },
     close: () => undefined,
   };

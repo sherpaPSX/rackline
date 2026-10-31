@@ -35,12 +35,44 @@ body {
   font-size: 16px;
   letter-spacing: 0.04em;
 }
-.app-status {
+.app-top-gap {
   flex: 1;
+}
+.app-device {
+  position: relative;
+  min-width: 0;
+}
+.app-device-btn {
   display: flex;
   align-items: center;
   gap: var(--rl-s2);
-  min-width: 0;
+  max-width: 320px;
+  padding: var(--rl-s1) var(--rl-s2);
+  border: 1px solid var(--rl-line);
+  border-radius: var(--rl-radius);
+  background: var(--rl-well);
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+.app-device-btn:hover {
+  border-color: var(--rl-dim);
+}
+.app-device-menu {
+  position: absolute;
+  top: calc(100% + var(--rl-s1));
+  left: 0;
+  z-index: 3;
+  display: grid;
+  gap: var(--rl-s3);
+  justify-items: start;
+  width: max-content;
+  max-width: min(520px, 90vw);
+  padding: var(--rl-s3);
+  border: 1px solid var(--rl-line);
+  border-radius: var(--rl-radius);
+  background: var(--rl-panel);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.4);
 }
 .app-status-text {
   white-space: nowrap;
@@ -104,11 +136,11 @@ body {
   font-size: 13px;
   color: var(--rl-dim);
 }
-.app-status .app-note {
+.app-top > .app-note {
   white-space: nowrap;
 }
 .app-row .app-note,
-.app-status .app-note {
+.app-top > .app-note {
   margin: 0;
 }
 .app-error-text {
@@ -134,17 +166,6 @@ body {
 .app-stack {
   display: grid;
   gap: var(--rl-s4);
-}
-.app-toolbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.app-mode {
-  font: 600 12px var(--rl-font-label);
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  color: var(--rl-accent);
 }
 
 /* Show: strips */
@@ -467,7 +488,7 @@ button.app-flow-chip:focus-visible {
 }
 .app-grid-canvas {
   overflow: auto;
-  max-height: calc(100vh - 140px);
+  max-height: calc(100vh - 100px);
   background-color: var(--rl-well);
   background-image: radial-gradient(circle, var(--rl-line) 1px, transparent 1px);
   background-size: 16px 16px;
