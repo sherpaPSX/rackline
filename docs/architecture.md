@@ -140,6 +140,10 @@ Every message is JSON validated by a zod schema on both sides
   shows width, From and To as chips that jump to the rack, input or output,
   plus a quick band mute. Modules run left to right; PEQ and crossover
   expand sideways with a curve; limiters show the threshold until expanded;
+  System also has a Grid view (preview, `SystemGrid`): `Setup.canvas`
+  carries Drag Net's block positions and wires from the block table, the
+  grid draws them as Drag Net does and a click opens the block's editor
+  (stereo pairs linked). Moving blocks and wiring wait for phase 2.
   a power button only where the RPM has a real bypass (GEQ, AGC,
   side-chain compressors, noise compensator), never a made-up one; every
   expanded module grows sideways so racks stay low. Stereo

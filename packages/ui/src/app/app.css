@@ -454,140 +454,92 @@ button.app-flow-chip:focus-visible {
   height: 120px;
 }
 
-/* System map (DriveRack-style overview): racks as rows of tiles, crossovers as tall tiles, branches stacked to the right. */
+/* System grid: blocks at their Drag Net places, wires drawn under them. */
 .app-map-wrap {
   display: grid;
   gap: var(--rl-s3);
 }
-.app-map {
-  display: grid;
-  gap: var(--rl-s5);
-  padding: var(--rl-s4);
-  background: var(--rl-panel);
+.app-grid-canvas {
+  overflow: auto;
+  max-height: 70vh;
+  background-color: var(--rl-well);
+  background-image: radial-gradient(circle, var(--rl-line) 1px, transparent 1px);
+  background-size: 16px 16px;
   border: 1px solid var(--rl-line);
   border-radius: var(--rl-radius);
-  overflow-x: auto;
 }
-.app-map-root,
-.app-map-node {
-  display: flex;
-  align-items: stretch;
-}
-.app-map-in {
-  display: flex;
-  align-items: center;
-}
-.app-map-chain {
-  display: flex;
-  align-items: center;
-  gap: 0;
-  padding: var(--rl-s4) 0 var(--rl-s1);
+.app-grid-plane {
   position: relative;
 }
-.app-map-rack {
+.app-grid-wires {
   position: absolute;
-  top: 0;
-  left: var(--rl-s4);
-  display: flex;
-  gap: var(--rl-s2);
-  align-items: baseline;
-  white-space: nowrap;
+  inset: 0;
+  pointer-events: none;
 }
-.app-map-rack-name {
-  font: 600 12px var(--rl-font-label);
-  color: var(--app-rack, var(--rl-fg));
-  letter-spacing: 0.04em;
+.app-grid-wires path {
+  fill: none;
+  stroke: var(--rl-dim);
+  stroke-opacity: 0.55;
+  stroke-width: 1.5;
 }
-.app-map-rack-detail {
-  font: 11px var(--rl-font-label);
-  color: var(--rl-dim);
+.app-grid-wires path[data-lit] {
+  stroke: var(--rl-accent);
+  stroke-opacity: 1;
+  stroke-width: 2;
 }
-.app-map-children {
-  display: grid;
-  gap: var(--rl-s3);
-  align-content: center;
-  /* Bracket from the crossover (or chain end) to the branches. */
-  border-left: 2px solid var(--rl-line);
-  padding-left: var(--rl-s3);
-  margin: var(--rl-s4) 0;
-}
-.app-map-outs {
-  display: grid;
-  gap: var(--rl-s2);
-  align-content: center;
-  padding-top: var(--rl-s4);
-}
-.app-map-unused {
-  display: flex;
-  gap: var(--rl-s2);
-  align-items: center;
-  opacity: 0.7;
-}
-/* Wires between tiles. */
-.app-map-chain > .app-tile,
-.app-map-outs > .app-tile {
-  margin-left: var(--rl-s4);
-}
-.app-map-chain > .app-tile::before,
-.app-map-outs > .app-tile::before {
-  content: '';
+.app-grid-slot {
   position: absolute;
-  right: 100%;
-  top: 50%;
-  width: var(--rl-s4);
-  border-top: 2px solid var(--rl-line);
+  display: flex;
 }
 .app-tile {
   position: relative;
-  flex: none;
+  flex: 1;
   display: grid;
-  grid-template-rows: auto 1fr auto;
+  grid-template-rows: auto 1fr;
   gap: 2px;
   justify-items: center;
   align-items: center;
-  width: 104px;
-  min-height: 84px;
-  padding: var(--rl-s2) var(--rl-s1);
+  min-width: 0;
+  padding: 4px 3px;
   background: var(--rl-bg);
   color: var(--rl-fg);
   border: 1px solid var(--rl-line);
-  border-top: 3px solid var(--app-tile-k, var(--app-rack, var(--rl-line)));
+  border-top: 3px solid var(--app-tile-k, var(--rl-line));
   border-radius: var(--rl-radius);
   cursor: pointer;
   font: inherit;
   text-align: center;
+  overflow: hidden;
 }
 .app-tile:hover {
   border-color: var(--rl-dim);
-  border-top-color: var(--app-tile-k, var(--app-rack, var(--rl-dim)));
+  border-top-color: var(--app-tile-k, var(--rl-dim));
 }
 .app-tile[data-selected] {
   outline: 2px solid var(--rl-accent);
   outline-offset: 1px;
 }
-.app-tile[data-tall] {
-  align-self: stretch;
-  margin-top: calc(-1 * var(--rl-s1));
+.app-tile[data-unknown] {
+  opacity: 0.5;
 }
 .app-tile-name {
-  font: 600 12px var(--rl-font-label);
-  letter-spacing: 0.03em;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font: 600 11px var(--rl-font-label);
 }
 .app-tile-body {
   display: grid;
   gap: 1px;
   width: 100%;
-  font: 12px var(--rl-font-value);
+  font: 11px var(--rl-font-value);
   color: var(--rl-dim);
 }
 .app-tile[data-muted] .app-tile-body::after {
   content: 'MUTED';
   font: 600 10px var(--rl-font-label);
   color: var(--rl-danger);
-}
-.app-tile-width {
-  font: 10px var(--rl-font-label);
-  color: var(--rl-dim);
 }
 .app-map-editor {
   position: sticky;

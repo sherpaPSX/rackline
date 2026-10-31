@@ -67,3 +67,23 @@ describe('setup of Lukas config (PSX_RCF_FINAL.r26)', () => {
     expect(findParam(table, 200, 'gain')).toEqual({ ok: false, error: 'no block 200 in this setup' });
   });
 });
+
+describe('canvas of Lukas config (PSX_RCF_FINAL.r26)', () => {
+  const setup = toSetup(psxProject().blockTable, { kind: 'file', fileName: 'PSX_RCF_FINAL.r26' });
+  const canvas = setup.canvas ?? expect.fail('no canvas');
+
+  it('keeps Drag Net positions and pin counts', () => {
+    expect(canvas.blocks).toHaveLength(setup.blocks.length);
+    expect(canvas.blocks.find((b) => b.id === 3)).toEqual({ id: 3, x: 10, y: 2, inputs: 1, outputs: 1 });
+    expect(canvas.blocks.find((b) => b.id === 8)).toMatchObject({ inputs: 1, outputs: 3 });
+  });
+
+  it('connects equal wire numbers, with fan-out', () => {
+    // Analog in 1 (wire 388) → Limiter 1; Delay 1 (413) → Delay 2 and Mixer 3 input 1.
+    expect(canvas.wires).toContainEqual({ from: { blockId: 1, pin: 0 }, to: { blockId: 3, pin: 0 } });
+    expect(canvas.wires).toContainEqual({ from: { blockId: 54, pin: 0 }, to: { blockId: 17, pin: 0 } });
+    expect(canvas.wires).toContainEqual({ from: { blockId: 54, pin: 0 }, to: { blockId: 37, pin: 0 } });
+    // Physical connectors (wire 1 on the analog input's own input) make no wire.
+    expect(canvas.wires.some((w) => w.to.blockId === 1)).toBe(false);
+  });
+});

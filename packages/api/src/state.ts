@@ -118,6 +118,29 @@ export const Rack = z.object({
 });
 export type Rack = z.infer<typeof Rack>;
 
+/** One end of a wire: a block's input or output pin (0-based). */
+export const Pin = z.object({ blockId: z.number(), pin: z.number() });
+export type Pin = z.infer<typeof Pin>;
+
+/**
+ * The schematic as drawn in Drag Net: block positions on its grid and the
+ * wires between pins. Read from the setup; it does not change while tuning.
+ */
+export const Canvas = z.object({
+  blocks: z.array(
+    z.object({
+      id: z.number(),
+      /** Top-left corner in Drag Net grid units. */
+      x: z.number(),
+      y: z.number(),
+      inputs: z.number(),
+      outputs: z.number(),
+    }),
+  ),
+  wires: z.array(z.object({ from: Pin, to: Pin })),
+});
+export type Canvas = z.infer<typeof Canvas>;
+
 /** The loaded DSP setup. Its layout never changes while tuning (phase 1). */
 export const Setup = z.object({
   /** Configuration name stored in the setup, e.g. `RPM 26z Configuration`. */
@@ -137,6 +160,8 @@ export const Setup = z.object({
   modules: z.array(ModuleInfo),
   /** Estimated DSP load in percent (only the compiler knows the exact figure). */
   dspPercent: z.number(),
+  /** The Drag Net schematic, when the setup carries one. */
+  canvas: Canvas.optional(),
 });
 export type Setup = z.infer<typeof Setup>;
 
