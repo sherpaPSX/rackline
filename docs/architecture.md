@@ -136,35 +136,25 @@ Every message is JSON validated by a zod schema on both sides
 - View helpers (`racks.ts`) derive band strips, input pairs and rack detail
   lines from the API's JSON only.
 - Screens: **Show** (fader = trim + mute per input pair and band; band
-  fader = Output Trim of all its outputs), **System / Tune**: input
-  channels on top, then one row per speaker. An input channel is a pair of
-  physical inputs (sensitivity, trim, mute) plus the rack that processes
-  them before the first split (`isInputRack`). A speaker row is a rack that
-  plays into outputs with its whole chain from the input channel: the racks
-  it is fed through (delay, sum, crossover), its own modules, then its
-  outputs (trim, polarity, mute). A block other speakers also play through
-  has a dashed outline and "Also plays LF": editing it changes them too.
-  Racks no speaker plays through follow as rows of their own, so every
-  value stays tunable. Headers show width, outputs and From ("ANALOG →
-  High"), plus a quick mute; input channels list the speakers they feed as
-  chips that jump to the row. Modules run left to right; PEQ and crossover
-  expand sideways with a curve; limiters show the threshold until expanded;
-  System also has a Grid view (preview, `SystemGrid`): `Setup.canvas`
-  carries Drag Net's block positions and wires from the block table, the
-  grid draws them as Drag Net does and a click opens the block's editor
-  (stereo pairs linked). Moving blocks and wiring wait for phase 2.
-  a power button only where the RPM has a real bypass (GEQ, AGC,
-  side-chain compressors, noise compensator), never a made-up one; every
-  expanded module grows sideways so racks stay low. A stereo row
-  has one link button in its header: linked, it is one chain and every edit
-  sets both channels (an amber "5 ≠ 6" marks a module whose channels still
-  differ); unlinked, it shows one lane per channel. It starts linked when
-  both channels agree; channels are named by their physical inputs/outputs
-  (1+2, A+B, 5+6). Wiring is fixed except through Select 1 of N blocks (a
-  parameter, no dropout): an input channel starting with a Select picks its
-  inputs in its header, and a Select in front of outputs makes the row a
-  switchable speaker ("Out 5+6 from MF\\HF / LF"). `mixerInputs` in the API
-  maps each source to its Select input, so unconnected inputs are skipped),
+  fader = Output Trim of all its outputs), **System / Tune**: Drag Net's grid
+  (`SystemGrid`, chosen by Lukas 2026-10-31 over a DriveRack-style map and
+  the racks). `Setup.canvas` carries Drag Net's block positions and wires
+  from the block table; the grid draws them as Drag Net does, each block
+  with its main value (PEQ: a mini curve), and a click lights its wires and
+  opens its editor below (on a phone as a bottom sheet). Blocks that form
+  one stereo module (left and right PEQ, a cascaded crossover) open
+  together, linked. Values only: moving blocks and wiring wait for phase 2.
+  The racks view (`SystemRacks`, PR #19: input channels, then one row per
+  speaker with its whole chain, a stereo link button per row) is kept for
+  setups without a schematic (the module gallery) and in case it comes
+  back. Module cards: PEQ and crossover expand sideways with a curve;
+  limiters show the threshold until expanded; a power button only where
+  the RPM has a real bypass (GEQ, AGC, side-chain compressors, noise
+  compensator), never a made-up one; every expanded module grows sideways.
+  Channels are named by their physical inputs/outputs (1+2, A+B, 5+6).
+  Wiring is fixed except through Select 1 of N blocks (a parameter, no
+  dropout); `mixerInputs` in the API maps each source to its Select input,
+  so unconnected inputs are skipped),
   **Files** (find/connect a device, open `.r26`, recall presets).
 - Curves are drawn from the option labels the core sends (`curves.ts`);
   Low/High cut as 2nd-order Butterworth and Horn EQ/all-pass as flat are
