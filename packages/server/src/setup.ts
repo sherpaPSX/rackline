@@ -1,4 +1,4 @@
-import type { ModuleInfo, ParamInfo, ParamValue, Setup, StepValue, Values } from '@rackline/api';
+import type { Canvas, ModuleInfo, ParamInfo, ParamValue, Pin, Setup, StepValue, Values } from '@rackline/api';
 import {
   buildRacks,
   decodeParam,
@@ -32,6 +32,28 @@ export function toSetup(table: BlockTable, source: Setup['source']): Setup {
       return def === undefined ? [] : [moduleInfo(def)];
     }),
     dspPercent: Math.round(estimateDspLoad(table.blocks).dspPercent * 10) / 10,
+    canvas: toCanvas(table),
+  };
+}
+
+/**
+ * Drag Net's schematic: positions from the block table, and a wire wherever
+ * an output and an input carry the same wire number (fan-out allowed).
+ * Physical connectors only appear on one side, so they make no wire.
+ */
+export function toCanvas(table: BlockTable): Canvas {
+  const drivers = new Map<number, Pin>();
+  for (const b of table.blocks) b.outputs.forEach((w, pin) => w !== 0 && drivers.set(w, { blockId: b.id, pin }));
+  const wires: Canvas['wires'] = [];
+  for (const b of table.blocks) {
+    b.inputs.forEach((w, pin) => {
+      const from = w === 0 ? undefined : drivers.get(w);
+      if (from) wires.push({ from, to: { blockId: b.id, pin } });
+    });
+  }
+  return {
+    blocks: table.blocks.map((b) => ({ id: b.id, x: b.x, y: b.y, inputs: b.inputs.length, outputs: b.outputs.length })),
+    wires,
   };
 }
 
