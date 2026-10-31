@@ -140,7 +140,9 @@ Every message is JSON validated by a zod schema on both sides
   shows width, From and To as chips that jump to the rack, input or output,
   plus a quick band mute. Modules run left to right; PEQ and crossover
   expand sideways with a curve; limiters show the threshold until expanded;
-  PEQ bypass switches all filters off (the RPM has no bypass). Stereo
+  a power button only where the RPM has a real bypass (GEQ, AGC,
+  side-chain compressors, noise compensator), never a made-up one; every
+  expanded module grows sideways so racks stay low. Stereo
   modules edit both channels linked (one quiet "1+2" button) or one when
   they differ (amber 1+2 / 1 / 2); channels are named by their physical
   inputs/outputs (1+2, A+B, 5+6). Wiring is fixed except through Select 1 of
