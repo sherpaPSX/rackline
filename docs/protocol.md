@@ -55,7 +55,7 @@ Record (14 bytes, big-endian):
 | 1 | block instance ID (subtype for system objects) |
 | 2..3 | block type / object ID |
 | 4..5 | parameter index |
-| 6..7 | 0 |
+| 6..7 | 0 in requests; in replies the record status (seen on hardware): 0 OK, 6 wrong block type, 7 no such index, 9 wrong size. The frame status (bytes 1..2) is the first non-zero record status |
 | 8..9 | value size in bytes (1, 2 or 4) |
 | 10..13 | value (right-aligned) |
 
@@ -248,7 +248,7 @@ the registry in `@rackline/model` clamps to them.
 | S-C compressor ratio | 1.0 … 10.0 in 0.1 steps (raw 0..90), then 11, 12 … (raw 91 = 11, 127 = 47) |
 | Noise compensator ratio (0–14) | 0.1, 0.2 … 0.9, 1, 1.5, 2, 2.5, 3, 4 : 1 |
 | PEQ gain | dB = (raw − 120) / 4, −15 … +12 dB |
-| PEQ bandwidth | octaves = 0.025 · (raw + 1) for raw 0 … 80 (0.025 … 2.025 oct); raw 12 = default 0.325 oct. Drag Net 4.21 shows 2.025 oct for every raw above 80, also for Lukas's own values (raw 149 … 223, served live by the simulator with type Band). What the DSP does above raw 80 is **unverified** (needs hardware). The help's 0.015 … 4 oct does not match Drag Net's display |
+| PEQ bandwidth | octaves = 0.025 · (raw + 1) for raw 0 … 80 (0.025 … 2.025 oct); raw 12 = default 0.325 oct. Drag Net 4.21 shows 2.025 oct for every raw above 80, also for Lukas's own values (raw 149 … 223, served live by the simulator with type Band). Seen on hardware: Lukas's running configuration holds 28 PEQ widths at raw 164 … 222, so the device stores the full range; what the DSP does above raw 80 is **unverified** (needs an acoustic measurement). The help's 0.015 … 4 oct does not match Drag Net's display |
 | Frequency (PEQ, crossover, generator) | raw = Hz (2 bytes), 20 … 20 000 Hz; Horn EQ 2 … 5 kHz |
 | Delay | ms = raw / 48 (samples at 48 kHz, 2 bytes) |
 | Attack (0–15) | 0.5, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 25, 50, 75, 100 ms |
@@ -319,7 +319,19 @@ HighLower 16), outputs in order High, Mid, Low. 0x0601 = 2-band PEQ,
   second output, low-pass 120 Hz, feeds SUB FLEX; the first is unconnected).
 - **Unknown indexes:** the index before each crossover filter group (2-way:
   2, 6; 3-way: 2, 6, 10, 14) is 1 in all samples; Level idx 4 is 255. Not
-  exposed.
+  exposed. Seen on hardware: the 3-way indexes 2, 6, 10, 14 are real
+  1-byte parameters (value 1 on all three crossovers).
+- **Seen on hardware** (Lukas's RPM 26z, firmware 2.5.3, 31 Oct 2026, reads
+  only): all 337 registry parameters of the 35 blocks of the running
+  configuration (10 block types: analog input, digital input, output,
+  Limiter, PEQ with 4, 7 and 9 filters, Delay, 3-way crossover, Mix 2×1)
+  answered at the registry's
+  index and size, with no value outside the registry's raw range. Scanning
+  indexes 0 … 60 found nothing else in use except index 0 (preset tag),
+  index 1 (always 0), the crossover indexes above and the meters at 0x8000+.
+  The device answers only when the requested size matches exactly. The other
+  modules (GEQ, dynamics, Matrix, Auto Mixer, Feedback Suppressor, …) are not
+  in that configuration and stay verified with the simulator only.
 
 Code: the module registry in `@rackline/model` (`findModule`,
 `decodeParam` / `encodeParam`, `decodeBlockValues`) holds these indexes and
