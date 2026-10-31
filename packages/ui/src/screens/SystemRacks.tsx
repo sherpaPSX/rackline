@@ -1,6 +1,7 @@
+import { useState } from 'react';
 import type { ReactNode } from 'react';
 import type { ModuleInfo, Rack, Setup, Values } from '@rackline/api';
-import { Button, IconButton, MuteButton, RackCard } from '@rackline/ui-kit';
+import { IconButton, MuteButton, RackCard } from '@rackline/ui-kit';
 import { useCoreClient } from '../app/core-context.js';
 import {
   anyMuted,
