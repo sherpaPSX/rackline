@@ -154,6 +154,35 @@ describe('Core', () => {
     expect(last('devices')?.devices).toEqual([{ ip: '192.168.69.22', mac: '00:50:c2:12:34:56' }]);
   });
 
+  it('moves a device from another subnet into this network before connecting', async () => {
+    const device = new FakeDevice();
+    const opened: string[] = [];
+    const core = new Core({
+      openDevice: (ip) => {
+        opened.push(ip);
+        return Promise.resolve(device);
+      },
+      discover: () => Promise.resolve([{ ip: '10.9.9.9', mac: '00:11:fa:01:1c:5c', reachable: false }]),
+      moveIntoNetwork: (d) => Promise.resolve({ ok: true, value: { ip: '192.168.69.22', mac: d.mac, reachable: true } }),
+    });
+    await core.handle({ type: 'discover' });
+    await core.handle({ type: 'connect', ip: '10.9.9.9' });
+    expect(opened).toEqual(['192.168.69.22']);
+    expect(core.state().devices).toEqual([{ ip: '192.168.69.22', mac: '00:11:fa:01:1c:5c', reachable: true }]);
+    expect(core.state().connection.status).toBe('online');
+  });
+
+  it('stays offline with the reason when the device cannot be moved', async () => {
+    const core = new Core({
+      openDevice: () => Promise.reject(new Error('must not open')),
+      discover: () => Promise.resolve([{ ip: '10.9.9.9', mac: '00:11:fa:01:1c:5c', reachable: false }]),
+      moveIntoNetwork: () => Promise.resolve({ ok: false, error: 'no free address' }),
+    });
+    await core.handle({ type: 'discover' });
+    await core.handle({ type: 'connect', ip: '10.9.9.9' });
+    expect(core.state().connection).toEqual({ status: 'offline', error: "cannot bring the device into this computer's network: no free address" });
+  });
+
   it('drops a connect that is overtaken by a disconnect while the socket opens', async () => {
     const device = new FakeDevice();
     let open: (d: Device) => void = () => undefined;

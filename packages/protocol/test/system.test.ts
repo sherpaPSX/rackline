@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { decodeFrame, encodeFrame } from '../src/frame.js';
 import { decodeDeviceInfo, deviceInfoReadRecords } from '../src/system.js';
+import { fixture } from './fixtures.js';
 
 describe('device info', () => {
   it('reads firmware, model and name in one frame and decodes the reply', () => {
@@ -18,6 +19,15 @@ describe('device info', () => {
     expect(decoded.ok).toBe(true);
     if (!decoded.ok) return;
     expect(decodeDeviceInfo(decoded.value.records)).toEqual({ model: 'RPM 26z', firmware: '2.5.3', name: 'RPM26z' });
+  });
+
+  it('decodes the real RPM 26z reply: cut after the last record, model code 0x62', () => {
+    const reply = fixture('rpm26z-device-info-reply.bin');
+    expect(reply).toHaveLength(9 + 14 * 12);
+    const decoded = decodeFrame(reply);
+    expect(decoded.ok).toBe(true);
+    if (!decoded.ok) return;
+    expect(decodeDeviceInfo(decoded.value.records)).toEqual({ model: 'RPM 26z', firmware: '2.5.3', name: '' });
   });
 
   it('names missing and unknown model codes', () => {
