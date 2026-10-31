@@ -3,7 +3,8 @@
 State as of 2026-10-24. Read from the code of RaneSock.exe and DragNet.exe and
 verified against a simulator that the original Drag Net (under Wine) treats as
 a real RPM 26z. **Parameter indexes and sizes of almost all mapped modules were checked on a
-real RPM 26z (§4); the value conversions were not.**
+real RPM 26z (§4); the value conversions were not.** Other sections that were
+seen on hardware (Lukas's RPM 26z, firmware 2.5.3, 31 Oct 2026) say so.
 
 Machine-readable parameter map: [rpm26z-modules.json](rpm26z-modules.json).
 
@@ -37,9 +38,25 @@ Code: `encodeFindAll`, `encodeGetMac`, `encodeSetIp`, `decodeDiscoveryReply`
 in `@rackline/protocol`. The reply layout is verified with the simulator
 (Drag Net accepts it); `WI` is encoded from Drag Net's code and unverified.
 
+Seen on hardware: the RPM answered `RA` from 192.168.69.71 while the PC was
+in 192.168.0.0/24 (same switch). A read frame sent to `255.255.255.255:5000`
+was answered too, but unicast to the device fails because the PC routes it
+to its gateway. TFTP and polling need unicast, so the device has to be moved
+into the PC's network.
+
+**Plug-and-play in Rackline** (`moveIntoNetwork` in `@rackline/server`): when
+the user connects to a discovered device outside every PC network, the core
+picks the highest free host address of the PC's first network (no ping
+reply and no ARP entry afterwards), broadcasts `WI` with that address and the
+PC's netmask, and repeats `RA` until the device answers from the new address.
+Routers usually lease DHCP addresses from the bottom of the range, hence the
+top. The device has no gateway setting in `WI`.
+
 ## 2. Parameter frames (UDP 5000)
 
-A frame is always 905 bytes:
+Requests are always 905 bytes. Replies from the simulator are 905 bytes too;
+seen on hardware: the RPM 26z cuts its replies after the last record
+(9 + 14·N bytes), so decoding accepts any length that holds the records.
 
 | Offset | Meaning |
 |---|---|
@@ -73,7 +90,7 @@ Code: `encodeFrame` / `decodeFrame` / `isReplyTo` in `@rackline/protocol`,
 | Record | Meaning |
 |---|---|
 | `04 11 fb05` idx 0 | firmware version: major×10 (25 → 2.5) |
-| `04 11 fb05` idx 2 | type: 0x00 RPM 88, 0x20 RPM 22, 0x40 RPM 44, **0x60 RPM 26z**, 0x80 RPM 2, 0xA0 RPM 2m |
+| `04 11 fb05` idx 2 | type in the top 3 bits: 0x00 RPM 88, 0x20 RPM 22, 0x40 RPM 44, **0x60 RPM 26z**, 0x80 RPM 2, 0xA0 RPM 2m. Seen on hardware: the RPM 26z answers 0x62 (the simulator 0x60); the low bits are unknown |
 | `04 11 fb05` idx 3 | firmware version: minor (3 → 2.5.3) |
 | `04 08 fc01` idx 0..7 | device name, 8×4 bytes ASCII |
 | `04 01 fc00` idx 0 | **current preset; writing it recalls the preset** |

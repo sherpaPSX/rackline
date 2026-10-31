@@ -7,3 +7,4 @@ export * from './setup.js';
 export * from './core.js';
 export * from './ws-server.js';
 export * from './start.js';
+export * from './plug-and-play.js';

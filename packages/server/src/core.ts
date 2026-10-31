@@ -19,6 +19,12 @@ import { Throttle } from './throttle.js';
 export interface CoreOptions {
   openDevice(ip: string): Promise<Device>;
   discover(): Promise<FoundDevice[]>;
+  /**
+   * Plug-and-play: give a discovered device outside this computer's networks
+   * an address it can reach, and return the device as it is now. Called only
+   * when the user connects to that device.
+   */
+  moveIntoNetwork?(device: FoundDevice): Promise<Result<FoundDevice>>;
   /** Minimum time between two writes of the same parameter (default 30 ms). */
   throttleMs?: number;
   /** Liveness check while connected and reconnect attempts while unreachable (default 2 s). */
@@ -38,7 +44,8 @@ const PRESET = readRecord(SYSTEM.currentPreset, 1);
  * The single source of truth for device state (docs/architecture.md). Clients
  * send intents through `handle`; every resulting change goes to all
  * subscribers. Only parameter values and preset recalls are written: the core
- * never changes the DSP layout or the device's network settings.
+ * never changes the DSP layout, and changes the device's address only when the
+ * user connects to a device outside this computer's networks (plug-and-play).
  */
 export class Core {
   private connection: Connection = { status: 'offline' };
@@ -162,6 +169,18 @@ export class Core {
     this.connection = { status: 'connecting' };
     this.emitState();
     const generation = this.generation;
+    const found = this.devices.find((d) => d.ip === ip);
+    if (found?.reachable === false && this.options.moveIntoNetwork !== undefined) {
+      const moved = await this.options.moveIntoNetwork(found);
+      if (generation !== this.generation) return;
+      if (!moved.ok) {
+        this.connection = { status: 'offline', error: `cannot bring the device into this computer's network: ${moved.error}` };
+        return this.emit({ type: 'connection', connection: this.connection });
+      }
+      this.devices = this.devices.map((d) => (d.mac === found.mac ? moved.value : d));
+      this.emit({ type: 'devices', devices: this.devices });
+      ip = moved.value.ip;
+    }
     let device: Device;
     try {
       device = await this.options.openDevice(ip);

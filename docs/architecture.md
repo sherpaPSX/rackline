@@ -115,6 +115,10 @@ Every message is JSON validated by a zod schema on both sides
   changed elsewhere → values re-read.
 - `ControlClient` refuses every system-object write except the preset
   recall, so network settings (`fe03`) cannot be written from the core.
+- **Plug-and-play:** discovery marks devices outside the PC's networks
+  (`reachable: false`). Connecting to one first moves it into the PC's
+  network with `WI` (docs/protocol.md §1); this is the only network change
+  the core makes, and only on that user action.
 - Not yet: meters, storing presets, saving `.r26` files.
 
 ## UI client (`@rackline/ui`)
