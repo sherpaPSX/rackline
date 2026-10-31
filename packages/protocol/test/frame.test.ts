@@ -42,7 +42,9 @@ describe('parameter frames', () => {
   });
 
   it('rejects malformed frames', () => {
-    expect(decodeFrame(new Uint8Array(904)).ok).toBe(false);
+    expect(decodeFrame(new Uint8Array(8)).ok).toBe(false);
+    expect(decodeFrame(new Uint8Array(906)).ok).toBe(false);
+    expect(decodeFrame(hex('02 0000 0000000000 02 0411fb05 0000 0000 0001 00000019')).ok).toBe(false); // 2 records, 1 sent
     expect(decodeFrame(padded(hex('07'), 905)).ok).toBe(false);
     expect(decodeFrame(padded(hex('02 0000 0000000000 41'), 905)).ok).toBe(false);
     expect(decodeFrame(padded(hex('02 0000 0000000000 01 00 08 0610 0004 0000 0003 00000000'), 905)).ok).toBe(false);

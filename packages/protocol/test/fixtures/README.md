@@ -7,6 +7,7 @@ Real samples the protocol tests run on. Keep them byte-exact
 |---|---|
 | `PSX_RCF_FINAL.r26` | Lukas's Drag Net project for his RCF rig (RPM 26z), unchanged. Flat XML: block table (`RawScript`) and preset values, no compiled DSP code. |
 | `rpm26z_01-config-table.bin` | First 900 bytes of the configuration `file` downloaded over TFTP from the simulator after Drag Net uploaded its RPM26z_01 template: header, block table and end-of-table record. |
+| `rpm26z-device-info-reply.bin` | Lukas's real RPM 26z (firmware 2.5.3, 31 Oct 2026) answering a read of firmware, model code, current preset and the 8 name words. The reply is 177 bytes (cut after the last record), not 905. |
 | `dragnet-display-samples.json` | `[blockType, index, raw, display]` rows from Drag Net 4.21's "Generate Report" of configurations served by the simulator with chosen raw values (many copies of each module, one raw value per copy), plus `names`: Drag Net's parameter name per index for the size-dependent Mix, Select and Matrix block types. Only numbers, parameter names and display strings, no Drag Net code. |
 
 The full captured config is 19 592 bytes (sha256 `948c483e…d8809`). The rest

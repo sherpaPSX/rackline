@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { AppState } from '@rackline/api';
 import { Button, ConfirmButton, Select, TextField } from '@rackline/ui-kit';
 import { useCoreClient } from '../app/core-context.js';
@@ -15,6 +15,11 @@ export function FilesScreen({ app }: { app: AppState }) {
   const fileInput = useRef<HTMLInputElement>(null);
   const { connection, setup } = app;
   const connected = connection.status !== 'offline';
+
+  // Plug-and-play: look for devices as soon as the screen shows without one.
+  useEffect(() => {
+    if (!connected) client.send({ type: 'discover' });
+  }, [client, connected]);
 
   return (
     <div className="app-screen">
@@ -44,6 +49,7 @@ export function FilesScreen({ app }: { app: AppState }) {
                   <li key={d.mac} className="app-row">
                     <span className="app-mono">{d.ip}</span>
                     <span className="app-note">{d.mac}</span>
+                    {d.reachable === false && <span className="app-note">Other network: Connect gives it a free address in yours</span>}
                     <Button onClick={() => client.send({ type: 'connect', ip: d.ip })}>Connect</Button>
                   </li>
                 ))}
