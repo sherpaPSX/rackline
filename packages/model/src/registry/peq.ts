@@ -1,20 +1,20 @@
-import { FREQUENCY, PEQ_BANDWIDTH, PEQ_GAIN } from '../units.js';
-import { bool, choice, num } from './params.js';
-import type { ModuleDef, ParamDef } from './types.js';
+import { FREQUENCY, PEQ_BANDWIDTH, PEQ_GAIN } from "../units.js";
+import { bool, choice, num } from "./params.js";
+import type { ModuleDef, ParamDef } from "./types.js";
 
 /**
  * Codes 0, 1, 2, 4, 5, 6 are verified with the simulator. 3 and 7 follow the
  * order of Drag Net's filter type list, which matches every verified code.
  */
 export const PEQ_FILTER_TYPES = {
-  0: 'Band',
-  1: 'Low shelf',
-  2: 'High shelf',
-  3: 'Low cut',
-  4: 'High cut',
-  5: 'Horn EQ',
-  6: 'All-pass (1st order)',
-  7: 'All-pass (2nd order)',
+  0: "Band",
+  1: "Low shelf",
+  2: "High shelf",
+  3: "Low cut",
+  4: "High cut",
+  5: "Horn EQ",
+  6: "All-pass (1st order)",
+  7: "All-pass (2nd order)",
 };
 
 /** RPM PEQs hold 1 to 15 filters; the count is fixed at compile time. */
@@ -40,9 +40,16 @@ export function peq(filters: number): ModuleDef {
   return {
     blockType: PEQ_BASE_TYPE + filters - 1,
     name: `Parametric EQ (${filters})`,
-    role: 'processing',
-    evidence: filters === 9 ? 'simulator' : SEEN_FILTER_COUNTS.includes(filters) ? 'sample' : 'guessed',
-    params: Array.from({ length: filters }, (_, k) => filterParams(k + 1)).flat(),
+    role: "processing",
+    evidence:
+      filters === 9
+        ? "simulator"
+        : SEEN_FILTER_COUNTS.includes(filters)
+          ? "sample"
+          : "guessed",
+    params: Array.from({ length: filters }, (_, k) =>
+      filterParams(k + 1),
+    ).flat(),
     // The compact view of a PEQ is its response curve, not single controls.
     compact: [],
     dspPercent: 1.2 + 0.55 * filters,

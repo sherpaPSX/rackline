@@ -1,12 +1,12 @@
-import { useState } from 'react';
-import type { ModuleInfo, ParamValue, Values } from '@rackline/api';
-import { EqCurve, ModuleCard } from '@rackline/ui-kit';
-import type { EqCurveLine } from '@rackline/ui-kit';
-import { crossoverBands, crossoverEdges } from '../curves.js';
-import { valueOf } from '../racks.js';
-import { ChannelsBadge } from './ChannelsBadge.js';
-import { ParamControl, ParamField } from './ParamControl.js';
-import { useLinkedModule } from './linked.js';
+import { useState } from "react";
+import type { ModuleInfo, ParamValue, Values } from "@rackline/api";
+import { EqCurve, ModuleCard } from "@rackline/ui-kit";
+import type { EqCurveLine } from "@rackline/ui-kit";
+import { crossoverBands, crossoverEdges } from "../curves.js";
+import { valueOf } from "../racks.js";
+import { ChannelsBadge } from "./ChannelsBadge.js";
+import { ParamControl, ParamField } from "./ParamControl.js";
+import { useLinkedModule } from "./linked.js";
 
 export interface CrossoverModuleProps {
   /** Per channel: the cascaded crossover blocks, the first one fed by the rack. */
@@ -40,40 +40,66 @@ function CrossoverStage({
   colors: readonly (string | undefined)[];
   channelNames: readonly string[];
 }) {
-  const linked = useLinkedModule(values, blockIds, module.params.map((p) => p.key), channelNames);
+  const linked = useLinkedModule(
+    values,
+    blockIds,
+    module.params.map((p) => p.key),
+    channelNames,
+  );
   const edges = crossoverEdges(module);
   const bands = crossoverBands(module, linked.value);
-  const lines: EqCurveLine[] = bands.map((b, i) => ({ id: b.name, filters: b.filters, color: colors[i] ?? 'var(--rl-fg)' }));
+  const lines: EqCurveLine[] = bands.map((b, i) => ({
+    id: b.name,
+    filters: b.filters,
+    color: colors[i] ?? "var(--rl-fg)",
+  }));
   const param = (key: string) => module.params.find((p) => p.key === key);
   return (
     <div className="app-xover-stage">
       <div className="app-xover-graph">
-      <div className="app-row">
-        <span className="rl-label">{module.name}</span>
-        <ChannelsBadge linked={linked} />
-      </div>
-      <EqCurve
-        height={EXPANDED_CURVE_H}
-        label={`${owner} bands`}
-        dbRange={DB_RANGE}
-        lines={lines}
-        handles={edges.flatMap((e) => {
-          const freq = linked.value(`${e.prefix}Freq`);
-          return typeof freq === 'number' ? [{ id: e.prefix, freq, gainDb: -6, label: e.name[0] ?? '', name: `${owner} ${e.name}` }] : [];
-        })}
-        onMove={(id, m) => linked.set({ [`${id}Freq`]: m.freq })}
-      />
+        <div className="app-row">
+          <span className="rl-label">{module.name}</span>
+          <ChannelsBadge linked={linked} />
+        </div>
+        <EqCurve
+          height={EXPANDED_CURVE_H}
+          label={`${owner} bands`}
+          dbRange={DB_RANGE}
+          lines={lines}
+          handles={edges.flatMap((e) => {
+            const freq = linked.value(`${e.prefix}Freq`);
+            return typeof freq === "number"
+              ? [
+                  {
+                    id: e.prefix,
+                    freq,
+                    gainDb: -6,
+                    label: e.name[0] ?? "",
+                    name: `${owner} ${e.name}`,
+                  },
+                ]
+              : [];
+          })}
+          onMove={(id, m) => linked.set({ [`${id}Freq`]: m.freq })}
+        />
       </div>
       {/* One column per edge: slope, frequency, polarity. Columns sit side by side so the rack stays low. */}
       <div className="app-xover-edges">
         {edges.map((e) => {
           const props = (suffix: string) => {
             const p = param(`${e.prefix}${suffix}`);
-            return p && { param: p, owner: `${owner} ${e.name}`, value: linked.value(p.key), onChange: (v: ParamValue) => linked.set({ [p.key]: v }) };
+            return (
+              p && {
+                param: p,
+                owner: `${owner} ${e.name}`,
+                value: linked.value(p.key),
+                onChange: (v: ParamValue) => linked.set({ [p.key]: v }),
+              }
+            );
           };
-          const type = props('Type');
-          const freq = props('Freq');
-          const invert = props('Invert');
+          const type = props("Type");
+          const freq = props("Freq");
+          const invert = props("Invert");
           return (
             <div className="app-xover-edge" key={e.prefix}>
               <span className="app-edge-name">{e.name}</span>
@@ -89,28 +115,52 @@ function CrossoverStage({
 }
 
 /** The crossover at the end of a rack. A cascade (3-way + 2-way) shows each block as a stage. */
-export function CrossoverModule({ initiallyOpen, blockIds, modules, values, rackName, channelNames, bandColors }: CrossoverModuleProps) {
+export function CrossoverModule({
+  initiallyOpen,
+  blockIds,
+  modules,
+  values,
+  rackName,
+  channelNames,
+  bandColors,
+}: CrossoverModuleProps) {
   const [open, setOpen] = useState(initiallyOpen ?? false);
   const owner = `${rackName} crossover`;
   // Stage s of the cascade: block s of every channel.
-  const stages = (blockIds[0] ?? []).map((_, s) => blockIds.map((chain) => chain[s]).filter((id): id is number => id !== undefined));
+  const stages = (blockIds[0] ?? []).map((_, s) =>
+    blockIds
+      .map((chain) => chain[s])
+      .filter((id): id is number => id !== undefined),
+  );
   const first = stages[0] ?? [];
   // Band colors only line up with a single block; a cascade's first block has fewer bands.
   const colors = stages.length === 1 ? bandColors : [];
   const firstModule = modules[0];
-  const read = (key: string) => (first[0] === undefined ? undefined : valueOf(values, first[0], key));
+  const read = (key: string) =>
+    first[0] === undefined ? undefined : valueOf(values, first[0], key);
   const summaryLines: EqCurveLine[] = firstModule
-    ? crossoverBands(firstModule, read).map((b, i) => ({ id: b.name, filters: b.filters, color: colors[i] ?? 'var(--rl-fg)' }))
+    ? crossoverBands(firstModule, read).map((b, i) => ({
+        id: b.name,
+        filters: b.filters,
+        color: colors[i] ?? "var(--rl-fg)",
+      }))
     : [];
   return (
     <ModuleCard
-      name={stages.length > 1 ? `Crossover (${stages.length} stages)` : 'Crossover'}
+      name={
+        stages.length > 1 ? `Crossover (${stages.length} stages)` : "Crossover"
+      }
       expanded={open}
       onExpandedChange={setOpen}
       wide
       summary={
         <div className="app-mini-curve">
-          <EqCurve compact label={`${owner} bands`} dbRange={DB_RANGE} lines={summaryLines} />
+          <EqCurve
+            compact
+            label={`${owner} bands`}
+            dbRange={DB_RANGE}
+            lines={summaryLines}
+          />
         </div>
       }
     >
@@ -120,7 +170,7 @@ export function CrossoverModule({ initiallyOpen, blockIds, modules, values, rack
           return (
             module && (
               <CrossoverStage
-                key={ids.join('-')}
+                key={ids.join("-")}
                 module={module}
                 blockIds={ids}
                 values={values}

@@ -1,5 +1,5 @@
-import type { BlockTable, ConfigBlock } from '@rackline/protocol';
-import { findModule, type ModuleRole } from './registry/index.js';
+import type { BlockTable, ConfigBlock } from "@rackline/protocol";
+import { findModule, type ModuleRole } from "./registry/index.js";
 
 /**
  * Racks are a view of the Drag Net block graph (docs/ui-plan.md "Model"): the
@@ -10,12 +10,12 @@ import { findModule, type ModuleRole } from './registry/index.js';
 
 /** Where a rack channel's signal comes from. `channel` is 0 = left (or mono), 1 = right. */
 export type Tap =
-  | { kind: 'input'; blockId: number }
-  | { kind: 'generator'; blockId: number }
+  | { kind: "input"; blockId: number }
+  | { kind: "generator"; blockId: number }
   /** End of another rack's module chain (a split). */
-  | { kind: 'rack'; rackId: string; channel: number }
+  | { kind: "rack"; rackId: string; channel: number }
   /** A band of another rack's crossover. */
-  | { kind: 'band'; rackId: string; channel: number; band: number };
+  | { kind: "band"; rackId: string; channel: number; band: number };
 
 export interface RackChannel {
   /** One source, or several summed by `mixerId` (a mono sum of a stereo rack is two taps of it). */
@@ -91,15 +91,16 @@ function roleOf(block: ConfigBlock): ModuleRole {
   const role = findModule(block.blockType)?.role;
   if (role !== undefined) return role;
   // Unknown block types: judge by kind and shape.
-  if (INPUT_KINDS.has(block.kind)) return 'input';
-  if (block.kind === OUTPUT_KIND) return 'output';
-  if (block.inputs.length === 0) return 'generator';
-  if (block.inputs.length > 1) return 'mixer';
-  if (block.outputs.length > 1) return 'crossover';
-  return 'processing';
+  if (INPUT_KINDS.has(block.kind)) return "input";
+  if (block.kind === OUTPUT_KIND) return "output";
+  if (block.inputs.length === 0) return "generator";
+  if (block.inputs.length > 1) return "mixer";
+  if (block.outputs.length > 1) return "crossover";
+  return "processing";
 }
 
-const isSource = (role: ModuleRole): boolean => role === 'input' || role === 'generator';
+const isSource = (role: ModuleRole): boolean =>
+  role === "input" || role === "generator";
 
 export function buildRacks(table: BlockTable): RackLayout {
   const blocks = table.blocks;
@@ -114,16 +115,21 @@ export function buildRacks(table: BlockTable): RackLayout {
   const consumers = new Map<number, ConfigBlock[]>();
   for (const b of blocks) {
     const r = role.get(b.id);
-    if (r !== 'output') b.outputs.forEach((w, output) => w !== 0 && producer.set(w, { blockId: b.id, output }));
-    if (r !== 'input') {
-      for (const w of b.inputs) if (w !== 0) consumers.set(w, [...(consumers.get(w) ?? []), b]);
+    if (r !== "output")
+      b.outputs.forEach(
+        (w, output) => w !== 0 && producer.set(w, { blockId: b.id, output }),
+      );
+    if (r !== "input") {
+      for (const w of b.inputs)
+        if (w !== 0) consumers.set(w, [...(consumers.get(w) ?? []), b]);
     }
   }
   const listeners = (p: Point): ConfigBlock[] => {
     const wire = get(p.blockId).outputs[p.output] ?? 0;
     return wire === 0 ? [] : (consumers.get(wire) ?? []);
   };
-  const driver = (wire: number): Point | undefined => (wire === 0 ? undefined : producer.get(wire));
+  const driver = (wire: number): Point | undefined =>
+    wire === 0 ? undefined : producer.get(wire);
 
   /** The next block of a chain: the only listener, if it is a single-input module. */
   const next = (block: ConfigBlock): ConfigBlock | undefined => {
@@ -131,22 +137,27 @@ export function buildRacks(table: BlockTable): RackLayout {
     const [only, ...rest] = listeners({ blockId: block.id, output: 0 });
     if (only === undefined || rest.length > 0) return undefined;
     const r = role.get(only.id);
-    return r === 'processing' || r === 'crossover' ? only : undefined;
+    return r === "processing" || r === "crossover" ? only : undefined;
   };
 
   /** Crossover blocks fed by another crossover's band and nothing else. */
   const cascaded = (p: Point): ConfigBlock | undefined => {
     const [only, ...rest] = listeners(p);
-    const isCrossover = only !== undefined && findModule(only.blockType)?.role === 'crossover';
-    return isCrossover && rest.length === 0 && findModule(get(p.blockId).blockType)?.role === 'crossover' ? only : undefined;
+    const isCrossover =
+      only !== undefined && findModule(only.blockType)?.role === "crossover";
+    return isCrossover &&
+      rest.length === 0 &&
+      findModule(get(p.blockId).blockType)?.role === "crossover"
+      ? only
+      : undefined;
   };
 
   const chained = new Set<number>();
   for (const b of blocks) {
     const r = role.get(b.id);
-    const n = r === 'processing' || r === 'mixer' ? next(b) : undefined;
+    const n = r === "processing" || r === "mixer" ? next(b) : undefined;
     if (n !== undefined) chained.add(n.id);
-    if (r === 'crossover') {
+    if (r === "crossover") {
       b.outputs.forEach((_, output) => {
         const c = cascaded({ blockId: b.id, output });
         if (c !== undefined) chained.add(c.id);
@@ -159,10 +170,14 @@ export function buildRacks(table: BlockTable): RackLayout {
   const bandOf = new Map<string, { rack: MonoRack; band: number }>(); // "block:output" → band
   const key = (p: Point): string => `${p.blockId}:${p.output}`;
 
-  const expandCrossover = (root: ConfigBlock): NonNullable<MonoRack['crossover']> => {
+  const expandCrossover = (
+    root: ConfigBlock,
+  ): NonNullable<MonoRack["crossover"]> => {
     const xo = { blocks: [root], bands: [] as Point[], names: [] as string[] };
     const walk = (block: ConfigBlock): void => {
-      const names = findModule(block.blockType)?.bands ?? block.outputs.map((_, i) => `Out ${i + 1}`);
+      const names =
+        findModule(block.blockType)?.bands ??
+        block.outputs.map((_, i) => `Out ${i + 1}`);
       block.outputs.forEach((_, output) => {
         const p = { blockId: block.id, output };
         const sub = cascaded(p);
@@ -183,20 +198,31 @@ export function buildRacks(table: BlockTable): RackLayout {
   // 1. Chains starting at every block that does not continue another chain.
   for (const head of blocks) {
     const r = role.get(head.id);
-    if (r === undefined || isSource(r) || r === 'output' || chained.has(head.id)) continue;
+    if (
+      r === undefined ||
+      isSource(r) ||
+      r === "output" ||
+      chained.has(head.id)
+    )
+      continue;
     const fed = head.inputs.flatMap((w, input) => {
       const p = driver(w);
       return p === undefined ? [] : [{ p, input }];
     });
-    const rack: MonoRack = { id: `rack-${head.id}`, sources: fed.map((f) => f.p), modules: [], outputs: [] };
+    const rack: MonoRack = {
+      id: `rack-${head.id}`,
+      sources: fed.map((f) => f.p),
+      modules: [],
+      outputs: [],
+    };
     let block: ConfigBlock | undefined = head;
-    if (r === 'mixer') {
+    if (r === "mixer") {
       rack.mixer = head;
       rack.mixerInputs = fed.map((f) => f.input);
       block = next(head);
     }
     while (block !== undefined) {
-      if (role.get(block.id) === 'crossover') {
+      if (role.get(block.id) === "crossover") {
         rack.crossover = expandCrossover(block);
         break;
       }
@@ -205,14 +231,16 @@ export function buildRacks(table: BlockTable): RackLayout {
     }
     const end = rack.modules.at(-1) ?? rack.mixer;
     if (end !== undefined) endOf.set(end.id, rack);
-    rack.crossover?.bands.forEach((p, band) => bandOf.set(key(p), { rack, band }));
+    rack.crossover?.bands.forEach((p, band) =>
+      bandOf.set(key(p), { rack, band }),
+    );
     monoRacks.push(rack);
   }
 
   // 2. Outputs join the rack whose end feeds them; outputs fed straight from an
   //    input, generator or crossover band get a rack without modules.
   const direct = new Map<string, MonoRack>();
-  for (const out of blocks.filter((b) => role.get(b.id) === 'output')) {
+  for (const out of blocks.filter((b) => role.get(b.id) === "output")) {
     const p = driver(out.inputs[0] ?? 0);
     if (p === undefined) continue;
     const owner = endOf.get(p.blockId);
@@ -232,51 +260,63 @@ export function buildRacks(table: BlockTable): RackLayout {
   // 3. Taps, then fold parallel left/right racks into stereo racks.
   const tapOf = (p: Point): MonoTap => {
     const r = role.get(p.blockId);
-    if (r === 'input') return { kind: 'input', blockId: p.blockId };
-    if (r === 'generator') return { kind: 'generator', blockId: p.blockId };
+    if (r === "input") return { kind: "input", blockId: p.blockId };
+    if (r === "generator") return { kind: "generator", blockId: p.blockId };
     const band = bandOf.get(key(p));
-    if (band !== undefined) return { kind: 'band', rack: band.rack, band: band.band };
+    if (band !== undefined)
+      return { kind: "band", rack: band.rack, band: band.band };
     const rack = endOf.get(p.blockId);
     // A wire driven by a block that is neither a source nor a rack end cannot occur in a valid table.
-    if (rack === undefined) throw new Error(`block ${p.blockId} output ${p.output} is not a rack end`);
-    return { kind: 'rack', rack };
+    if (rack === undefined)
+      throw new Error(
+        `block ${p.blockId} output ${p.output} is not a rack end`,
+      );
+    return { kind: "rack", rack };
   };
   const sortedRacks = topoSort(monoRacks, (r) => r.sources.map(tapOf), order);
   const pairs = foldStereo(sortedRacks, tapOf, byId);
 
   // 4. Final racks in display order.
   return {
-    inputs: blocks.filter((b) => role.get(b.id) === 'input'),
-    outputs: blocks.filter((b) => role.get(b.id) === 'output'),
+    inputs: blocks.filter((b) => role.get(b.id) === "input"),
+    outputs: blocks.filter((b) => role.get(b.id) === "output"),
     racks: displayOrder(pairs, tapOf, byId),
   };
 }
 
 type MonoTap =
-  | { kind: 'input'; blockId: number }
-  | { kind: 'generator'; blockId: number }
-  | { kind: 'rack'; rack: MonoRack }
-  | { kind: 'band'; rack: MonoRack; band: number };
+  | { kind: "input"; blockId: number }
+  | { kind: "generator"; blockId: number }
+  | { kind: "rack"; rack: MonoRack }
+  | { kind: "band"; rack: MonoRack; band: number };
 
 /** Positional names for merged crossovers (3-way + 2-way = 4 bands). */
 function bandNames(count: number, fallback: string[]): string[] {
-  if (count === 4) return ['High', 'High mid', 'Low mid', 'Low'];
-  if (count === 5) return ['High', 'High mid', 'Mid', 'Low mid', 'Low'];
+  if (count === 4) return ["High", "High mid", "Low mid", "Low"];
+  if (count === 5) return ["High", "High mid", "Mid", "Low mid", "Low"];
   return fallback;
 }
 
 function parentsOf(taps: MonoTap[]): MonoRack[] {
-  return taps.flatMap((t) => (t.kind === 'rack' || t.kind === 'band' ? [t.rack] : []));
+  return taps.flatMap((t) =>
+    t.kind === "rack" || t.kind === "band" ? [t.rack] : [],
+  );
 }
 
 /** Racks in an order where every rack follows its parents (ties: block table order). */
-function topoSort(racks: MonoRack[], taps: (r: MonoRack) => MonoTap[], order: Map<number, number>): MonoRack[] {
+function topoSort(
+  racks: MonoRack[],
+  taps: (r: MonoRack) => MonoTap[],
+  order: Map<number, number>,
+): MonoRack[] {
   const first = (r: MonoRack): number => order.get(firstBlock(r).id) ?? 0;
   const pending = [...racks].sort((a, b) => first(a) - first(b));
   const done = new Set<MonoRack>();
   const out: MonoRack[] = [];
   while (pending.length > 0) {
-    const i = pending.findIndex((r) => parentsOf(taps(r)).every((p) => done.has(p) || p === r));
+    const i = pending.findIndex((r) =>
+      parentsOf(taps(r)).every((p) => done.has(p) || p === r),
+    );
     // A feedback loop (not possible in a compiled config): take the next one anyway.
     const [rack] = pending.splice(Math.max(i, 0), 1);
     if (rack === undefined) break;
@@ -287,7 +327,10 @@ function topoSort(racks: MonoRack[], taps: (r: MonoRack) => MonoTap[], order: Ma
 }
 
 function firstBlock(r: MonoRack): ConfigBlock {
-  return (r.mixer ?? r.modules[0] ?? r.crossover?.blocks[0] ?? r.outputs[0]) as ConfigBlock;
+  return (r.mixer ??
+    r.modules[0] ??
+    r.crossover?.blocks[0] ??
+    r.outputs[0]) as ConfigBlock;
 }
 
 /** What must match for two racks to be the left and right side of one stereo rack. */
@@ -303,20 +346,38 @@ function shape(r: MonoRack): string {
 
 type Pair = [MonoRack] | [MonoRack, MonoRack];
 
-function foldStereo(racks: MonoRack[], tapOf: (p: Point) => MonoTap, byId: Map<number, ConfigBlock>): Pair[] {
+function foldStereo(
+  racks: MonoRack[],
+  tapOf: (p: Point) => MonoTap,
+  byId: Map<number, ConfigBlock>,
+): Pair[] {
   const side = new Map<MonoRack, { pair: Pair; channel: number }>();
   const pairs: Pair[] = [];
 
   const isLeftRight = (a: MonoTap, b: MonoTap): boolean => {
-    if (a.kind === 'input' && b.kind === 'input') {
+    if (a.kind === "input" && b.kind === "input") {
       const l = byId.get(a.blockId);
       const r = byId.get(b.blockId);
-      return l !== undefined && r !== undefined && l.blockType === r.blockType && l.channel % 2 === 1 && r.channel === l.channel + 1;
+      return (
+        l !== undefined &&
+        r !== undefined &&
+        l.blockType === r.blockType &&
+        l.channel % 2 === 1 &&
+        r.channel === l.channel + 1
+      );
     }
-    if ((a.kind === 'rack' && b.kind === 'rack') || (a.kind === 'band' && b.kind === 'band' && a.band === b.band)) {
+    if (
+      (a.kind === "rack" && b.kind === "rack") ||
+      (a.kind === "band" && b.kind === "band" && a.band === b.band)
+    ) {
       const l = side.get(a.rack);
       const r = side.get(b.rack);
-      return l !== undefined && l.pair === r?.pair && l.channel === 0 && r.channel === 1;
+      return (
+        l !== undefined &&
+        l.pair === r?.pair &&
+        l.channel === 0 &&
+        r.channel === 1
+      );
     }
     return false;
   };
@@ -328,7 +389,8 @@ function foldStereo(racks: MonoRack[], tapOf: (p: Point) => MonoTap, byId: Map<n
       lt.length === 0
         ? undefined
         : racks.find((r) => {
-            if (r === left || side.has(r) || shape(r) !== shape(left)) return false;
+            if (r === left || side.has(r) || shape(r) !== shape(left))
+              return false;
             const rt = r.sources.map(tapOf);
             return lt.every((t, i) => {
               const u = rt[i];
@@ -342,16 +404,23 @@ function foldStereo(racks: MonoRack[], tapOf: (p: Point) => MonoTap, byId: Map<n
   return pairs;
 }
 
-function displayOrder(pairs: Pair[], tapOf: (p: Point) => MonoTap, byId: Map<number, ConfigBlock>): Rack[] {
+function displayOrder(
+  pairs: Pair[],
+  tapOf: (p: Point) => MonoTap,
+  byId: Map<number, ConfigBlock>,
+): Rack[] {
   const pairOf = new Map<MonoRack, { pair: Pair; channel: number }>();
-  pairs.forEach((pair) => pair.forEach((r, channel) => pairOf.set(r, { pair, channel })));
+  pairs.forEach((pair) =>
+    pair.forEach((r, channel) => pairOf.set(r, { pair, channel })),
+  );
   const idOf = (pair: Pair): string => pair[0].id;
   const parents = (pair: Pair): Pair[] => {
     const found = new Set<Pair>();
-    for (const r of pair) for (const p of parentsOf(r.sources.map(tapOf))) {
-      const parent = pairOf.get(p)?.pair;
-      if (parent !== undefined && parent !== pair) found.add(parent);
-    }
+    for (const r of pair)
+      for (const p of parentsOf(r.sources.map(tapOf))) {
+        const parent = pairOf.get(p)?.pair;
+        if (parent !== undefined && parent !== pair) found.add(parent);
+      }
     return [...found];
   };
 
@@ -361,16 +430,18 @@ function displayOrder(pairs: Pair[], tapOf: (p: Point) => MonoTap, byId: Map<num
     Math.min(
       ...pair[0].sources.map((p) => {
         const t = tapOf(p);
-        return t.kind === 'band' ? t.band + 1 : 0;
+        return t.kind === "band" ? t.band + 1 : 0;
       }),
     );
-  for (const pair of pairs) for (const parent of parents(pair)) children.get(parent)?.push(pair);
+  for (const pair of pairs)
+    for (const parent of parents(pair)) children.get(parent)?.push(pair);
   for (const list of children.values()) list.sort((a, b) => rank(a) - rank(b));
 
   const emitted = new Set<Pair>();
   const ordered: Pair[] = [];
   const visit = (pair: Pair): void => {
-    if (emitted.has(pair) || !parents(pair).every((p) => emitted.has(p))) return;
+    if (emitted.has(pair) || !parents(pair).every((p) => emitted.has(p)))
+      return;
     emitted.add(pair);
     ordered.push(pair);
     for (const child of children.get(pair) ?? []) visit(child);
@@ -380,26 +451,42 @@ function displayOrder(pairs: Pair[], tapOf: (p: Point) => MonoTap, byId: Map<num
 
   const names = new Map<Pair, string>();
   const toTap = (t: MonoTap): Tap => {
-    if (t.kind === 'input' || t.kind === 'generator') return t;
+    if (t.kind === "input" || t.kind === "generator") return t;
     const p = pairOf.get(t.rack);
     const rackId = p === undefined ? t.rack.id : idOf(p.pair);
     const channel = p?.channel ?? 0;
-    return t.kind === 'rack' ? { kind: 'rack', rackId, channel } : { kind: 'band', rackId, channel, band: t.band };
+    return t.kind === "rack"
+      ? { kind: "rack", rackId, channel }
+      : { kind: "band", rackId, channel, band: t.band };
   };
 
   return ordered.map((pair) => {
     const [left] = pair;
-    const name = suggestName(pair, (p) => names.get(p), (t) => (t.kind === 'rack' || t.kind === 'band' ? pairOf.get(t.rack)?.pair : undefined), tapOf, byId);
+    const name = suggestName(
+      pair,
+      (p) => names.get(p),
+      (t) =>
+        t.kind === "rack" || t.kind === "band"
+          ? pairOf.get(t.rack)?.pair
+          : undefined,
+      tapOf,
+      byId,
+    );
     names.set(pair, name);
     const rack: Rack = {
       id: idOf(pair),
       name,
       channels: pair.map((r) => ({
         sources: r.sources.map((p) => toTap(tapOf(p))),
-        ...(r.mixer === undefined ? {} : { mixerId: r.mixer.id, mixerInputs: r.mixerInputs ?? [] }),
+        ...(r.mixer === undefined
+          ? {}
+          : { mixerId: r.mixer.id, mixerInputs: r.mixerInputs ?? [] }),
         outputIds: r.outputs.map((o) => o.id),
       })),
-      modules: left.modules.map((m, i) => ({ blockType: m.blockType, blockIds: pair.map((r) => r.modules[i]?.id ?? 0) })),
+      modules: left.modules.map((m, i) => ({
+        blockType: m.blockType,
+        blockIds: pair.map((r) => r.modules[i]?.id ?? 0),
+      })),
     };
     const xo = left.crossover;
     if (xo !== undefined) {
@@ -407,7 +494,9 @@ function displayOrder(pairs: Pair[], tapOf: (p: Point) => MonoTap, byId: Map<num
         blockIds: pair.map((r) => r.crossover?.blocks.map((b) => b.id) ?? []),
         bands: xo.names.map((name, band) => ({
           name,
-          points: pair.map((r) => r.crossover?.bands[band] ?? { blockId: 0, output: 0 }),
+          points: pair.map(
+            (r) => r.crossover?.bands[band] ?? { blockId: 0, output: 0 },
+          ),
         })),
       };
     }
@@ -427,31 +516,46 @@ function suggestName(
   byId: Map<number, ConfigBlock>,
 ): string {
   const channelName = (r: MonoRack): string => {
-    if (r.outputs.length > 0) return r.outputs.map((o) => o.name).join(' + ');
+    if (r.outputs.length > 0) return r.outputs.map((o) => o.name).join(" + ");
     const taps = r.sources.map(tapOf);
     const parents = [...new Set(taps.map(parentPair))];
     const [only] = parents;
-    if (taps.length > 1 && parents.length === 1 && only !== undefined && only.length === 2) {
-      return `${nameOf(only) ?? ''} mono`.trim();
+    if (
+      taps.length > 1 &&
+      parents.length === 1 &&
+      only !== undefined &&
+      only.length === 2
+    ) {
+      return `${nameOf(only) ?? ""} mono`.trim();
     }
     const [first] = taps;
-    if (first !== undefined && (first.kind === 'input' || first.kind === 'generator') && taps.length === 1) {
-      return byId.get(first.blockId)?.name ?? '';
+    if (
+      first !== undefined &&
+      (first.kind === "input" || first.kind === "generator") &&
+      taps.length === 1
+    ) {
+      return byId.get(first.blockId)?.name ?? "";
     }
     return firstBlock(r).name;
   };
   const [left, right] = pair;
-  return right === undefined ? channelName(left) : commonName(channelName(left), channelName(right));
+  return right === undefined
+    ? channelName(left)
+    : commonName(channelName(left), channelName(right));
 }
 
 const SIDE_WORDS = /\b(left|right|l|r)\b/gi;
 
 /** "MF\HF - LEFT" + "MF\HF - RIGHT" → "MF\HF"; "Crossover 5" + "Crossover 3" → "Crossover". */
 export function commonName(a: string, b: string): string {
-  const clean = (s: string): string => s.replace(SIDE_WORDS, ' ').replace(/\s+/g, ' ').replace(/^[\s\-_/\\]+|[\s\-_/\\]+$/g, '');
+  const clean = (s: string): string =>
+    s
+      .replace(SIDE_WORDS, " ")
+      .replace(/\s+/g, " ")
+      .replace(/^[\s\-_/\\]+|[\s\-_/\\]+$/g, "");
   const [ca, cb] = [clean(a), clean(b)];
-  if (ca === cb && ca !== '') return ca;
-  const [na, nb] = [ca.replace(/\s*\d+$/, ''), cb.replace(/\s*\d+$/, '')];
-  if (na === nb && na !== '') return na;
+  if (ca === cb && ca !== "") return ca;
+  const [na, nb] = [ca.replace(/\s*\d+$/, ""), cb.replace(/\s*\d+$/, "")];
+  if (na === nb && na !== "") return na;
   return `${a} / ${b}`;
 }

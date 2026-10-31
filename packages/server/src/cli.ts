@@ -1,5 +1,5 @@
-import { parseArgs } from 'node:util';
-import { DEFAULT_PORT, startRackline } from './start.js';
+import { parseArgs } from "node:util";
+import { DEFAULT_PORT, startRackline } from "./start.js";
 
 /**
  * Development entry: `pnpm --filter @rackline/server start [--port 5180]
@@ -8,26 +8,38 @@ import { DEFAULT_PORT, startRackline } from './start.js';
  */
 const { values } = parseArgs({
   options: {
-    port: { type: 'string', default: String(DEFAULT_PORT) },
-    connect: { type: 'string' },
-    broadcast: { type: 'string' },
+    port: { type: "string", default: String(DEFAULT_PORT) },
+    connect: { type: "string" },
+    broadcast: { type: "string" },
   },
 });
 
 const port = Number(values.port);
-if (!Number.isInteger(port) || port < 1 || port > 65535) throw new Error(`invalid --port ${values.port}`);
+if (!Number.isInteger(port) || port < 1 || port > 65535)
+  throw new Error(`invalid --port ${values.port}`);
 
 const rackline = await startRackline({
   port,
-  ...(values.broadcast === undefined ? {} : { broadcastAddress: values.broadcast }),
+  ...(values.broadcast === undefined
+    ? {}
+    : { broadcastAddress: values.broadcast }),
 });
 console.log(`Rackline core on ws://127.0.0.1:${rackline.server.port}`);
 rackline.core.subscribe((m) => {
-  if (m.type === 'connection') console.log('connection:', m.connection.status, m.connection.error ?? '');
+  if (m.type === "connection")
+    console.log("connection:", m.connection.status, m.connection.error ?? "");
 });
 if (values.connect !== undefined) {
-  await rackline.core.handle({ type: 'connect', ip: values.connect });
+  await rackline.core.handle({ type: "connect", ip: values.connect });
   const { connection, setup } = rackline.core.state();
-  console.log('connection:', connection.status, connection.error ?? '', setup === undefined ? '' : `${setup.racks.length} racks`);
+  console.log(
+    "connection:",
+    connection.status,
+    connection.error ?? "",
+    setup === undefined ? "" : `${setup.racks.length} racks`,
+  );
 }
-process.on('SIGINT', () => void rackline.close().finally(() => process.exit(0)));
+process.on(
+  "SIGINT",
+  () => void rackline.close().finally(() => process.exit(0)),
+);

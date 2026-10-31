@@ -697,6 +697,22 @@
         "compact": [
           "trim",
           "mute"
+        ],
+        "meters": [
+          {
+            "key": "adc",
+            "label": "After A/D",
+            "unit": "dBFS",
+            "fullScale": 0,
+            "reduction": false
+          },
+          {
+            "key": "analog",
+            "label": "Analog in",
+            "unit": "dBu",
+            "fullScale": 24,
+            "reduction": false
+          }
         ]
       },
       {
@@ -764,6 +780,15 @@
         ],
         "compact": [
           "threshold"
+        ],
+        "meters": [
+          {
+            "key": "reduction",
+            "label": "Gain reduction",
+            "unit": "dB",
+            "fullScale": 0,
+            "reduction": true
+          }
         ]
       },
       {
@@ -1022,7 +1047,8 @@
           "midLowerFreq",
           "midUpperFreq",
           "highLowerFreq"
-        ]
+        ],
+        "meters": []
       },
       {
         "blockType": 259,
@@ -1048,6 +1074,15 @@
         "compact": [
           "trim",
           "mute"
+        ],
+        "meters": [
+          {
+            "key": "input",
+            "label": "AES3 in",
+            "unit": "dBFS",
+            "fullScale": 0,
+            "reduction": false
+          }
         ]
       },
       {
@@ -1080,6 +1115,22 @@
           "trim",
           "mute",
           "invert"
+        ],
+        "meters": [
+          {
+            "key": "dac",
+            "label": "Before D/A",
+            "unit": "dBFS",
+            "fullScale": 0,
+            "reduction": false
+          },
+          {
+            "key": "analog",
+            "label": "Analog out",
+            "unit": "dBu",
+            "fullScale": 24,
+            "reduction": false
+          }
         ]
       },
       {
@@ -1100,7 +1151,8 @@
         ],
         "compact": [
           "delay"
-        ]
+        ],
+        "meters": []
       },
       {
         "blockType": 1537,
@@ -1251,7 +1303,8 @@
             "step": 0.25
           }
         ],
-        "compact": []
+        "compact": [],
+        "meters": []
       },
       {
         "blockType": 1539,
@@ -1544,7 +1597,8 @@
             "step": 0.25
           }
         ],
-        "compact": []
+        "compact": [],
+        "meters": []
       },
       {
         "blockType": 512,
@@ -1599,7 +1653,8 @@
           "input1Level",
           "input2Level",
           "outputLevel"
-        ]
+        ],
+        "meters": []
       },
       {
         "blockType": 384,
@@ -1647,7 +1702,8 @@
         "compact": [
           "level",
           "options"
-        ]
+        ],
+        "meters": []
       },
       {
         "blockType": 1551,
@@ -1781,7 +1837,8 @@
         "compact": [
           "lowUpperFreq",
           "highLowerFreq"
-        ]
+        ],
+        "meters": []
       }
     ],
     "dspPercent": 91.4

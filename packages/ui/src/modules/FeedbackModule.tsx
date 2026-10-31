@@ -1,38 +1,72 @@
-import { useState } from 'react';
-import { EqCurve, ModuleCard } from '@rackline/ui-kit';
-import { peqBands, peqFilters, readPeqBand } from '../curves.js';
-import { ChannelsBadge } from './ChannelsBadge.js';
-import { EXPANDED_CURVE_H } from './CrossoverModule.js';
-import type { ModuleViewProps } from './GenericModule.js';
-import { useLinkedModule } from './linked.js';
-import { ParamControl } from './ParamControl.js';
+import { useState } from "react";
+import { EqCurve, ModuleCard } from "@rackline/ui-kit";
+import { peqBands, peqFilters, readPeqBand } from "../curves.js";
+import { ChannelsBadge } from "./ChannelsBadge.js";
+import { EXPANDED_CURVE_H } from "./CrossoverModule.js";
+import type { ModuleViewProps } from "./GenericModule.js";
+import { useLinkedModule } from "./linked.js";
+import { ParamControl } from "./ParamControl.js";
 
 const SHORT: Record<string, string> = {
-  dynamicLevel: 'Dynamic',
-  releaseRate: 'Release',
-  maxAttenuation: 'Max cut',
-  newFilterWidth: 'Width',
-  cycleClear: 'Cycle clr',
-  timeoutClear: 'Timeout clr',
-  freeze: 'Freeze',
+  dynamicLevel: "Dynamic",
+  releaseRate: "Release",
+  maxAttenuation: "Max cut",
+  newFilterWidth: "Width",
+  cycleClear: "Cycle clr",
+  timeoutClear: "Timeout clr",
+  freeze: "Freeze",
 };
 
 /**
  * Feedback suppressor: its notch filters are placed by the device, so they
  * are shown read-only on a curve; the settings are ordinary controls.
  */
-export function FeedbackModule({ initiallyOpen, module, blockIds, values, rackName, channelNames, title = 'Feedback' }: ModuleViewProps) {
+export function FeedbackModule({
+  initiallyOpen,
+  module,
+  blockIds,
+  values,
+  rackName,
+  channelNames,
+  title = "Feedback",
+}: ModuleViewProps) {
   const [open, setOpen] = useState(initiallyOpen ?? false);
-  const linked = useLinkedModule(values, blockIds, module.params.map((p) => p.key), channelNames);
+  const linked = useLinkedModule(
+    values,
+    blockIds,
+    module.params.map((p) => p.key),
+    channelNames,
+  );
   const owner = `${rackName} ${title}`;
-  const notches = peqBands(module).map((n) => readPeqBand(module, linked.value, n));
+  const notches = peqBands(module).map((n) =>
+    readPeqBand(module, linked.value, n),
+  );
   const active = notches.filter((b) => b.on).length;
   const settings = module.params.filter((p) => !/^band\d+/.test(p.key));
   const control = (p: (typeof settings)[number]) => (
-    <ParamControl key={p.key} param={p} owner={owner} label={SHORT[p.key]} value={linked.value(p.key)} onChange={(v) => linked.set({ [p.key]: v })} />
+    <ParamControl
+      key={p.key}
+      param={p}
+      owner={owner}
+      label={SHORT[p.key]}
+      value={linked.value(p.key)}
+      onChange={(v) => linked.set({ [p.key]: v })}
+    />
   );
   const curve = (compact: boolean) => (
-    <EqCurve compact={compact} {...(compact ? {} : { height: EXPANDED_CURVE_H })} label={`${owner} notch filters`} lines={[{ id: 'notches', filters: peqFilters(notches), fill: true, color: 'var(--rl-warn)' }]} />
+    <EqCurve
+      compact={compact}
+      {...(compact ? {} : { height: EXPANDED_CURVE_H })}
+      label={`${owner} notch filters`}
+      lines={[
+        {
+          id: "notches",
+          filters: peqFilters(notches),
+          fill: true,
+          color: "var(--rl-warn)",
+        },
+      ]}
+    />
   );
   return (
     <ModuleCard
@@ -47,7 +81,11 @@ export function FeedbackModule({ initiallyOpen, module, blockIds, values, rackNa
           <span className="app-note">
             {active} of {notches.length} filters set
           </span>
-          <div className="app-row">{settings.filter((p) => module.compact.includes(p.key)).map(control)}</div>
+          <div className="app-row">
+            {settings
+              .filter((p) => module.compact.includes(p.key))
+              .map(control)}
+          </div>
         </div>
       }
     >

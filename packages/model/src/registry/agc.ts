@@ -1,6 +1,6 @@
-import { AGC_HOLD_S, AGC_RATIO, dbRange, rate } from '../units.js';
-import { bool, num, steps } from './params.js';
-import type { ModuleDef } from './types.js';
+import { AGC_HOLD_S, AGC_RATIO, dbRange, rate } from "../units.js";
+import { bool, num, steps } from "./params.js";
+import type { ModuleDef } from "./types.js";
 
 /**
  * Automatic gain control (inputs In, S-C). Ranges from the Drag Net help.
@@ -11,20 +11,20 @@ import type { ModuleDef } from './types.js';
  */
 export const agc: ModuleDef = {
   blockType: 0x0502,
-  name: 'AGC',
-  role: 'processing',
-  evidence: 'simulator',
+  name: "AGC",
+  role: "processing",
+  evidence: "simulator",
   params: [
-    bool(2, 'bypass', 'Bypass'),
-    num(3, 'target', 'Target', dbRange(-50, -5, 'dBFS')),
-    num(4, 'threshold', 'Threshold (rel. to target)', dbRange(-30, 0)),
-    num(5, 'ratio', 'Ratio', AGC_RATIO),
-    num(6, 'gainIncrease', 'Gain increase', rate(1, 30)),
-    num(7, 'gainDecrease', 'Gain decrease', rate(1, 30)),
-    steps(8, 'hold', 'Gain hold', 's', AGC_HOLD_S),
-    num(9, 'gainNormalize', 'Gain normalize', rate(0, 30)),
+    bool(2, "bypass", "Bypass"),
+    num(3, "target", "Target", dbRange(-50, -5, "dBFS")),
+    num(4, "threshold", "Threshold (rel. to target)", dbRange(-30, 0)),
+    num(5, "ratio", "Ratio", AGC_RATIO),
+    num(6, "gainIncrease", "Gain increase", rate(1, 30)),
+    num(7, "gainDecrease", "Gain decrease", rate(1, 30)),
+    steps(8, "hold", "Gain hold", "s", AGC_HOLD_S),
+    num(9, "gainNormalize", "Gain normalize", rate(0, 30)),
   ],
-  compact: ['target', 'bypass'],
+  compact: ["target", "bypass"],
   // Not measured.
   dspPercent: 3,
 };

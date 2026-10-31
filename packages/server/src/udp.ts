@@ -1,4 +1,4 @@
-import { createSocket } from 'node:dgram';
+import { createSocket } from "node:dgram";
 
 export interface UdpPacket {
   data: Uint8Array;
@@ -24,24 +24,34 @@ export interface UdpSocketOptions {
   broadcast?: boolean;
 }
 
-export function openUdpSocket(options: UdpSocketOptions = {}): Promise<UdpSocket> {
-  const socket = createSocket({ type: 'udp4', reuseAddr: true });
+export function openUdpSocket(
+  options: UdpSocketOptions = {},
+): Promise<UdpSocket> {
+  const socket = createSocket({ type: "udp4", reuseAddr: true });
   const listeners = new Set<(packet: UdpPacket) => void>();
-  socket.on('message', (data, remote) => {
-    const packet = { data: new Uint8Array(data), address: remote.address, port: remote.port };
+  socket.on("message", (data, remote) => {
+    const packet = {
+      data: new Uint8Array(data),
+      address: remote.address,
+      port: remote.port,
+    };
     for (const listener of listeners) listener(packet);
   });
 
   return new Promise((resolve, reject) => {
-    socket.once('error', reject);
+    socket.once("error", reject);
     socket.bind(options.port ?? 0, () => {
-      socket.off('error', reject);
+      socket.off("error", reject);
       // Errors after binding (e.g. ICMP unreachable) surface as request timeouts.
-      socket.on('error', () => undefined);
+      socket.on("error", () => undefined);
       if (options.broadcast === true) socket.setBroadcast(true);
       resolve({
         send: (data, port, address) =>
-          new Promise((done, fail) => socket.send(data, port, address, (error) => (error ? fail(error) : done()))),
+          new Promise((done, fail) =>
+            socket.send(data, port, address, (error) =>
+              error ? fail(error) : done(),
+            ),
+          ),
         onPacket: (listener) => {
           listeners.add(listener);
           return () => listeners.delete(listener);

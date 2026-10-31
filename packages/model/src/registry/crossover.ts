@@ -1,6 +1,6 @@
-import { FREQUENCY } from '../units.js';
-import { bool, choice, num } from './params.js';
-import type { ModuleDef, ParamDef } from './types.js';
+import { FREQUENCY } from "../units.js";
+import { bool, choice, num } from "./params.js";
+import type { ModuleDef, ParamDef } from "./types.js";
 
 /**
  * Codes 0, 1, 2, 4, 5, 6, 8 are verified with the simulator. 3, 7 and 9
@@ -8,16 +8,16 @@ import type { ModuleDef, ParamDef } from './types.js';
  * verified code. Simple mode always uses LR24.
  */
 export const CROSSOVER_FILTER_TYPES = {
-  0: 'Off',
-  1: 'LR12',
-  2: 'LR24',
-  3: 'BW12',
-  4: 'BW18',
-  5: 'BW24',
-  6: 'Bessel12',
-  7: 'Bessel18',
-  8: 'Bessel24',
-  9: '1st order',
+  0: "Off",
+  1: "LR12",
+  2: "LR24",
+  3: "BW12",
+  4: "BW18",
+  5: "BW24",
+  6: "Bessel12",
+  7: "Bessel18",
+  8: "Bessel24",
+  9: "1st order",
 };
 
 /**
@@ -39,28 +39,31 @@ function filter(index: number, key: string, label: string): ParamDef[] {
  */
 export const crossover2: ModuleDef = {
   blockType: 0x060f,
-  name: '2-way Crossover',
-  role: 'crossover',
-  evidence: 'simulator',
-  params: [...filter(3, 'lowUpper', 'Low band upper'), ...filter(7, 'highLower', 'High band lower')],
-  compact: ['lowUpperFreq', 'highLowerFreq'],
+  name: "2-way Crossover",
+  role: "crossover",
+  evidence: "simulator",
+  params: [
+    ...filter(3, "lowUpper", "Low band upper"),
+    ...filter(7, "highLower", "High band lower"),
+  ],
+  compact: ["lowUpperFreq", "highLowerFreq"],
   dspPercent: 4.8,
-  bands: ['High', 'Low'],
+  bands: ["High", "Low"],
 };
 
 /** Read from Lukas's config only; the invert indexes are guessed by analogy with the 2-way. */
 export const crossover3: ModuleDef = {
   blockType: 0x0610,
-  name: '3-way Crossover',
-  role: 'crossover',
-  evidence: 'sample',
+  name: "3-way Crossover",
+  role: "crossover",
+  evidence: "sample",
   params: [
-    ...filter(3, 'lowUpper', 'Low band upper'),
-    ...filter(7, 'midLower', 'Mid band lower'),
-    ...filter(11, 'midUpper', 'Mid band upper'),
-    ...filter(15, 'highLower', 'High band lower'),
+    ...filter(3, "lowUpper", "Low band upper"),
+    ...filter(7, "midLower", "Mid band lower"),
+    ...filter(11, "midUpper", "Mid band upper"),
+    ...filter(15, "highLower", "High band lower"),
   ],
-  compact: ['lowUpperFreq', 'midLowerFreq', 'midUpperFreq', 'highLowerFreq'],
+  compact: ["lowUpperFreq", "midLowerFreq", "midUpperFreq", "highLowerFreq"],
   dspPercent: 8.3,
-  bands: ['High', 'Mid', 'Low'],
+  bands: ["High", "Mid", "Low"],
 };

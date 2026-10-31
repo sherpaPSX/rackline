@@ -1,6 +1,6 @@
-import type { ParamValue, Values } from '@rackline/api';
-import { channelsAgree, valueOf } from '../racks.js';
-import { useCoreClient } from '../app/core-context.js';
+import type { ParamValue, Values } from "@rackline/api";
+import { channelsAgree, valueOf } from "../racks.js";
+import { useCoreClient } from "../app/core-context.js";
 
 export interface LinkedModule {
   /** Blocks of the module, one per channel. */
@@ -22,7 +22,12 @@ export interface LinkedModule {
  * passes both channels; an unlinked rack draws one module per channel
  * (see SystemScreen), so there is no per-module channel choice.
  */
-export function useLinkedModule(values: Values, blockIds: readonly number[], keys: readonly string[], names: readonly string[] = ['L', 'R']): LinkedModule {
+export function useLinkedModule(
+  values: Values,
+  blockIds: readonly number[],
+  keys: readonly string[],
+  names: readonly string[] = ["L", "R"],
+): LinkedModule {
   const client = useCoreClient();
   const stereo = blockIds.length > 1;
   const shownId = blockIds[0] ?? 0;
@@ -33,6 +38,15 @@ export function useLinkedModule(values: Values, blockIds: readonly number[], key
     differ: stereo && !channelsAgree(values, blockIds, keys),
     shownId,
     value: (key) => valueOf(values, shownId, key),
-    set: (patch) => client.setParams(blockIds.flatMap((blockId) => Object.entries(patch).map(([key, value]) => ({ blockId, key, value })))),
+    set: (patch) =>
+      client.setParams(
+        blockIds.flatMap((blockId) =>
+          Object.entries(patch).map(([key, value]) => ({
+            blockId,
+            key,
+            value,
+          })),
+        ),
+      ),
   };
 }

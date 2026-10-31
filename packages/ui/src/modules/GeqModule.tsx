@@ -1,12 +1,12 @@
-import { useState } from 'react';
-import type { ModuleInfo } from '@rackline/api';
-import { ConfirmButton, EqCurve, GraphicEq } from '@rackline/ui-kit';
-import type { Filter } from '@rackline/ui-kit';
-import { ModuleCard } from '@rackline/ui-kit';
-import { ChannelsBadge } from './ChannelsBadge.js';
-import type { ModuleViewProps } from './GenericModule.js';
-import { useLinkedModule } from './linked.js';
-import { ParamControl } from './ParamControl.js';
+import { useState } from "react";
+import type { ModuleInfo } from "@rackline/api";
+import { ConfirmButton, EqCurve, GraphicEq } from "@rackline/ui-kit";
+import type { Filter } from "@rackline/ui-kit";
+import { ModuleCard } from "@rackline/ui-kit";
+import { ChannelsBadge } from "./ChannelsBadge.js";
+import type { ModuleViewProps } from "./GenericModule.js";
+import { useLinkedModule } from "./linked.js";
+import { ParamControl } from "./ParamControl.js";
 
 /** Graphic EQ band keys with their frequency, read from the labels ("1.25k Hz"). */
 export function geqBands(module: ModuleInfo): { key: string; freq: number }[] {
@@ -21,43 +21,117 @@ export function geqBands(module: ModuleInfo): { key: string; freq: number }[] {
 const THIRD_OCTAVE_Q = 4.32;
 
 /** Controls next to the faders, in this order. */
-const SIDE = ['range', 'eqType', 'lowCut', 'inputLevel', 'outputLevel', 'lowLevel', 'midLevel', 'highLevel'];
-const SHORT: Record<string, string> = { eqType: 'Type', inputLevel: 'In', outputLevel: 'Out', lowLevel: 'Low', midLevel: 'Mid', highLevel: 'High' };
+const SIDE = [
+  "range",
+  "eqType",
+  "lowCut",
+  "inputLevel",
+  "outputLevel",
+  "lowLevel",
+  "midLevel",
+  "highLevel",
+];
+const SHORT: Record<string, string> = {
+  eqType: "Type",
+  inputLevel: "In",
+  outputLevel: "Out",
+  lowLevel: "Low",
+  midLevel: "Mid",
+  highLevel: "High",
+};
 
 /** 30-band graphic EQ: compact curve in the chain, faders under the curve when expanded. */
-export function GeqModule({ initiallyOpen, module, blockIds, values, rackName, channelNames, title = 'Graphic EQ' }: ModuleViewProps) {
+export function GeqModule({
+  initiallyOpen,
+  module,
+  blockIds,
+  values,
+  rackName,
+  channelNames,
+  title = "Graphic EQ",
+}: ModuleViewProps) {
   const [open, setOpen] = useState(initiallyOpen ?? false);
-  const linked = useLinkedModule(values, blockIds, module.params.map((p) => p.key), channelNames);
+  const linked = useLinkedModule(
+    values,
+    blockIds,
+    module.params.map((p) => p.key),
+    channelNames,
+  );
   const owner = `${rackName} ${title}`;
-  const bands = geqBands(module).map((b) => ({ ...b, gainDb: typeof linked.value(b.key) === 'number' ? (linked.value(b.key) as number) : 0 }));
-  const filters: Filter[] = bands.map((b) => ({ kind: 'peak', freq: b.freq, gainDb: b.gainDb, q: THIRD_OCTAVE_Q }));
-  const rangeDb = linked.value('range') === 1 ? 6 : 12;
-  const bypass = module.params.some((p) => p.key === 'bypass');
+  const bands = geqBands(module).map((b) => ({
+    ...b,
+    gainDb:
+      typeof linked.value(b.key) === "number"
+        ? (linked.value(b.key) as number)
+        : 0,
+  }));
+  const filters: Filter[] = bands.map((b) => ({
+    kind: "peak",
+    freq: b.freq,
+    gainDb: b.gainDb,
+    q: THIRD_OCTAVE_Q,
+  }));
+  const rangeDb = linked.value("range") === 1 ? 6 : 12;
+  const bypass = module.params.some((p) => p.key === "bypass");
 
   return (
     <ModuleCard
       name={title}
-      {...(bypass ? { on: linked.value('bypass') !== true, onOnChange: (on: boolean) => linked.set({ bypass: !on }) } : {})}
+      {...(bypass
+        ? {
+            on: linked.value("bypass") !== true,
+            onOnChange: (on: boolean) => linked.set({ bypass: !on }),
+          }
+        : {})}
       badge={linked.stereo ? <ChannelsBadge linked={linked} /> : undefined}
       expanded={open}
       onExpandedChange={setOpen}
       wide
       summary={
         <div className="app-mini-curve">
-          <EqCurve compact label={`${owner} response`} lines={[{ id: 'total', filters, fill: true }]} dbRange={[-rangeDb, rangeDb]} />
+          <EqCurve
+            compact
+            label={`${owner} response`}
+            lines={[{ id: "total", filters, fill: true }]}
+            dbRange={[-rangeDb, rangeDb]}
+          />
         </div>
       }
     >
       <div className="app-geq">
         <div className="app-geq-faders">
-          <GraphicEq label={owner} curveHeight={110} bands={bands} q={THIRD_OCTAVE_Q} rangeDb={rangeDb} onChange={(i, g) => linked.set({ [bands[i]?.key ?? '']: g })} />
+          <GraphicEq
+            label={owner}
+            curveHeight={110}
+            bands={bands}
+            q={THIRD_OCTAVE_Q}
+            rangeDb={rangeDb}
+            onChange={(i, g) => linked.set({ [bands[i]?.key ?? ""]: g })}
+          />
         </div>
         <div className="app-geq-side">
           {SIDE.flatMap((key) => {
             const p = module.params.find((x) => x.key === key);
-            return p ? [<ParamControl key={key} param={p} owner={owner} label={SHORT[key]} value={linked.value(key)} onChange={(v) => linked.set({ [key]: v })} />] : [];
+            return p
+              ? [
+                  <ParamControl
+                    key={key}
+                    param={p}
+                    owner={owner}
+                    label={SHORT[key]}
+                    value={linked.value(key)}
+                    onChange={(v) => linked.set({ [key]: v })}
+                  />,
+                ]
+              : [];
           })}
-          <ConfirmButton label="Flat" confirmLabel="Sure?" onConfirm={() => linked.set(Object.fromEntries(bands.map((b) => [b.key, 0])))} />
+          <ConfirmButton
+            label="Flat"
+            confirmLabel="Sure?"
+            onConfirm={() =>
+              linked.set(Object.fromEntries(bands.map((b) => [b.key, 0])))
+            }
+          />
         </div>
       </div>
     </ModuleCard>

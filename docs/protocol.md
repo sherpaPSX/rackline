@@ -115,6 +115,19 @@ analog, 0 dBFS for converters), 10 = 10 dB below. Drag Net's meter shows about
 64 dB of range. For gain reduction the value is the dB of reduction directly.
 The 1 dB step is an estimate from the meter drawing; verify on hardware.
 
+**Guessed, not seen in a capture** (Rackline reads them; the core stops
+reading a block whose meter the device refuses):
+
+| Meter | Record |
+|---|---|
+| Limiter gain reduction (dB) | `00 <id> 0501` idx 0x8000, like the compressor |
+| Meter block level (dBFS) | `00 <id> 0400` idx 0x8000; the block answers no index 0 … 9 |
+
+**Not verified on hardware:** none of the meter records has been read from a
+real RPM yet (indexes, size, scale and step).
+
+Code: `meters` in the module registry (`@rackline/model`), `decodeMeter`.
+
 ### Presets
 
 The device has 24 unnamed presets (names exist only in the Drag Net project).

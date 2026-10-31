@@ -1,10 +1,11 @@
-import { useState } from 'react';
-import type { ReactNode } from 'react';
-import type { ModuleInfo, Values } from '@rackline/api';
-import { Meter, ModuleCard } from '@rackline/ui-kit';
-import { ChannelsBadge } from './ChannelsBadge.js';
-import { ParamControl } from './ParamControl.js';
-import { useLinkedModule } from './linked.js';
+import { useState } from "react";
+import type { ReactNode } from "react";
+import type { ModuleInfo, Values } from "@rackline/api";
+import { ModuleCard } from "@rackline/ui-kit";
+import { MeterCell } from "./LiveMeter.js";
+import { ChannelsBadge } from "./ChannelsBadge.js";
+import { ParamControl } from "./ParamControl.js";
+import { useLinkedModule } from "./linked.js";
 
 export interface ModuleViewProps {
   module: ModuleInfo;
@@ -24,76 +25,107 @@ export interface ModuleViewProps {
 }
 
 /** Level's limits for remote wall controls: not needed while tuning. */
-const HIDDEN = new Set(['min', 'max']);
-/** Dynamics show only their key controls until expanded (D27; live meters join them once the core reads meters). */
+const HIDDEN = new Set(["min", "max"]);
+/** Dynamics show only their key controls and their gain reduction until expanded (D27). */
 const COMPACT = /^(Limiter|Compressor)/;
 /** More controls than this and a module shows its compact controls until expanded. */
 const MANY = 6;
 
 /** Labels short enough for a knob; the full label stays the accessible name. */
 const SHORT: Record<string, string> = {
-  userTrim: 'User gain',
-  outputLevel: 'Out',
-  outputMute: 'Out',
-  options: 'Mute',
-  invert: 'Polarity',
-  frequency: 'Freq',
-  gainIncrease: 'Gain up',
-  gainDecrease: 'Gain down',
-  gainNormalize: 'Normalize',
-  gainIncreaseTime: 'Up time',
-  gainDecreaseTime: 'Down time',
-  acousticCoupling: 'Coupling',
-  programMute: 'Program',
+  userTrim: "User gain",
+  outputLevel: "Out",
+  outputMute: "Out",
+  options: "Mute",
+  invert: "Polarity",
+  frequency: "Freq",
+  gainIncrease: "Gain up",
+  gainDecrease: "Gain down",
+  gainNormalize: "Normalize",
+  gainIncreaseTime: "Up time",
+  gainDecreaseTime: "Down time",
+  acousticCoupling: "Coupling",
+  programMute: "Program",
 };
 
 export function shortLabel(key: string): string | undefined {
   const io = /^(input|output)(\d+)(Level|Mute)$/.exec(key);
-  if (io) return `${io[1] === 'input' ? 'In' : 'Out'} ${io[2]}`;
+  if (io) return `${io[1] === "input" ? "In" : "Out"} ${io[2]}`;
   return SHORT[key];
 }
 
 /** A parameter that does nothing in the current setting, e.g. the sine frequency while pink noise plays. */
 function inactive(key: string, value: (key: string) => unknown): boolean {
-  return key === 'frequency' && value('signal') === 0;
+  return key === "frequency" && value("signal") === 0;
 }
 
 /** A small module: every parameter visible, in the order the module lists them. */
-export function GenericModule({ initiallyOpen, module, blockIds, values, rackName, channelNames, title = module.name, extra }: ModuleViewProps) {
+export function GenericModule({
+  initiallyOpen,
+  module,
+  blockIds,
+  values,
+  rackName,
+  channelNames,
+  title = module.name,
+  extra,
+}: ModuleViewProps) {
   const [open, setOpen] = useState(initiallyOpen ?? false);
   // A bypass switch is the card's power button, not a control.
-  const params = module.params.filter((p) => !HIDDEN.has(p.key) && p.key !== 'bypass');
-  const hasBypass = module.params.some((p) => p.key === 'bypass');
-  const linked = useLinkedModule(values, blockIds, module.params.map((p) => p.key), channelNames);
+  const params = module.params.filter(
+    (p) => !HIDDEN.has(p.key) && p.key !== "bypass",
+  );
+  const hasBypass = module.params.some((p) => p.key === "bypass");
+  const linked = useLinkedModule(
+    values,
+    blockIds,
+    module.params.map((p) => p.key),
+    channelNames,
+  );
   const owner = `${rackName} ${title}`;
-  const control = (p: ModuleInfo['params'][number]) => (
+  const control = (p: ModuleInfo["params"][number]) => (
     <ParamControl
       key={p.key}
       param={p}
       owner={owner}
-      label={shortLabel(p.key) ?? p.label.replace(/\s*\(.*\)$/, '')}
+      label={shortLabel(p.key) ?? p.label.replace(/\s*\(.*\)$/, "")}
       value={linked.value(p.key)}
       onChange={(value) => linked.set({ [p.key]: value })}
       disabled={inactive(p.key, linked.value)}
     />
   );
   const many = params.length > MANY;
-  const compact = COMPACT.test(module.name) || many ? params.filter((p) => module.compact.includes(p.key)) : [];
+  const compact =
+    COMPACT.test(module.name) || many
+      ? params.filter((p) => module.compact.includes(p.key))
+      : [];
+  const meters = module.meters.map((m) => (
+    <MeterCell key={`meter-${m.key}`} meter={m} blockIds={blockIds} />
+  ));
   return (
     <ModuleCard
       name={title}
-      {...(hasBypass ? { on: linked.value('bypass') !== true, onOnChange: (on: boolean) => linked.set({ bypass: !on }) } : {})}
+      {...(hasBypass
+        ? {
+            on: linked.value("bypass") !== true,
+            onOnChange: (on: boolean) => linked.set({ bypass: !on }),
+          }
+        : {})}
       badge={linked.stereo ? <ChannelsBadge linked={linked} /> : undefined}
-      {...(compact.length > 0 && compact.length < params.length ? { summary: compact.map(control), expanded: open, onExpandedChange: setOpen } : {})}
+      {...(compact.length > 0 && compact.length < params.length
+        ? {
+            summary: [...compact.map(control), ...meters],
+            expanded: open,
+            onExpandedChange: setOpen,
+          }
+        : {})}
     >
-      {params.length === 0 && (
-        // A meter block; the core does not read levels yet, so it stays empty.
-        <div className="rl-cell app-meter-cell">
-          <Meter readLevel={() => -Infinity} />
-          <span className="rl-label">No level yet</span>
-        </div>
+      {many ? (
+        <div className="app-many">{params.map(control)}</div>
+      ) : (
+        params.map(control)
       )}
-      {many ? <div className="app-many">{params.map(control)}</div> : params.map(control)}
+      {meters}
       {extra}
     </ModuleCard>
   );

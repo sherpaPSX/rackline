@@ -1,4 +1,4 @@
-import { parseServerMessage, type ServerMessage } from '@rackline/api';
+import { API_VERSION, parseServerMessage, type ServerMessage } from '@rackline/api';
 import { afterEach, describe, expect, it } from 'vitest';
 import { WebSocket } from 'ws';
 import { Core, startWsServer, type WsServer } from '../src/index.js';
@@ -39,7 +39,7 @@ describe('WebSocket server (loopback)', () => {
     const { port } = await start();
     const a = await client(port);
     expect(await a.messages(2)).toEqual([
-      { type: 'hello', apiVersion: 1 },
+      { type: 'hello', apiVersion: API_VERSION },
       { type: 'state', state: { connection: { status: 'offline' }, devices: [], values: {} } },
     ]);
     a.socket.close();

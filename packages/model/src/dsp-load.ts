@@ -1,8 +1,16 @@
-import type { ConfigBlock } from '@rackline/protocol';
-import { findModule, peqFilterCount, PEQ_MAX_FILTERS } from './registry/index.js';
+import type { ConfigBlock } from "@rackline/protocol";
+import {
+  findModule,
+  peqFilterCount,
+  PEQ_MAX_FILTERS,
+} from "./registry/index.js";
 
 /** RPM 26z resource limits (docs/dsp-limits.md). */
-export const RPM26Z_LIMITS = { dspPercent: 100, delayBlocks: 10, peqFilters: PEQ_MAX_FILTERS } as const;
+export const RPM26Z_LIMITS = {
+  dspPercent: 100,
+  delayBlocks: 10,
+  peqFilters: PEQ_MAX_FILTERS,
+} as const;
 
 export interface DspLoadEstimate {
   /**
@@ -18,8 +26,15 @@ export interface DspLoadEstimate {
   unknownBlocks: ConfigBlock[];
 }
 
-export function estimateDspLoad(blocks: readonly ConfigBlock[]): DspLoadEstimate {
-  const estimate: DspLoadEstimate = { dspPercent: 0, delayBlocks: 0, maxPeqFilters: 0, unknownBlocks: [] };
+export function estimateDspLoad(
+  blocks: readonly ConfigBlock[],
+): DspLoadEstimate {
+  const estimate: DspLoadEstimate = {
+    dspPercent: 0,
+    delayBlocks: 0,
+    maxPeqFilters: 0,
+    unknownBlocks: [],
+  };
   for (const block of blocks) {
     const module = findModule(block.blockType);
     if (module === undefined) {
@@ -28,7 +43,10 @@ export function estimateDspLoad(blocks: readonly ConfigBlock[]): DspLoadEstimate
     }
     estimate.dspPercent += module.dspPercent;
     estimate.delayBlocks += module.delayBlocks ?? 0;
-    estimate.maxPeqFilters = Math.max(estimate.maxPeqFilters, peqFilterCount(block.blockType) ?? 0);
+    estimate.maxPeqFilters = Math.max(
+      estimate.maxPeqFilters,
+      peqFilterCount(block.blockType) ?? 0,
+    );
   }
   return estimate;
 }

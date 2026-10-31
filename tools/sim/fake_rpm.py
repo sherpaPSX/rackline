@@ -5,6 +5,7 @@ Answers discovery (UDP 5131), parameter frames (UDP 5000/5001) and TFTP
 See docs/protocol.md. Data lives in $SIM_DIR (default: tools/sim/.data).
 """
 import json
+import math
 import os
 import socket
 import threading
@@ -61,6 +62,14 @@ def discovery():
         s.sendto(bytes(r), (a[0], 5132))
 
 
+def meter(rec):
+    """A moving meter reading (dB below full scale; gain reduction for 0x05xx), so the UI has something to show."""
+    t = time.time() * 2 + rec[1]
+    if rec[2] == 0x05:
+        return int(3 + 3 * math.sin(t))
+    return int(24 + 8 * math.sin(t) + 4 * math.sin(3.7 * t))
+
+
 def control(port):
     s = udp(port)
     while True:
@@ -84,6 +93,8 @@ def control(port):
                 r[at:at + 4] = store[key].to_bytes(4, 'big')
             elif key in init:
                 r[at:at + 4] = int(init[key]).to_bytes(4, 'big')
+            elif int.from_bytes(rec[4:6], 'big') >= 0x8000 and d[0] == 0:
+                r[at:at + 4] = meter(rec).to_bytes(4, 'big')
         if d[0] == 1:
             json.dump(store, open(STORE, 'w'))
         s.sendto(bytes(r), a)
