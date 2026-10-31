@@ -171,4 +171,21 @@ describe('CoreClient', () => {
     t.reconnect();
     expect(t.opened()).toBe(1);
   });
+
+  it('keeps the latest levels without a re-render and forgets them when they stop', () => {
+    const t = setup();
+    t.connect();
+    let renders = 0;
+    t.client.subscribe(() => renders++);
+    expect(t.client.level(1, 'adc')).toBeUndefined();
+    t.server({ type: 'meters', levels: { '1': { adc: -18, analog: 6 } } });
+    expect(t.client.level(1, 'adc')).toBe(-18);
+    expect(t.client.level(1, 'nope')).toBeUndefined();
+    expect(renders).toBe(0);
+    t.tick(1001);
+    expect(t.client.level(1, 'adc')).toBeUndefined();
+    t.server({ type: 'meters', levels: { '1': { adc: -12 } } });
+    t.server({ type: 'state', state: psxState() });
+    expect(t.client.level(1, 'adc')).toBeUndefined();
+  });
 });

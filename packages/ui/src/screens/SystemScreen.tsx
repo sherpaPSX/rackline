@@ -1,8 +1,14 @@
-import { useState } from 'react';
-import type { ReactNode } from 'react';
-import type { ModuleInfo, Rack, Setup, Values } from '@rackline/api';
-import { Button, IconButton, MuteButton, RackCard, Segmented } from '@rackline/ui-kit';
-import { useCoreClient } from '../app/core-context.js';
+import { useState } from "react";
+import type { ReactNode } from "react";
+import type { ModuleInfo, Rack, Setup, Values } from "@rackline/api";
+import {
+  Button,
+  IconButton,
+  MuteButton,
+  RackCard,
+  Segmented,
+} from "@rackline/ui-kit";
+import { useCoreClient } from "../app/core-context.js";
 import {
   anyMuted,
   blockById,
@@ -21,15 +27,21 @@ import {
   sharedWith,
   sourceChoice,
   speakers,
-} from '../racks.js';
-import type { InputChannel, PathStep, Speaker } from '../racks.js';
-import { CrossoverModule } from '../modules/CrossoverModule.js';
-import { ModuleView } from '../modules/ModuleView.js';
-import { FlowLine, SourcePicker } from './FlowChips.js';
-import { SystemMap } from './SystemMap.js';
+} from "../racks.js";
+import type { InputChannel, PathStep, Speaker } from "../racks.js";
+import { CrossoverModule } from "../modules/CrossoverModule.js";
+import { ModuleView } from "../modules/ModuleView.js";
+import { FlowLine, SourcePicker } from "./FlowChips.js";
+import { SystemMap } from "./SystemMap.js";
 
-function UnknownModule({ blockIds, setup }: { blockIds: readonly number[]; setup: Setup }) {
-  const name = blockById(setup, blockIds[0] ?? -1)?.name ?? 'Unknown block';
+function UnknownModule({
+  blockIds,
+  setup,
+}: {
+  blockIds: readonly number[];
+  setup: Setup;
+}) {
+  const name = blockById(setup, blockIds[0] ?? -1)?.name ?? "Unknown block";
   return (
     <div className="rl-module" data-off>
       <div className="rl-module-head">
@@ -47,42 +59,114 @@ function UnknownModule({ blockIds, setup }: { blockIds: readonly number[]; setup
  * `shared` names the other speakers that play through it.
  */
 type ChainItem = { key: string; shared: string[]; anchor?: string } & (
-  | { kind: 'module'; ids: number[]; title?: string; channelTitles?: string[] }
-  | { kind: 'crossover'; rack: Rack; ids: number[][] }
+  | { kind: "module"; ids: number[]; title?: string; channelTitles?: string[] }
+  | { kind: "crossover"; rack: Rack; ids: number[][] }
 );
 
 /** The cards of one rack on a row, its channels mapped to the row's channels. */
-function rackItems(setup: Setup, { rack, channels }: PathStep, shared: string[]): ChainItem[] {
+function rackItems(
+  setup: Setup,
+  { rack, channels }: PathStep,
+  shared: string[],
+): ChainItem[] {
   const mixerIds = channels.map((c) => rack.channels[c]?.mixerId ?? -1);
   // A rack fed by the signal generator starts with the generator's own card.
-  const generators = [...new Set(rack.channels.flatMap((c) => c.sources.flatMap((t) => (t.kind === 'generator' ? [t.blockId] : []))))];
+  const generators = [
+    ...new Set(
+      rack.channels.flatMap((c) =>
+        c.sources.flatMap((t) => (t.kind === "generator" ? [t.blockId] : [])),
+      ),
+    ),
+  ];
   const gens: ChainItem[] = generators.map((id) => {
     const title = blockById(setup, id)?.name;
-    return { kind: 'module', key: `gen-${id}`, ids: channels.map(() => id), shared, ...(title ? { title } : {}) };
+    return {
+      kind: "module",
+      key: `gen-${id}`,
+      ids: channels.map(() => id),
+      shared,
+      ...(title ? { title } : {}),
+    };
   });
   const sum: ChainItem[] =
-    mixerIds[0] !== -1 && !sourceChoice(setup, rack) ? [{ kind: 'module', key: `sum-${rack.id}`, ids: mixerIds, title: 'Sum', shared }] : [];
-  const modules: ChainItem[] = rack.modules.map((m) => ({ kind: 'module', key: m.blockIds.join('-'), ids: channels.map((c) => m.blockIds[c] ?? -1), shared }));
+    mixerIds[0] !== -1 && !sourceChoice(setup, rack)
+      ? [
+          {
+            kind: "module",
+            key: `sum-${rack.id}`,
+            ids: mixerIds,
+            title: "Sum",
+            shared,
+          },
+        ]
+      : [];
+  const modules: ChainItem[] = rack.modules.map((m) => ({
+    kind: "module",
+    key: m.blockIds.join("-"),
+    ids: channels.map((c) => m.blockIds[c] ?? -1),
+    shared,
+  }));
   const { crossover } = rack;
-  const xover: ChainItem[] = crossover ? [{ kind: 'crossover', key: `xo-${rack.id}`, rack, ids: channels.map((c) => crossover.blockIds[c] ?? []), shared }] : [];
+  const xover: ChainItem[] = crossover
+    ? [
+        {
+          kind: "crossover",
+          key: `xo-${rack.id}`,
+          rack,
+          ids: channels.map((c) => crossover.blockIds[c] ?? []),
+          shared,
+        },
+      ]
+    : [];
   return [...gens, ...sum, ...modules, ...xover];
 }
 
 /** Colors of the speakers fed by each band of a rack's crossover, so the curve matches the rows. */
 function bandColors(setup: Setup, rack: Rack): (string | undefined)[] {
   return (rack.crossover?.bands ?? []).map((_, band) => {
-    const fed = setup.racks.find((r) => r.channels.some((c) => c.sources.some((t) => t.kind === 'band' && t.rackId === rack.id && t.band === band)));
+    const fed = setup.racks.find((r) =>
+      r.channels.some((c) =>
+        c.sources.some(
+          (t) => t.kind === "band" && t.rackId === rack.id && t.band === band,
+        ),
+      ),
+    );
     return fed && rackColor(setup, fed.id);
   });
 }
 
-function ItemView({ item, channels, names, owner, setup, values }: { item: ChainItem; channels: readonly number[]; names: readonly string[]; owner: string; setup: Setup; values: Values }) {
-  const laneNames = channels.map((c) => names[c] ?? '');
+function ItemView({
+  item,
+  channels,
+  names,
+  owner,
+  setup,
+  values,
+}: {
+  item: ChainItem;
+  channels: readonly number[];
+  names: readonly string[];
+  owner: string;
+  setup: Setup;
+  values: Values;
+}) {
+  const laneNames = channels.map((c) => names[c] ?? "");
   let card: ReactNode;
-  if (item.kind === 'crossover') {
+  if (item.kind === "crossover") {
     const ids = channels.map((c) => item.ids[c] ?? []);
-    const modules = (ids[0] ?? []).map((id) => moduleOf(setup, id)).filter((m): m is ModuleInfo => m !== undefined);
-    card = <CrossoverModule blockIds={ids} modules={modules} values={values} rackName={item.rack.name} channelNames={laneNames} bandColors={bandColors(setup, item.rack)} />;
+    const modules = (ids[0] ?? [])
+      .map((id) => moduleOf(setup, id))
+      .filter((m): m is ModuleInfo => m !== undefined);
+    card = (
+      <CrossoverModule
+        blockIds={ids}
+        modules={modules}
+        values={values}
+        rackName={item.rack.name}
+        channelNames={laneNames}
+        bandColors={bandColors(setup, item.rack)}
+      />
+    );
   } else {
     // A mono block feeding both channels of a linked row is edited once.
     const ids = [...new Set(channels.map((c) => item.ids[c] ?? -1))];
@@ -94,14 +178,19 @@ function ItemView({ item, channels, names, owner, setup, values }: { item: Chain
         values={values}
         rackName={owner}
         channelNames={ids.length > 1 ? laneNames : []}
-        title={item.channelTitles ? joinChannels(channels.map((c) => item.channelTitles?.[c] ?? '')) : item.title}
+        title={
+          item.channelTitles
+            ? joinChannels(channels.map((c) => item.channelTitles?.[c] ?? ""))
+            : item.title
+        }
       />
     ) : (
       <UnknownModule blockIds={ids} setup={setup} />
     );
   }
-  if (item.shared.length === 0) return item.anchor ? <div id={item.anchor}>{card}</div> : card;
-  const note = `Also plays ${item.shared.join(', ')}`;
+  if (item.shared.length === 0)
+    return item.anchor ? <div id={item.anchor}>{card}</div> : card;
+  const note = `Also plays ${item.shared.join(", ")}`;
   return (
     <div className="app-shared" title={`${note}: editing it changes them too`}>
       {card}
@@ -127,7 +216,18 @@ interface ChainRowProps {
 }
 
 /** An input channel or speaker: its whole chain on one row, or one lane per channel when unlinked. */
-function ChainRow({ anchor, name, color, detail, names, items, agree, outputs = [], setup, values }: ChainRowProps) {
+function ChainRow({
+  anchor,
+  name,
+  color,
+  detail,
+  names,
+  items,
+  agree,
+  outputs = [],
+  setup,
+  values,
+}: ChainRowProps) {
   const client = useCoreClient();
   const [expanded, setExpanded] = useState(true);
   // Stereo rows start linked when both channels agree; the engineer can split or join them.
@@ -135,9 +235,23 @@ function ChainRow({ anchor, name, color, detail, names, items, agree, outputs = 
   const stereo = names.length > 1;
   const linked = !stereo || (link ?? agree);
   const chain = (channels: readonly number[]) =>
-    items.map((item) => <ItemView key={item.key} item={item} channels={channels} names={names} owner={name} setup={setup} values={values} />);
+    items.map((item) => (
+      <ItemView
+        key={item.key}
+        item={item}
+        channels={channels}
+        names={names}
+        owner={name}
+        setup={setup}
+        values={values}
+      />
+    ));
   return (
-    <section id={anchor} className="app-row-card" data-split={!linked || undefined}>
+    <section
+      id={anchor}
+      className="app-row-card"
+      data-split={!linked || undefined}
+    >
       <RackCard
         name={name}
         color={color}
@@ -150,7 +264,11 @@ function ChainRow({ anchor, name, color, detail, names, items, agree, outputs = 
               <IconButton
                 icon="link"
                 pressed={linked}
-                label={linked ? `${names.join(' and ')} linked: click to edit them one by one` : `Link ${names.join(' and ')}: edits set both`}
+                label={
+                  linked
+                    ? `${names.join(" and ")} linked: click to edit them one by one`
+                    : `Link ${names.join(" and ")}: edits set both`
+                }
                 onClick={() => setLink(!linked)}
               />
             )}
@@ -158,7 +276,15 @@ function ChainRow({ anchor, name, color, detail, names, items, agree, outputs = 
               <MuteButton
                 muted={anyMuted(values, outputs)}
                 target={name}
-                onChange={(m) => client.setParams(outputs.map((blockId) => ({ blockId, key: 'mute', value: m })))}
+                onChange={(m) =>
+                  client.setParams(
+                    outputs.map((blockId) => ({
+                      blockId,
+                      key: "mute",
+                      value: m,
+                    })),
+                  )
+                }
               />
             )}
           </>
@@ -178,33 +304,56 @@ function ChainRow({ anchor, name, color, detail, names, items, agree, outputs = 
 }
 
 /** Header line: width, then the given flow lines. */
-function Detail({ stereo, children }: { stereo: boolean; children: ReactNode }) {
+function Detail({
+  stereo,
+  children,
+}: {
+  stereo: boolean;
+  children: ReactNode;
+}) {
   return (
     <span className="app-rack-flow">
-      <span>{stereo ? 'Stereo' : 'Mono'}</span>
+      <span>{stereo ? "Stereo" : "Mono"}</span>
       {children}
     </span>
   );
 }
 
 /** An input channel: sensitivity, trim and mute of its inputs, then its processing before the first split. */
-function InputRow({ channel, list, setup, values }: { channel: InputChannel; list: readonly Speaker[]; setup: Setup; values: Values }) {
+function InputRow({
+  channel,
+  list,
+  setup,
+  values,
+}: {
+  channel: InputChannel;
+  list: readonly Speaker[];
+  setup: Setup;
+  values: Values;
+}) {
   const { rack, strips } = channel;
   const width = rack?.channels.length ?? strips[0]?.blockIds.length ?? 1;
-  const names = rack ? rackChannelNames(setup, rack, values) : (strips[0]?.blockIds.map((id) => channelName(setup, id) ?? '') ?? []);
+  const names = rack
+    ? rackChannelNames(setup, rack, values)
+    : (strips[0]?.blockIds.map((id) => channelName(setup, id) ?? "") ?? []);
   const inputs: ChainItem[] = strips.map((st) => ({
-    kind: 'module',
-    key: `in-${st.blockIds.join('-')}`,
-    ids: Array.from({ length: width }, (_, c) => st.blockIds[c] ?? st.blockIds[0] ?? -1),
-    title: strips.length > 1 || rack ? `${st.name} input` : 'Input',
+    kind: "module",
+    key: `in-${st.blockIds.join("-")}`,
+    ids: Array.from(
+      { length: width },
+      (_, c) => st.blockIds[c] ?? st.blockIds[0] ?? -1,
+    ),
+    title: strips.length > 1 || rack ? `${st.name} input` : "Input",
     anchor: inputAnchor(st.blockIds),
     shared: [],
   }));
-  const own = rack ? rackItems(setup, { rack, channels: rack.channels.map((_, c) => c) }, []) : [];
+  const own = rack
+    ? rackItems(setup, { rack, channels: rack.channels.map((_, c) => c) }, [])
+    : [];
   const choice = rack && sourceChoice(setup, rack);
   const targets = inputTargets(setup, channel, list);
   const ids = strips.flatMap((st) => st.blockIds);
-  const physical = joinChannels(ids.map((id) => channelName(setup, id) ?? ''));
+  const physical = joinChannels(ids.map((id) => channelName(setup, id) ?? ""));
   return (
     <ChainRow
       anchor={rack ? rackAnchor(rack.id) : inputAnchor(ids)}
@@ -220,12 +369,20 @@ function InputRow({ channel, list, setup, values }: { channel: InputChannel; lis
           {choice ? (
             <span className="app-flow-line">
               <span className="app-flow-label">From</span>
-              <SourcePicker choice={choice} values={values} owner={channel.name} />
+              <SourcePicker
+                choice={choice}
+                values={values}
+                owner={channel.name}
+              />
             </span>
           ) : (
             <span>{physical}</span>
           )}
-          {targets.length > 0 ? <FlowLine label="To" links={targets} /> : <span className="app-note">Not used</span>}
+          {targets.length > 0 ? (
+            <FlowLine label="To" links={targets} />
+          ) : (
+            <span className="app-note">Not used</span>
+          )}
         </Detail>
       }
     />
@@ -233,15 +390,39 @@ function InputRow({ channel, list, setup, values }: { channel: InputChannel; lis
 }
 
 /** A speaker: the racks its signal passes, then its outputs with trim, polarity and mute. */
-function SpeakerRow({ speaker, list, setup, values }: { speaker: Speaker; list: readonly Speaker[]; setup: Setup; values: Values }) {
+function SpeakerRow({
+  speaker,
+  list,
+  setup,
+  values,
+}: {
+  speaker: Speaker;
+  list: readonly Speaker[];
+  setup: Setup;
+  values: Values;
+}) {
   const { rack, end } = speaker;
   const names = rackChannelNames(setup, end, values);
   const outputs = end.channels.flatMap((c) => c.outputIds);
-  const outItems: ChainItem[] = Array.from({ length: Math.max(0, ...end.channels.map((c) => c.outputIds.length)) }, (_, j) => {
-    const ids = end.channels.map((c) => c.outputIds[j] ?? -1);
-    return { kind: 'module', key: `out-${ids.join('-')}`, ids, channelTitles: ids.map((id) => channelName(setup, id) ?? ''), shared: [] };
-  });
-  const items = [...speaker.path.flatMap((step) => rackItems(setup, step, sharedWith(list, speaker, step.rack.id))), ...outItems];
+  const outItems: ChainItem[] = Array.from(
+    { length: Math.max(0, ...end.channels.map((c) => c.outputIds.length)) },
+    (_, j) => {
+      const ids = end.channels.map((c) => c.outputIds[j] ?? -1);
+      return {
+        kind: "module",
+        key: `out-${ids.join("-")}`,
+        ids,
+        channelTitles: ids.map((id) => channelName(setup, id) ?? ""),
+        shared: [],
+      };
+    },
+  );
+  const items = [
+    ...speaker.path.flatMap((step) =>
+      rackItems(setup, step, sharedWith(list, speaker, step.rack.id)),
+    ),
+    ...outItems,
+  ];
   const choice = end !== rack ? sourceChoice(setup, end) : undefined;
   return (
     <ChainRow
@@ -250,20 +431,40 @@ function SpeakerRow({ speaker, list, setup, values }: { speaker: Speaker; list: 
       color={rackColor(setup, end.id)}
       names={names}
       items={items}
-      agree={speaker.path.every((p) => rackChannelsAgree(setup, p.rack, values))}
+      agree={speaker.path.every((p) =>
+        rackChannelsAgree(setup, p.rack, values),
+      )}
       outputs={outputs}
       setup={setup}
       values={values}
       detail={
         <Detail stereo={names.length > 1}>
-          {outputs.length > 0 ? <span>{joinChannels(outputs.map((id) => channelName(setup, id) ?? ''))}</span> : <span className="app-note">No outputs</span>}
+          {outputs.length > 0 ? (
+            <span>
+              {joinChannels(outputs.map((id) => channelName(setup, id) ?? ""))}
+            </span>
+          ) : (
+            <span className="app-note">No outputs</span>
+          )}
           {choice ? (
             <span className="app-flow-line">
               <span className="app-flow-label">From</span>
-              <SourcePicker choice={choice} values={values} owner={joinChannels(names)} />
+              <SourcePicker
+                choice={choice}
+                values={values}
+                owner={joinChannels(names)}
+              />
             </span>
           ) : (
-            <FlowLine label="From" links={speaker.from.length > 0 ? speaker.from : flowSources(setup, rack)} then={speaker.band} />
+            <FlowLine
+              label="From"
+              links={
+                speaker.from.length > 0
+                  ? speaker.from
+                  : flowSources(setup, rack)
+              }
+              then={speaker.band}
+            />
           )}
         </Detail>
       }
@@ -281,7 +482,18 @@ function UnusedOutputs({ setup, values }: { setup: Setup; values: Values }) {
       <div className="app-io-tiles">
         {strips.map((st) => {
           const module = moduleOf(setup, st.blockIds[0] ?? -1);
-          return module && <ModuleView key={st.name} module={module} blockIds={st.blockIds} values={values} rackName={st.name} title={st.name} />;
+          return (
+            module && (
+              <ModuleView
+                key={st.name}
+                module={module}
+                blockIds={st.blockIds}
+                values={values}
+                rackName={st.name}
+                title={st.name}
+              />
+            )
+          );
         })}
       </div>
     </section>
@@ -289,9 +501,15 @@ function UnusedOutputs({ setup, values }: { setup: Setup; values: Values }) {
 }
 
 /** System, mode Tune: input channels on top, then one row per speaker with its whole chain; values only. */
-export function SystemScreen({ setup, values }: { setup: Setup; values: Values }) {
+export function SystemScreen({
+  setup,
+  values,
+}: {
+  setup: Setup;
+  values: Values;
+}) {
   // Preview of the DriveRack-style signal map next to the racks, for Lukas to compare.
-  const [view, setView] = useState<'map' | 'racks'>('map');
+  const [view, setView] = useState<"map" | "racks">("map");
   return (
     <div className="app-screen">
       <div className="app-toolbar">
@@ -299,8 +517,8 @@ export function SystemScreen({ setup, values }: { setup: Setup; values: Values }
         <Segmented
           label="System view"
           options={[
-            { value: 'map', label: 'Map' },
-            { value: 'racks', label: 'Racks' },
+            { value: "map", label: "Map" },
+            { value: "racks", label: "Racks" },
           ]}
           value={view}
           onChange={setView}
@@ -309,7 +527,11 @@ export function SystemScreen({ setup, values }: { setup: Setup; values: Values }
           Edit layout
         </Button>
       </div>
-      {view === 'map' ? <SystemMap setup={setup} values={values} /> : <RackList setup={setup} values={values} />}
+      {view === "map" ? (
+        <SystemMap setup={setup} values={values} />
+      ) : (
+        <RackList setup={setup} values={values} />
+      )}
     </div>
   );
 }
@@ -321,11 +543,23 @@ function RackList({ setup, values }: { setup: Setup; values: Values }) {
     <>
       <h2 className="app-h2">Inputs</h2>
       {inputChannels(setup).map((ch) => (
-        <InputRow key={ch.name} channel={ch} list={list} setup={setup} values={values} />
+        <InputRow
+          key={ch.name}
+          channel={ch}
+          list={list}
+          setup={setup}
+          values={values}
+        />
       ))}
       <h2 className="app-h2">Speakers</h2>
       {list.map((s) => (
-        <SpeakerRow key={s.end.id} speaker={s} list={list} setup={setup} values={values} />
+        <SpeakerRow
+          key={s.end.id}
+          speaker={s}
+          list={list}
+          setup={setup}
+          values={values}
+        />
       ))}
       <UnusedOutputs setup={setup} values={values} />
     </>

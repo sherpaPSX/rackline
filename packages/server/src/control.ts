@@ -11,8 +11,8 @@ import {
   type Frame,
   type ParamRecord,
   type Result,
-} from '@rackline/protocol';
-import type { UdpSocket } from './udp.js';
+} from "@rackline/protocol";
+import type { UdpSocket } from "./udp.js";
 
 export interface ControlOptions {
   /** How long to wait for each reply. */
@@ -28,10 +28,11 @@ export interface ControlOptions {
  */
 const WRITABLE_SYSTEM = [SYSTEM.currentPreset];
 
-const REJECTED = 'device rejected the frame';
+const REJECTED = "device rejected the frame";
 
 /** Whether a read or write failed because the device refused a record (wrong index or size), not because it did not answer. */
-export const isRejection = (error: string): boolean => error.startsWith(REJECTED);
+export const isRejection = (error: string): boolean =>
+  error.startsWith(REJECTED);
 
 /**
  * Parameter reads and writes to one device over UDP 5000 (docs/protocol.md
@@ -54,23 +55,36 @@ export class ControlClient {
 
   /** Read the values of `records` (their `value` is ignored). Returns the records with values filled in. */
   read(records: readonly ParamRecord[]): Promise<Result<ParamRecord[]>> {
-    return this.transfer('read', records);
+    return this.transfer("read", records);
   }
 
   /** Write `records`. Resolves once the device confirmed every frame. */
   write(records: readonly ParamRecord[]): Promise<Result<ParamRecord[]>> {
-    const forbidden = records.find((r) => r.target === 'system' && !WRITABLE_SYSTEM.some((a) => sameAddress(a, r)));
+    const forbidden = records.find(
+      (r) =>
+        r.target === "system" &&
+        !WRITABLE_SYSTEM.some((a) => sameAddress(a, r)),
+    );
     if (forbidden !== undefined) {
-      const hex = forbidden.objectType.toString(16).padStart(4, '0');
-      return Promise.resolve(fail(`refusing to write system object ${hex} index ${forbidden.index}`));
+      const hex = forbidden.objectType.toString(16).padStart(4, "0");
+      return Promise.resolve(
+        fail(`refusing to write system object ${hex} index ${forbidden.index}`),
+      );
     }
-    return this.transfer('write', records);
+    return this.transfer("write", records);
   }
 
-  private async transfer(kind: 'read' | 'write', records: readonly ParamRecord[]): Promise<Result<ParamRecord[]>> {
+  private async transfer(
+    kind: "read" | "write",
+    records: readonly ParamRecord[],
+  ): Promise<Result<ParamRecord[]>> {
     const replies: ParamRecord[] = [];
     for (let i = 0; i < records.length; i += MAX_RECORDS_PER_FRAME) {
-      const reply = await this.enqueue({ kind, status: 0, records: records.slice(i, i + MAX_RECORDS_PER_FRAME) });
+      const reply = await this.enqueue({
+        kind,
+        status: 0,
+        records: records.slice(i, i + MAX_RECORDS_PER_FRAME),
+      });
       if (!reply.ok) return reply;
       replies.push(...reply.value.records);
     }
@@ -90,13 +104,17 @@ export class ControlClient {
     for (let attempt = 0; attempt < this.attempts; attempt++) {
       const reply = await this.sendAndWait(bytes, request);
       if (reply === undefined) continue;
-      if (reply.status !== 0) return fail(`${REJECTED} (status ${reply.status})`);
+      if (reply.status !== 0)
+        return fail(`${REJECTED} (status ${reply.status})`);
       return ok(reply);
     }
     return fail(`no reply from ${this.ip}`);
   }
 
-  private sendAndWait(bytes: Uint8Array, request: Frame): Promise<Frame | undefined> {
+  private sendAndWait(
+    bytes: Uint8Array,
+    request: Frame,
+  ): Promise<Frame | undefined> {
     return new Promise((resolve) => {
       const finish = (frame: Frame | undefined): void => {
         clearTimeout(timer);
@@ -109,7 +127,9 @@ export class ControlClient {
         const frame = decodeFrame(packet.data);
         if (frame.ok && isReplyTo(request, frame.value)) finish(frame.value);
       });
-      this.socket.send(bytes, PORTS.control, this.ip).catch(() => finish(undefined));
+      this.socket
+        .send(bytes, PORTS.control, this.ip)
+        .catch(() => finish(undefined));
     });
   }
 }

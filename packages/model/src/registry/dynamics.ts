@@ -1,35 +1,44 @@
-import { ATTACK_MS, COMPRESSOR_THRESHOLD, dbRange, LIMITER_THRESHOLD, rate, RATIO, RELEASE_MS, SC_RATIO } from '../units.js';
-import { reductionMeter } from '../meters.js';
-import { bool, num, steps } from './params.js';
-import type { ModuleDef } from './types.js';
+import {
+  ATTACK_MS,
+  COMPRESSOR_THRESHOLD,
+  dbRange,
+  LIMITER_THRESHOLD,
+  rate,
+  RATIO,
+  RELEASE_MS,
+  SC_RATIO,
+} from "../units.js";
+import { reductionMeter } from "../meters.js";
+import { bool, num, steps } from "./params.js";
+import type { ModuleDef } from "./types.js";
 
 export const compressor: ModuleDef = {
   blockType: 0x0500,
-  name: 'Compressor',
-  role: 'processing',
-  evidence: 'simulator',
+  name: "Compressor",
+  role: "processing",
+  evidence: "simulator",
   params: [
-    num(2, 'threshold', 'Threshold', COMPRESSOR_THRESHOLD),
-    steps(3, 'attack', 'Attack', 'ms', ATTACK_MS),
-    steps(4, 'release', 'Release', 'ms', RELEASE_MS),
-    steps(5, 'ratio', 'Ratio', 'ratio', RATIO),
+    num(2, "threshold", "Threshold", COMPRESSOR_THRESHOLD),
+    steps(3, "attack", "Attack", "ms", ATTACK_MS),
+    steps(4, "release", "Release", "ms", RELEASE_MS),
+    steps(5, "ratio", "Ratio", "ratio", RATIO),
   ],
-  compact: ['threshold', 'ratio'],
+  compact: ["threshold", "ratio"],
   meters: [reductionMeter(0x8000)],
   dspPercent: 3,
 };
 
 export const limiter: ModuleDef = {
   blockType: 0x0501,
-  name: 'Limiter',
-  role: 'processing',
-  evidence: 'simulator',
+  name: "Limiter",
+  role: "processing",
+  evidence: "simulator",
   params: [
-    num(2, 'threshold', 'Threshold', LIMITER_THRESHOLD),
-    steps(3, 'attack', 'Attack', 'ms', ATTACK_MS),
-    steps(4, 'release', 'Release', 'ms', RELEASE_MS),
+    num(2, "threshold", "Threshold", LIMITER_THRESHOLD),
+    steps(3, "attack", "Attack", "ms", ATTACK_MS),
+    steps(4, "release", "Release", "ms", RELEASE_MS),
   ],
-  compact: ['threshold'],
+  compact: ["threshold"],
   // Guessed like the compressor's; not seen in a Drag Net capture.
   meters: [reductionMeter(0x8000)],
   dspPercent: 2.3,
@@ -46,21 +55,27 @@ function sideChainCompressor(blockType: number, name: string): ModuleDef {
   return {
     blockType,
     name,
-    role: 'processing',
-    evidence: 'simulator',
+    role: "processing",
+    evidence: "simulator",
     params: [
-      num(2, 'threshold', 'Threshold', COMPRESSOR_THRESHOLD),
-      steps(3, 'ratio', 'Ratio', 'ratio', SC_RATIO),
-      num(4, 'attack', 'Attack', rate(0, 255)),
-      num(5, 'release', 'Release', rate(0, 255)),
-      num(6, 'knee', 'Knee', dbRange(0, 20)),
-      bool(7, 'bypass', 'Bypass'),
+      num(2, "threshold", "Threshold", COMPRESSOR_THRESHOLD),
+      steps(3, "ratio", "Ratio", "ratio", SC_RATIO),
+      num(4, "attack", "Attack", rate(0, 255)),
+      num(5, "release", "Release", rate(0, 255)),
+      num(6, "knee", "Knee", dbRange(0, 20)),
+      bool(7, "bypass", "Bypass"),
     ],
-    compact: ['threshold', 'ratio'],
+    compact: ["threshold", "ratio"],
     // Not measured; assumed like the compressor.
     dspPercent: 3,
   };
 }
 
-export const monoSideChainCompressor = sideChainCompressor(0x0509, 'Mono S-C Compressor');
-export const stereoSideChainCompressor = sideChainCompressor(0x050a, 'Stereo S-C Compressor');
+export const monoSideChainCompressor = sideChainCompressor(
+  0x0509,
+  "Mono S-C Compressor",
+);
+export const stereoSideChainCompressor = sideChainCompressor(
+  0x050a,
+  "Stereo S-C Compressor",
+);

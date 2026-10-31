@@ -90,7 +90,9 @@ Every message is JSON validated by a zod schema on both sides
   `disconnect`, `openProject` (an `.r26` without a device). The core applies
   them and broadcasts the result to all clients: `param` for one value,
   `state` when many values or the setup change, `connection`, `devices`,
-  `error`.
+  `error`, and `meters` (live levels, about 10 times per second while a
+  device is online). Each module lists its meters (`ModuleInfo.meters`);
+  levels are dBu / dBFS, gain reduction is dB.
 - Values are in engineering units (dB, Hz, ms, octaves). For `steps`
   parameters (attack, release, ratio) the value is the index into the
   module's step list; ∞ travels as `"inf"`. Enum values are option codes.
@@ -119,7 +121,13 @@ Every message is JSON validated by a zod schema on both sides
   (`reachable: false`). Connecting to one first moves it into the PC's
   network with `WI` (docs/protocol.md §1); this is the only network change
   the core makes, and only on that user action.
-- Not yet: meters, storing presets, saving `.r26` files.
+- **Meters:** while online, every 100 ms after the last reply the core reads
+  every meter (0x8000+ indexes, read only) in as few frames as possible and
+  broadcasts `meters`. If the device refuses a meter frame, the core reads
+  each block's meters alone once and stops reading the blocks it refuses
+  (some meter indexes are guessed). A failed meter read never marks the
+  device unreachable; the liveness poll does that.
+- Not yet: storing presets, saving `.r26` files.
 
 ## UI client (`@rackline/ui`)
 

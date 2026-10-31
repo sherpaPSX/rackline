@@ -1,5 +1,12 @@
-import { encodeReadRequest, fail, ok, PORTS, TftpDownload, type Result } from '@rackline/protocol';
-import type { UdpSocket } from './udp.js';
+import {
+  encodeReadRequest,
+  fail,
+  ok,
+  PORTS,
+  TftpDownload,
+  type Result,
+} from "@rackline/protocol";
+import type { UdpSocket } from "./udp.js";
 
 export interface TftpOptions {
   /** How long to wait for each data block. */
@@ -12,13 +19,20 @@ export interface TftpOptions {
  * Download the device's configuration file over TFTP (docs/protocol.md §3).
  * Use a socket of its own: replies come back to its local port.
  */
-export function downloadConfig(socket: UdpSocket, ip: string, options: TftpOptions = {}): Promise<Result<Uint8Array>> {
+export function downloadConfig(
+  socket: UdpSocket,
+  ip: string,
+  options: TftpOptions = {},
+): Promise<Result<Uint8Array>> {
   const timeoutMs = options.timeoutMs ?? 1000;
   const attempts = options.attempts ?? 5;
   const download = new TftpDownload();
 
   return new Promise((resolve) => {
-    let last: { data: Uint8Array; port: number } = { data: encodeReadRequest(), port: PORTS.tftp };
+    let last: { data: Uint8Array; port: number } = {
+      data: encodeReadRequest(),
+      port: PORTS.tftp,
+    };
     let misses = 0;
     let timer: ReturnType<typeof setTimeout> | undefined;
 
@@ -42,15 +56,15 @@ export function downloadConfig(socket: UdpSocket, ip: string, options: TftpOptio
       if (packet.address !== ip) return;
       const step = download.receive(packet.data);
       switch (step.type) {
-        case 'ignore':
+        case "ignore":
           return;
-        case 'error':
+        case "error":
           return finish(fail(step.message));
-        case 'continue':
+        case "continue":
           misses = 0;
           last = { data: step.ack, port: packet.port };
           return send();
-        case 'done':
+        case "done":
           socket.send(step.ack, packet.port, ip).catch(() => undefined);
           return finish(ok(step.file));
       }

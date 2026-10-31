@@ -454,6 +454,15 @@ button.app-flow-chip:focus-visible {
 }
 .app-meter-cell {
   height: 120px;
+  --rl-meter-h: 96px;
+}
+/* One bar per channel of a linked pair. */
+.app-meters {
+  display: inline-flex;
+  gap: 2px;
+}
+.app-meters[data-horizontal] {
+  flex-direction: column;
 }
 
 /* System map (DriveRack-style overview): racks as rows of tiles, crossovers as tall tiles, branches stacked to the right. */
@@ -532,7 +541,7 @@ button.app-flow-chip:focus-visible {
 }
 .app-map-chain > .app-tile::before,
 .app-map-outs > .app-tile::before {
-  content: '';
+  content: "";
   position: absolute;
   right: 100%;
   top: 50%;
@@ -583,7 +592,7 @@ button.app-flow-chip:focus-visible {
   color: var(--rl-dim);
 }
 .app-tile[data-muted] .app-tile-body::after {
-  content: 'MUTED';
+  content: "MUTED";
   font: 600 10px var(--rl-font-label);
   color: var(--rl-danger);
 }

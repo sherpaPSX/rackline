@@ -1,22 +1,27 @@
-import type { MeterDef } from './registry/types.js';
+import type { MeterDef } from "./registry/types.js";
 
 /** Analog full scale of the RPM 26z (docs/protocol.md "Meters"). */
 const ANALOG_FULL_SCALE_DBU = 24;
 
-export const levelMeter = (index: number, key: string, label: string, unit: 'dBu' | 'dBFS'): MeterDef => ({
+export const levelMeter = (
+  index: number,
+  key: string,
+  label: string,
+  unit: "dBu" | "dBFS",
+): MeterDef => ({
   index,
   key,
   label,
   unit,
-  fullScale: unit === 'dBu' ? ANALOG_FULL_SCALE_DBU : 0,
+  fullScale: unit === "dBu" ? ANALOG_FULL_SCALE_DBU : 0,
   reduction: false,
 });
 
 export const reductionMeter = (index: number): MeterDef => ({
   index,
-  key: 'reduction',
-  label: 'Gain reduction',
-  unit: 'dB',
+  key: "reduction",
+  label: "Gain reduction",
+  unit: "dB",
   fullScale: 0,
   reduction: true,
 });

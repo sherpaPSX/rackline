@@ -1,4 +1,12 @@
-import type { Levels, ModuleInfo, ParamInfo, ParamValue, Setup, StepValue, Values } from '@rackline/api';
+import type {
+  Levels,
+  ModuleInfo,
+  ParamInfo,
+  ParamValue,
+  Setup,
+  StepValue,
+  Values,
+} from "@rackline/api";
 import {
   buildRacks,
   decodeMeter,
@@ -11,21 +19,33 @@ import {
   type ModuleDef,
   type ParamDef,
   type Rack as ModelRack,
-} from '@rackline/model';
-import { fail, ok, readRecord, type BlockTable, type ParamRecord, type Result } from '@rackline/protocol';
+} from "@rackline/model";
+import {
+  fail,
+  ok,
+  readRecord,
+  type BlockTable,
+  type ParamRecord,
+  type Result,
+} from "@rackline/protocol";
 
 /**
  * Pure mapping between `model` (registry, racks, raw values) and the JSON
  * shapes of `api`. No I/O.
  */
 
-export function toSetup(table: BlockTable, source: Setup['source']): Setup {
+export function toSetup(table: BlockTable, source: Setup["source"]): Setup {
   const layout = buildRacks(table);
   const used = new Set(table.blocks.map((b) => b.blockType));
   return {
     name: table.configName,
     source,
-    blocks: table.blocks.map((b) => ({ id: b.id, blockType: b.blockType, name: b.name, channel: b.channel })),
+    blocks: table.blocks.map((b) => ({
+      id: b.id,
+      blockType: b.blockType,
+      name: b.name,
+      channel: b.channel,
+    })),
     inputIds: layout.inputs.map((b) => b.id),
     outputIds: layout.outputs.map((b) => b.id),
     racks: layout.racks.map(toRack),
@@ -37,7 +57,7 @@ export function toSetup(table: BlockTable, source: Setup['source']): Setup {
   };
 }
 
-function toRack(rack: ModelRack): Setup['racks'][number] {
+function toRack(rack: ModelRack): Setup["racks"][number] {
   return {
     id: rack.id,
     name: rack.name,
@@ -50,7 +70,12 @@ function toRack(rack: ModelRack): Setup['racks'][number] {
     modules: rack.modules,
     ...(rack.crossover === undefined
       ? {}
-      : { crossover: { blockIds: rack.crossover.blockIds, bands: rack.crossover.bands.map((b) => ({ name: b.name })) } }),
+      : {
+          crossover: {
+            blockIds: rack.crossover.blockIds,
+            bands: rack.crossover.bands.map((b) => ({ name: b.name })),
+          },
+        }),
   };
 }
 
@@ -62,27 +87,53 @@ export function moduleInfo(def: ModuleDef): ModuleInfo {
     evidence: def.evidence,
     params: def.params.map(paramInfo),
     compact: [...def.compact],
-    meters: (def.meters ?? []).map((m) => ({ key: m.key, label: m.label, unit: m.unit, fullScale: m.fullScale, reduction: m.reduction })),
+    meters: (def.meters ?? []).map((m) => ({
+      key: m.key,
+      label: m.label,
+      unit: m.unit,
+      fullScale: m.fullScale,
+      reduction: m.reduction,
+    })),
   };
 }
 
-const stepValue = (s: number): StepValue => (Number.isFinite(s) ? s : s > 0 ? 'inf' : '-inf');
+const stepValue = (s: number): StepValue =>
+  Number.isFinite(s) ? s : s > 0 ? "inf" : "-inf";
 
 function paramInfo(param: ParamDef): ParamInfo {
   const base = { key: param.key, label: param.label };
   switch (param.kind) {
-    case 'number': {
+    case "number": {
       const c = param.conversion;
-      return { ...base, kind: 'number', unit: c.unit, min: fromRaw(c, c.rawMin), max: fromRaw(c, c.rawMax), step: 1 / c.divisor };
+      return {
+        ...base,
+        kind: "number",
+        unit: c.unit,
+        min: fromRaw(c, c.rawMin),
+        max: fromRaw(c, c.rawMax),
+        step: 1 / c.divisor,
+      };
     }
-    case 'steps':
-      return { ...base, kind: 'steps', unit: param.unit, steps: param.steps.map(stepValue) };
-    case 'enum':
-      return { ...base, kind: 'enum', options: Object.entries(param.options).map(([value, label]) => ({ value: Number(value), label })) };
-    case 'bool':
-      return { ...base, kind: 'bool' };
-    case 'flags':
-      return { ...base, kind: 'flags', flags: Object.keys(param.bits) };
+    case "steps":
+      return {
+        ...base,
+        kind: "steps",
+        unit: param.unit,
+        steps: param.steps.map(stepValue),
+      };
+    case "enum":
+      return {
+        ...base,
+        kind: "enum",
+        options: Object.entries(param.options).map(([value, label]) => ({
+          value: Number(value),
+          label,
+        })),
+      };
+    case "bool":
+      return { ...base, kind: "bool" };
+    case "flags":
+      return { ...base, kind: "flags", flags: Object.keys(param.bits) };
   }
 }
 
@@ -91,13 +142,21 @@ function paramInfo(param: ParamDef): ParamInfo {
  * step tables hold ∞; everything else in engineering units via the registry.
  */
 export function toApiValue(param: ParamDef, raw: number): ParamValue {
-  return param.kind === 'steps' ? Math.min(raw, param.steps.length - 1) : decodeParam(param, raw);
+  return param.kind === "steps"
+    ? Math.min(raw, param.steps.length - 1)
+    : decodeParam(param, raw);
 }
 
 /** API value → raw record value (rounded and clamped by the registry). */
-export function fromApiValue(param: ParamDef, value: ParamValue): Result<number> {
-  if (param.kind !== 'steps') return encodeParam(param, value);
-  return typeof value === 'number' && Number.isInteger(value) && value >= 0 && value < param.steps.length
+export function fromApiValue(
+  param: ParamDef,
+  value: ParamValue,
+): Result<number> {
+  if (param.kind !== "steps") return encodeParam(param, value);
+  return typeof value === "number" &&
+    Number.isInteger(value) &&
+    value >= 0 &&
+    value < param.steps.length
     ? ok(value)
     : fail(`${param.key}: step index ${String(value)} out of range`);
 }
@@ -109,30 +168,53 @@ export interface ParamTarget {
 }
 
 /** Look up a block's parameter by key in a loaded table. */
-export function findParam(table: BlockTable, blockId: number, key: string): Result<ParamTarget> {
+export function findParam(
+  table: BlockTable,
+  blockId: number,
+  key: string,
+): Result<ParamTarget> {
   const block = table.blocks.find((b) => b.id === blockId);
   if (block === undefined) return fail(`no block ${blockId} in this setup`);
   const param = findModule(block.blockType)?.params.find((p) => p.key === key);
-  if (param === undefined) return fail(`block ${block.name} has no parameter ${key}`);
+  if (param === undefined)
+    return fail(`block ${block.name} has no parameter ${key}`);
   return ok({ blockId, blockType: block.blockType, param });
 }
 
 export function paramRecord(target: ParamTarget, raw = 0): ParamRecord {
-  const address = { target: 'block', instance: target.blockId, objectType: target.blockType, index: target.param.index } as const;
+  const address = {
+    target: "block",
+    instance: target.blockId,
+    objectType: target.blockType,
+    index: target.param.index,
+  } as const;
   return { ...readRecord(address, target.param.size), value: raw };
 }
 
 /** Read requests for every known parameter of every block. */
 export function valueReadRecords(table: BlockTable): ParamRecord[] {
-  return table.blocks.flatMap((b) => (findModule(b.blockType)?.params ?? []).map((param) => paramRecord({ blockId: b.id, blockType: b.blockType, param })));
+  return table.blocks.flatMap((b) =>
+    (findModule(b.blockType)?.params ?? []).map((param) =>
+      paramRecord({ blockId: b.id, blockType: b.blockType, param }),
+    ),
+  );
 }
 
 /** Decode block parameter records (device replies or an `.r26` preset) into `values`, in place. */
-export function applyRecords(table: BlockTable, values: Values, records: readonly ParamRecord[]): void {
+export function applyRecords(
+  table: BlockTable,
+  values: Values,
+  records: readonly ParamRecord[],
+): void {
   for (const r of records) {
-    if (r.target !== 'block') continue;
-    const block = table.blocks.find((b) => b.id === r.instance && b.blockType === r.objectType);
-    const param = block === undefined ? undefined : findModule(block.blockType)?.params.find((p) => p.index === r.index);
+    if (r.target !== "block") continue;
+    const block = table.blocks.find(
+      (b) => b.id === r.instance && b.blockType === r.objectType,
+    );
+    const param =
+      block === undefined
+        ? undefined
+        : findModule(block.blockType)?.params.find((p) => p.index === r.index);
     if (param === undefined) continue;
     const blockValues = (values[String(r.instance)] ??= {});
     blockValues[param.key] = toApiValue(param, r.value);
@@ -143,20 +225,39 @@ export function applyRecords(table: BlockTable, values: Values, records: readonl
 export function meterReadRecords(table: BlockTable): ParamRecord[] {
   return table.blocks.flatMap((b) =>
     (findModule(b.blockType)?.meters ?? []).map((m) =>
-      readRecord({ target: 'block', instance: b.id, objectType: b.blockType, index: m.index }, METER_SIZE),
+      readRecord(
+        {
+          target: "block",
+          instance: b.id,
+          objectType: b.blockType,
+          index: m.index,
+        },
+        METER_SIZE,
+      ),
     ),
   );
 }
 
 /** Decode meter replies into levels by block id and meter key. */
-export function decodeLevels(table: BlockTable, records: readonly ParamRecord[]): Levels {
+export function decodeLevels(
+  table: BlockTable,
+  records: readonly ParamRecord[],
+): Levels {
   const levels: Levels = {};
   for (const r of records) {
-    if (r.target !== 'block') continue;
-    const block = table.blocks.find((b) => b.id === r.instance && b.blockType === r.objectType);
-    const meter = block === undefined ? undefined : findModule(block.blockType)?.meters?.find((m) => m.index === r.index);
+    if (r.target !== "block") continue;
+    const block = table.blocks.find(
+      (b) => b.id === r.instance && b.blockType === r.objectType,
+    );
+    const meter =
+      block === undefined
+        ? undefined
+        : findModule(block.blockType)?.meters?.find((m) => m.index === r.index);
     if (meter === undefined) continue;
-    (levels[String(r.instance)] ??= {})[meter.key] = decodeMeter(meter, r.value);
+    (levels[String(r.instance)] ??= {})[meter.key] = decodeMeter(
+      meter,
+      r.value,
+    );
   }
   return levels;
 }

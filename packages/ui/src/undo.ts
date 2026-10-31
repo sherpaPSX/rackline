@@ -1,4 +1,4 @@
-import type { ParamValue } from '@rackline/api';
+import type { ParamValue } from "@rackline/api";
 
 /** One parameter of one block, before and after a change. */
 export interface ParamChange {
@@ -18,7 +18,8 @@ interface Entry {
 export const UNDO_MERGE_MS = 1000;
 const MAX_ENTRIES = 200;
 
-const targets = (changes: readonly ParamChange[]) => changes.map((c) => `${c.blockId}:${c.key}`).join(' ');
+const targets = (changes: readonly ParamChange[]) =>
+  changes.map((c) => `${c.blockId}:${c.key}`).join(" ");
 
 /**
  * Undo and redo of value changes made in this window. A drag of one control
@@ -40,8 +41,15 @@ export class UndoHistory {
     if (changes.length === 0) return;
     this.undone = [];
     const last = this.done.at(-1);
-    if (last && now - last.at < UNDO_MERGE_MS && targets(last.changes) === targets(changes)) {
-      last.changes = last.changes.map((c, i) => ({ ...c, after: changes[i]?.after ?? c.after }));
+    if (
+      last &&
+      now - last.at < UNDO_MERGE_MS &&
+      targets(last.changes) === targets(changes)
+    ) {
+      last.changes = last.changes.map((c, i) => ({
+        ...c,
+        after: changes[i]?.after ?? c.after,
+      }));
       last.at = now;
       return;
     }
@@ -54,7 +62,11 @@ export class UndoHistory {
     const entry = this.done.pop();
     if (!entry) return undefined;
     this.undone.push(entry);
-    return entry.changes.map((c) => ({ blockId: c.blockId, key: c.key, value: c.before }));
+    return entry.changes.map((c) => ({
+      blockId: c.blockId,
+      key: c.key,
+      value: c.before,
+    }));
   }
 
   redo(): { blockId: number; key: string; value: ParamValue }[] | undefined {
@@ -62,7 +74,11 @@ export class UndoHistory {
     if (!entry) return undefined;
     // A redone step must not merge with the next edit.
     this.done.push({ ...entry, at: -Infinity });
-    return entry.changes.map((c) => ({ blockId: c.blockId, key: c.key, value: c.after }));
+    return entry.changes.map((c) => ({
+      blockId: c.blockId,
+      key: c.key,
+      value: c.after,
+    }));
   }
 
   clear(): void {

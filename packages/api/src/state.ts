@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 /**
  * Device state as the core sends it to clients. These shapes mirror the
@@ -11,17 +11,35 @@ import { z } from 'zod';
  * code of an option, or the index into `steps`), a boolean (mute, invert) or
  * named flag bits.
  */
-export const ParamValue = z.union([z.number(), z.boolean(), z.record(z.string(), z.boolean())]);
+export const ParamValue = z.union([
+  z.number(),
+  z.boolean(),
+  z.record(z.string(), z.boolean()),
+]);
 export type ParamValue = z.infer<typeof ParamValue>;
 
-export const Unit = z.enum(['dB', 'dBFS', 'Hz', 'ms', 's', 'h', 'dB/s', 'oct', 'ratio']);
+export const Unit = z.enum([
+  "dB",
+  "dBFS",
+  "Hz",
+  "ms",
+  "s",
+  "h",
+  "dB/s",
+  "oct",
+  "ratio",
+]);
 export type Unit = z.infer<typeof Unit>;
 
 /**
  * `inf` stands for ∞ (compressor ratio, AGC hold) and `-inf` for Off (graphic
  * EQ tone level), which JSON cannot carry as numbers.
  */
-export const StepValue = z.union([z.number(), z.literal('inf'), z.literal('-inf')]);
+export const StepValue = z.union([
+  z.number(),
+  z.literal("inf"),
+  z.literal("-inf"),
+]);
 export type StepValue = z.infer<typeof StepValue>;
 
 const paramBase = {
@@ -31,20 +49,36 @@ const paramBase = {
 };
 
 /** How to show and edit one parameter. The value's type follows `kind`. */
-export const ParamInfo = z.discriminatedUnion('kind', [
+export const ParamInfo = z.discriminatedUnion("kind", [
   /** A number in `unit`, from `min` to `max` in increments of `step`. */
-  z.object({ ...paramBase, kind: z.literal('number'), unit: Unit, min: z.number(), max: z.number(), step: z.number() }),
+  z.object({
+    ...paramBase,
+    kind: z.literal("number"),
+    unit: Unit,
+    min: z.number(),
+    max: z.number(),
+    step: z.number(),
+  }),
   /** The value is an index into `steps` (attack, release and ratio tables). */
-  z.object({ ...paramBase, kind: z.literal('steps'), unit: Unit, steps: z.array(StepValue) }),
+  z.object({
+    ...paramBase,
+    kind: z.literal("steps"),
+    unit: Unit,
+    steps: z.array(StepValue),
+  }),
   /** The value is one option's `value` (filter type, input sensitivity). */
   z.object({
     ...paramBase,
-    kind: z.literal('enum'),
+    kind: z.literal("enum"),
     options: z.array(z.object({ value: z.number(), label: z.string() })),
   }),
-  z.object({ ...paramBase, kind: z.literal('bool') }),
+  z.object({ ...paramBase, kind: z.literal("bool") }),
   /** The value is an object with one boolean per name in `flags`. */
-  z.object({ ...paramBase, kind: z.literal('flags'), flags: z.array(z.string()) }),
+  z.object({
+    ...paramBase,
+    kind: z.literal("flags"),
+    flags: z.array(z.string()),
+  }),
 ]);
 export type ParamInfo = z.infer<typeof ParamInfo>;
 
@@ -52,16 +86,23 @@ export type ParamInfo = z.infer<typeof ParamInfo>;
  * How well a module's mapping is backed: `simulator` = verified with the
  * simulator, `sample` = read from a real file only, `guessed` = by analogy.
  */
-export const Evidence = z.enum(['simulator', 'sample', 'guessed']);
+export const Evidence = z.enum(["simulator", "sample", "guessed"]);
 
-export const ModuleRole = z.enum(['input', 'output', 'processing', 'mixer', 'crossover', 'generator']);
+export const ModuleRole = z.enum([
+  "input",
+  "output",
+  "processing",
+  "mixer",
+  "crossover",
+  "generator",
+]);
 
 /** A live level of a block, sent in `meters` messages under `key`. */
 export const MeterInfo = z.object({
   key: z.string(),
   label: z.string(),
   /** `dBu` / `dBFS` levels, or `dB` of gain reduction. */
-  unit: z.enum(['dBu', 'dBFS', 'dB']),
+  unit: z.enum(["dBu", "dBFS", "dB"]),
   /** Level at full scale (clip), e.g. +24 dBu or 0 dBFS. 0 for gain reduction. */
   fullScale: z.number(),
   /** Gain reduction: 0 = none, larger = more. */
@@ -95,13 +136,22 @@ export const Block = z.object({
 export type Block = z.infer<typeof Block>;
 
 /** Where a rack channel's signal comes from. `channel` is 0 = left (or mono), 1 = right. */
-export const Tap = z.discriminatedUnion('kind', [
-  z.object({ kind: z.literal('input'), blockId: z.number() }),
-  z.object({ kind: z.literal('generator'), blockId: z.number() }),
+export const Tap = z.discriminatedUnion("kind", [
+  z.object({ kind: z.literal("input"), blockId: z.number() }),
+  z.object({ kind: z.literal("generator"), blockId: z.number() }),
   /** End of another rack's module chain. */
-  z.object({ kind: z.literal('rack'), rackId: z.string(), channel: z.number() }),
+  z.object({
+    kind: z.literal("rack"),
+    rackId: z.string(),
+    channel: z.number(),
+  }),
   /** A band of another rack's crossover. */
-  z.object({ kind: z.literal('band'), rackId: z.string(), channel: z.number(), band: z.number() }),
+  z.object({
+    kind: z.literal("band"),
+    rackId: z.string(),
+    channel: z.number(),
+    band: z.number(),
+  }),
 ]);
 export type Tap = z.infer<typeof Tap>;
 
@@ -120,7 +170,9 @@ export const Rack = z.object({
     }),
   ),
   /** Module chain in signal order; one block per channel. */
-  modules: z.array(z.object({ blockType: z.number(), blockIds: z.array(z.number()) })),
+  modules: z.array(
+    z.object({ blockType: z.number(), blockIds: z.array(z.number()) }),
+  ),
   /** The last module, if the rack ends in a crossover. */
   crossover: z
     .object({
@@ -137,10 +189,10 @@ export type Rack = z.infer<typeof Rack>;
 export const Setup = z.object({
   /** Configuration name stored in the setup, e.g. `RPM 26z Configuration`. */
   name: z.string(),
-  source: z.discriminatedUnion('kind', [
-    z.object({ kind: z.literal('device'), ip: z.string() }),
+  source: z.discriminatedUnion("kind", [
+    z.object({ kind: z.literal("device"), ip: z.string() }),
     /** An `.r26` file opened without a device: changes stay in the core. */
-    z.object({ kind: z.literal('file'), fileName: z.string() }),
+    z.object({ kind: z.literal("file"), fileName: z.string() }),
   ]),
   blocks: z.array(Block),
   /** Input and output block ids in physical order. */
@@ -180,7 +232,12 @@ export type DeviceInfo = z.infer<typeof DeviceInfo>;
  * - `unreachable`: the device stopped answering; the core keeps the last
  *   known state and reconnects on its own
  */
-export const ConnectionStatus = z.enum(['offline', 'connecting', 'online', 'unreachable']);
+export const ConnectionStatus = z.enum([
+  "offline",
+  "connecting",
+  "online",
+  "unreachable",
+]);
 export type ConnectionStatus = z.infer<typeof ConnectionStatus>;
 
 export const Connection = z.object({
@@ -196,7 +253,11 @@ export type Connection = z.infer<typeof Connection>;
  * subnet than this computer; connecting gives it a free address in this
  * computer's network first (plug-and-play).
  */
-export const FoundDevice = z.object({ ip: z.string(), mac: z.string(), reachable: z.boolean().optional() });
+export const FoundDevice = z.object({
+  ip: z.string(),
+  mac: z.string(),
+  reachable: z.boolean().optional(),
+});
 export type FoundDevice = z.infer<typeof FoundDevice>;
 
 /** Everything a client needs to draw the app. Sent whole on connect and after a setup change. */

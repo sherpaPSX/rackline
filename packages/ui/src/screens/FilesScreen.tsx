@@ -1,25 +1,29 @@
-import { useEffect, useRef, useState } from 'react';
-import type { AppState } from '@rackline/api';
-import { Button, ConfirmButton, Select, TextField } from '@rackline/ui-kit';
-import { useCoreClient } from '../app/core-context.js';
+import { useEffect, useRef, useState } from "react";
+import type { AppState } from "@rackline/api";
+import { Button, ConfirmButton, Select, TextField } from "@rackline/ui-kit";
+import { useCoreClient } from "../app/core-context.js";
 
-const PRESETS = Array.from({ length: 24 }, (_, i) => ({ value: i + 1, label: `Preset ${i + 1}` }));
+const PRESETS = Array.from({ length: 24 }, (_, i) => ({
+  value: i + 1,
+  label: `Preset ${i + 1}`,
+}));
 const IPV4 = /^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/;
-const validIp = (ip: string) => IPV4.test(ip) && ip.split('.').every((n) => Number(n) <= 255);
+const validIp = (ip: string) =>
+  IPV4.test(ip) && ip.split(".").every((n) => Number(n) <= 255);
 
 /** Files: which device or file the app works with, and device presets. */
 export function FilesScreen({ app }: { app: AppState }) {
   const client = useCoreClient();
-  const [ip, setIp] = useState(app.connection.device?.ip ?? '');
+  const [ip, setIp] = useState(app.connection.device?.ip ?? "");
   const [manual, setManual] = useState(false);
   const [preset, setPreset] = useState(app.currentPreset ?? 1);
   const fileInput = useRef<HTMLInputElement>(null);
   const { connection, setup } = app;
-  const connected = connection.status !== 'offline';
+  const connected = connection.status !== "offline";
 
   // Plug-and-play: look for devices as soon as the screen shows without one.
   useEffect(() => {
-    if (!connected) client.send({ type: 'discover' });
+    if (!connected) client.send({ type: "discover" });
   }, [client, connected]);
 
   return (
@@ -31,15 +35,25 @@ export function FilesScreen({ app }: { app: AppState }) {
         {connected ? (
           <div className="app-row">
             <span>
-              {connection.device ? `${connection.device.model} “${connection.device.name}” at ${connection.device.ip}, firmware ${connection.device.firmware}` : 'Connecting…'}
+              {connection.device
+                ? `${connection.device.model} “${connection.device.name}” at ${connection.device.ip}, firmware ${connection.device.firmware}`
+                : "Connecting…"}
             </span>
-            <Button onClick={() => client.send({ type: 'disconnect' })}>Disconnect</Button>
+            <Button onClick={() => client.send({ type: "disconnect" })}>
+              Disconnect
+            </Button>
           </div>
         ) : (
           <>
             <div className="app-row">
-              <Button onClick={() => client.send({ type: 'discover' })}>Find devices</Button>
-              {!manual && <Button onClick={() => setManual(true)}>Connect by IP address</Button>}
+              <Button onClick={() => client.send({ type: "discover" })}>
+                Find devices
+              </Button>
+              {!manual && (
+                <Button onClick={() => setManual(true)}>
+                  Connect by IP address
+                </Button>
+              )}
             </div>
             {app.devices.length > 0 ? (
               <ul className="app-list">
@@ -47,25 +61,48 @@ export function FilesScreen({ app }: { app: AppState }) {
                   <li key={d.mac} className="app-row">
                     <span className="app-mono">{d.ip}</span>
                     <span className="app-note">{d.mac}</span>
-                    {d.reachable === false && <span className="app-note">Other network: Connect gives it a free address in yours</span>}
-                    <Button onClick={() => client.send({ type: 'connect', ip: d.ip })}>Connect</Button>
+                    {d.reachable === false && (
+                      <span className="app-note">
+                        Other network: Connect gives it a free address in yours
+                      </span>
+                    )}
+                    <Button
+                      onClick={() => client.send({ type: "connect", ip: d.ip })}
+                    >
+                      Connect
+                    </Button>
                   </li>
                 ))}
               </ul>
             ) : (
-              <p className="app-note">No device found yet. Check that the RPM is on and plugged into the same network, then Find devices.</p>
+              <p className="app-note">
+                No device found yet. Check that the RPM is on and plugged into
+                the same network, then Find devices.
+              </p>
             )}
             {manual && (
               <div className="app-row">
-                <TextField label="Device IP address" placeholder="192.168.1.20" value={ip} onChange={setIp} inputMode="decimal" size={16} />
-                <Button disabled={!validIp(ip)} onClick={() => client.send({ type: 'connect', ip })}>
+                <TextField
+                  label="Device IP address"
+                  placeholder="192.168.1.20"
+                  value={ip}
+                  onChange={setIp}
+                  inputMode="decimal"
+                  size={16}
+                />
+                <Button
+                  disabled={!validIp(ip)}
+                  onClick={() => client.send({ type: "connect", ip })}
+                >
                   Connect
                 </Button>
               </div>
             )}
           </>
         )}
-        {connection.error && <p className="app-error-text">{connection.error}</p>}
+        {connection.error && (
+          <p className="app-error-text">{connection.error}</p>
+        )}
       </section>
 
       <section className="app-panel" aria-labelledby="files-project">
@@ -73,7 +110,9 @@ export function FilesScreen({ app }: { app: AppState }) {
           Project file
         </h2>
         <div className="app-row">
-          <Button onClick={() => fileInput.current?.click()}>Open .r26 file</Button>
+          <Button onClick={() => fileInput.current?.click()}>
+            Open .r26 file
+          </Button>
           <input
             ref={fileInput}
             type="file"
@@ -81,14 +120,26 @@ export function FilesScreen({ app }: { app: AppState }) {
             hidden
             onChange={(e) => {
               const file = e.currentTarget.files?.[0];
-              e.currentTarget.value = '';
-              if (file) void file.text().then((text) => client.send({ type: 'openProject', fileName: file.name, text }));
+              e.currentTarget.value = "";
+              if (file)
+                void file
+                  .text()
+                  .then((text) =>
+                    client.send({
+                      type: "openProject",
+                      fileName: file.name,
+                      text,
+                    }),
+                  );
             }}
           />
-          {setup?.source.kind === 'file' && <span>Open: {setup.source.fileName}</span>}
+          {setup?.source.kind === "file" && (
+            <span>Open: {setup.source.fileName}</span>
+          )}
         </div>
         <p className="app-note">
-          Opening a file works without a device; changes stay in the app. Saving files and comparing a file with the device come later.
+          Opening a file works without a device; changes stay in the app. Saving
+          files and comparing a file with the device come later.
         </p>
       </section>
 
@@ -98,11 +149,26 @@ export function FilesScreen({ app }: { app: AppState }) {
             Presets
           </h2>
           <div className="app-row">
-            <Select label="Preset to recall" options={PRESETS} value={preset} onChange={setPreset} />
-            <ConfirmButton label={`Recall ${preset}`} confirmLabel="Sure?" onConfirm={() => client.send({ type: 'recallPreset', preset })} />
-            <span className="app-note">{app.currentPreset ? `Current: preset ${app.currentPreset}` : 'Current preset unknown'}</span>
+            <Select
+              label="Preset to recall"
+              options={PRESETS}
+              value={preset}
+              onChange={setPreset}
+            />
+            <ConfirmButton
+              label={`Recall ${preset}`}
+              confirmLabel="Sure?"
+              onConfirm={() => client.send({ type: "recallPreset", preset })}
+            />
+            <span className="app-note">
+              {app.currentPreset
+                ? `Current: preset ${app.currentPreset}`
+                : "Current preset unknown"}
+            </span>
           </div>
-          <p className="app-note">Recalling replaces every value and clears undo.</p>
+          <p className="app-note">
+            Recalling replaces every value and clears undo.
+          </p>
         </section>
       )}
     </div>
