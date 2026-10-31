@@ -345,6 +345,7 @@ export class Core {
   }
 
   private async readMeters(device: Device): Promise<void> {
+    if (device !== this.device) return;
     const table = this.loaded?.table;
     const records = this.meterRecords;
     if (
