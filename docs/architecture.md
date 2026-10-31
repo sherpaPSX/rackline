@@ -159,8 +159,9 @@ Every message is JSON validated by a zod schema on both sides
   device state as a button that opens find / connect by IP / disconnect
   (the app looks for devices on its own while it has none), preset recall
   (asks first), open `.r26`, the mode switch (Show = light view, volume
-  and EQ; Live = this grid on the connected device; Edit = layout, phase
-  2, shown disabled), DSP load and undo.
+  and EQ; Live = this grid on the connected device; both and presets only
+  while a device is online. Edit = the grid on an open file without a
+  device, values only until phase 2 adds moving modules and wiring), DSP load and undo.
   Import/export join the header when they exist.
 - Curves are drawn from the option labels the core sends (`curves.ts`);
   Low/High cut as 2nd-order Butterworth and Horn EQ/all-pass as flat are

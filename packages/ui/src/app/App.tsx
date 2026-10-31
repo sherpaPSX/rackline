@@ -40,10 +40,13 @@ export function App() {
   useUndoKeys();
   const app = snap.app;
   const setup = app?.setup;
+  // Show, Live and presets need a device; without one the app edits the file.
+  const online = app?.connection.status === 'online';
+  const shown: Screen = !online ? 'edit' : screen === 'edit' ? 'live' : screen;
 
   return (
     <div className="app">
-      <Header snap={snap} screen={screen} onScreen={setScreen} />
+      <Header snap={snap} screen={shown} onScreen={setScreen} />
       {snap.errors.length > 0 && (
         <div className="app-errors" role="alert">
           {snap.errors.map((e) => (
@@ -57,7 +60,7 @@ export function App() {
       <main className="app-main">
         {!setup || !app ? (
           <NoSetup app={app} />
-        ) : screen === 'show' ? (
+        ) : shown === 'show' ? (
           <ShowScreen setup={setup} values={app.values} />
         ) : (
           <SystemScreen setup={setup} values={app.values} />

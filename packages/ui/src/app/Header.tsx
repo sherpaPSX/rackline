@@ -8,15 +8,19 @@ import { useCoreClient } from './core-context.js';
 export type Screen = 'show' | 'live' | 'edit';
 
 /**
- * Modes (Lukas, 2026-10-31): Show is the light view (volume and EQ), Live
- * tunes every module of the connected device on the grid, Edit changes the
- * layout itself (phase 2: compile + upload with a dropout).
+ * Modes (Lukas, 2026-10-31): Show is the light view (volume and EQ) and
+ * Live tunes every module on the grid; both need a connected device. Edit
+ * works on a file without one: values for now, moving modules and wiring
+ * in phase 2 (compile + upload with a dropout).
  */
-const SCREENS: readonly SegmentOption<Screen>[] = [
-  { value: 'show', label: 'Show' },
-  { value: 'live', label: 'Live' },
-  { value: 'edit', label: 'Edit', disabled: true, hint: 'Editing the layout comes in phase 2' },
-];
+function modes(online: boolean): SegmentOption<Screen>[] {
+  const needsDevice = online ? {} : { disabled: true, hint: 'Connect a device first' };
+  return [
+    { value: 'show', label: 'Show', ...needsDevice },
+    { value: 'live', label: 'Live', ...needsDevice },
+    { value: 'edit', label: 'Edit', disabled: online, hint: online ? 'Disconnect to edit a file; editing the layout comes in phase 2' : 'Edit the open file' },
+  ];
+}
 
 const PRESETS = Array.from({ length: 24 }, (_, i) => ({ value: i + 1, label: `Preset ${i + 1}` }));
 const IPV4 = /^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/;
@@ -163,14 +167,15 @@ function OpenFile() {
 export function Header({ snap, screen, onScreen }: { snap: ClientSnapshot; screen: Screen; onScreen: (s: Screen) => void }) {
   const client = useCoreClient();
   const app = snap.app;
+  const online = app?.connection.status === 'online';
   return (
     <header className="app-top">
       <span className="app-brand">Rackline</span>
       <DeviceMenu snap={snap} app={app} />
-      {app?.setup && <PresetPicker key={app.currentPreset} app={app} />}
+      {app?.setup && online && <PresetPicker key={app.currentPreset} app={app} />}
       {app && <OpenFile />}
       <span className="app-top-gap" />
-      <Segmented label="Screen" options={SCREENS} value={screen} onChange={onScreen} />
+      <Segmented label="Screen" options={modes(online)} value={screen} onChange={onScreen} />
       {app?.setup && (
         <span className="app-note" title="Estimated DSP load">
           DSP {Math.round(app.setup.dspPercent)} %
