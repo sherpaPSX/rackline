@@ -11,6 +11,7 @@ const validIp = (ip: string) => IPV4.test(ip) && ip.split('.').every((n) => Numb
 export function FilesScreen({ app }: { app: AppState }) {
   const client = useCoreClient();
   const [ip, setIp] = useState(app.connection.device?.ip ?? '');
+  const [manual, setManual] = useState(false);
   const [preset, setPreset] = useState(app.currentPreset ?? 1);
   const fileInput = useRef<HTMLInputElement>(null);
   const { connection, setup } = app;
@@ -38,12 +39,9 @@ export function FilesScreen({ app }: { app: AppState }) {
           <>
             <div className="app-row">
               <Button onClick={() => client.send({ type: 'discover' })}>Find devices</Button>
-              <TextField label="Device IP address" placeholder="192.168.1.20" value={ip} onChange={setIp} inputMode="decimal" size={16} />
-              <Button disabled={!validIp(ip)} onClick={() => client.send({ type: 'connect', ip })}>
-                Connect
-              </Button>
+              {!manual && <Button onClick={() => setManual(true)}>Connect by IP address</Button>}
             </div>
-            {app.devices.length > 0 && (
+            {app.devices.length > 0 ? (
               <ul className="app-list">
                 {app.devices.map((d) => (
                   <li key={d.mac} className="app-row">
@@ -54,6 +52,16 @@ export function FilesScreen({ app }: { app: AppState }) {
                   </li>
                 ))}
               </ul>
+            ) : (
+              <p className="app-note">No device found yet. Check that the RPM is on and plugged into the same network, then Find devices.</p>
+            )}
+            {manual && (
+              <div className="app-row">
+                <TextField label="Device IP address" placeholder="192.168.1.20" value={ip} onChange={setIp} inputMode="decimal" size={16} />
+                <Button disabled={!validIp(ip)} onClick={() => client.send({ type: 'connect', ip })}>
+                  Connect
+                </Button>
+              </div>
             )}
           </>
         )}
