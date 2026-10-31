@@ -1,15 +1,22 @@
 import { useEffect, useRef, useState } from 'react';
 import type { AppState } from '@rackline/api';
 import { Button, ConfirmButton, Led, Segmented, Select, TextField } from '@rackline/ui-kit';
+import type { SegmentOption } from '@rackline/ui-kit';
 import type { ClientSnapshot } from '../core-client.js';
 import { useCoreClient } from './core-context.js';
 
-export type Screen = 'show' | 'system';
+export type Screen = 'show' | 'live' | 'edit';
 
-const SCREENS = [
+/**
+ * Modes (Lukas, 2026-10-31): Show is the light view (volume and EQ), Live
+ * tunes every module of the connected device on the grid, Edit changes the
+ * layout itself (phase 2: compile + upload with a dropout).
+ */
+const SCREENS: readonly SegmentOption<Screen>[] = [
   { value: 'show', label: 'Show' },
-  { value: 'system', label: 'System' },
-] as const satisfies readonly { value: Screen; label: string }[];
+  { value: 'live', label: 'Live' },
+  { value: 'edit', label: 'Edit', disabled: true, hint: 'Editing the layout comes in phase 2' },
+];
 
 const PRESETS = Array.from({ length: 24 }, (_, i) => ({ value: i + 1, label: `Preset ${i + 1}` }));
 const IPV4 = /^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/;

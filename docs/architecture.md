@@ -136,7 +136,7 @@ Every message is JSON validated by a zod schema on both sides
 - View helpers (`racks.ts`) derive band strips, input pairs and rack detail
   lines from the API's JSON only.
 - Screens: **Show** (fader = trim + mute per input pair and band; band
-  fader = Output Trim of all its outputs), **System**: Drag Net's grid
+  fader = Output Trim of all its outputs), **System (Live mode)**: Drag Net's grid
   (`SystemGrid`, chosen by Lukas 2026-10-31 over a DriveRack-style map and
   the racks). `Setup.canvas` carries Drag Net's block positions and wires
   from the block table; the grid draws them as Drag Net does, each block
@@ -158,9 +158,10 @@ Every message is JSON validated by a zod schema on both sides
   and a fixed **header** instead of a Files screen (Lukas, 2026-10-31):
   device state as a button that opens find / connect by IP / disconnect
   (the app looks for devices on its own while it has none), preset recall
-  (asks first), open `.r26`, the Show/System switch, DSP load and undo.
-  Import/export join the header when they exist; layout editing (phase 2)
-  will be a mode there too.
+  (asks first), open `.r26`, the mode switch (Show = light view, volume
+  and EQ; Live = this grid on the connected device; Edit = layout, phase
+  2, shown disabled), DSP load and undo.
+  Import/export join the header when they exist.
 - Curves are drawn from the option labels the core sends (`curves.ts`);
   Low/High cut as 2nd-order Butterworth and Horn EQ/all-pass as flat are
   guesses.

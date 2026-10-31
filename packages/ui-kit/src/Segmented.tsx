@@ -5,6 +5,9 @@ export interface SegmentOption<T extends string> {
   /** Visible text; with an icon it is the accessible name only. */
   label: string;
   icon?: ReactNode;
+  /** Shown but not pickable yet; `hint` says why. */
+  disabled?: boolean;
+  hint?: string;
 }
 
 export interface SegmentedProps<T extends string> {
@@ -27,7 +30,8 @@ export function Segmented<T extends string>({ label, options, value, onChange, t
           className="rl-btn"
           aria-checked={o.value === value}
           aria-label={o.icon ? o.label : undefined}
-          title={o.icon ? o.label : undefined}
+          title={o.hint ?? (o.icon ? o.label : undefined)}
+          disabled={o.disabled}
           data-square={o.icon ? true : undefined}
           data-touch={touch || undefined}
           onClick={() => onChange(o.value)}
