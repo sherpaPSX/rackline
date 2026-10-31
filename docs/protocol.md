@@ -2,7 +2,8 @@
 
 State as of 2026-10-24. Read from the code of RaneSock.exe and DragNet.exe and
 verified against a simulator that the original Drag Net (under Wine) treats as
-a real RPM 26z. **Not yet verified on real hardware.**
+a real RPM 26z. **Parameter indexes and sizes of almost all mapped modules were checked on a
+real RPM 26z (§4); the value conversions were not.**
 
 Machine-readable parameter map: [rpm26z-modules.json](rpm26z-modules.json).
 
@@ -215,11 +216,35 @@ Code: `parseR26` in `@rackline/protocol`.
 
 ### Configuration upload sequence (as Drag Net does it)
 
-1. write `04 05 fe00` idx 0 = 0x2a56 (start of transfer)
+Captured from Drag Net 4.21 against the simulator (2026-10-31):
+
+1. reads only: `04 11 fb05`, `04 13 fe03`, `04 08 fc01` (no writes)
 2. TFTP WRQ `file`
-3. write idx 0 = 0 to all blocks, then write all non-default parameter values
-4. write remote-control tables (`fc07`, `fc05`, `fc06`)
-5. write `04 05 fe00` idx 0 = 0x2100 (end of transfer)
+3. write `04 05 fe00` idx 0 = 0x2a56 (2 bytes)
+4. write idx 3 (mute) = 1 on every output block
+5. write remote-control tables (`fc07`, `fc05`, `fc06`)
+6. write `04 05 fe00` idx 0 = 0x2100 (2 bytes)
+7. TFTP RRQ `file`, then write idx 0 = 0 to all blocks and `04 4x e002`,
+   then all parameter values
+
+Seen on hardware (Lukas's RPM 26z, firmware 2.5.3, 31 Oct 2026; steps 2–4
+and 6–7 replayed by a script, step 5 left out):
+
+- The RRQ readback is byte-identical to the uploaded file.
+- **Parameter memory is not cleared.** After an upload, blocks hold values
+  left over from the previous configuration (shifted to other blocks), so
+  every parameter must be written after an upload.
+- **Presets are not kept.** After re-uploading the original file, presets
+  1, 2 and 24 differed in 7, 9 and 12 values. Storing them again with the
+  store sequence (§2) fixed them, and they then survived the next upload.
+- Leaving out step 5 changed 12 values: `e003` idx 1 of `50..57`
+  (65…72 → 0), `fb03` idx 0 (2 → 1), `fc05` idx 62, `fc06` idx 126 and
+  `fc07` idx 0 (191 → 127). Meaning unknown.
+- The end-of-transfer write answered frame status 2 on two of four uploads
+  (0 on the others). The first read 5–12 s after an upload timed out. Once
+  the device returned zeros from `fb05` for a few seconds and answered
+  again after about a minute. The output mutes from step 4 did not always
+  stay set.
 
 Download: TFTP RRQ `file`, then read all parameters of all blocks (from the
 block table).
@@ -329,9 +354,25 @@ HighLower 16), outputs in order High, Mid, Low. 0x0601 = 2-band PEQ,
   index and size, with no value outside the registry's raw range. Scanning
   indexes 0 … 60 found nothing else in use except index 0 (preset tag),
   index 1 (always 0), the crossover indexes above and the meters at 0x8000+.
-  The device answers only when the requested size matches exactly. The other
-  modules (GEQ, dynamics, Matrix, Auto Mixer, Feedback Suppressor, …) are not
-  in that configuration and stay verified with the simulator only.
+  The device answers only when the requested size matches exactly. 
+- **Seen on hardware, test configurations** (same device and day, with
+  Lukas's OK; his configuration and presets were restored afterwards):
+  three configurations with one block of each other type were uploaded and
+  every registry parameter was read. All answered with status 0 at the
+  registry's index and size: GEQ, Compressor, AGC, Ambient Noise
+  Compensator, Mono and Stereo S-C Compressor, Level, Mix 3×1 and 10×1,
+  Select 1 of 2, 3 and 10, Meter, PEQ with 2, 3, 5, 6, 8, 12 and 15
+  filters, 2-way crossover, Generator, Feedback Suppressor (15), Auto Mixer
+  4×4, Matrix 2×2 and 6×6. Probing up to 8 indexes past the registry found
+  nothing. Indexes that answer inside the registry's range but are not
+  exposed: GEQ 36; Ambient Noise Compensator 8, 10, 14–24 (17 and 22 are
+  2 bytes), 26–29; Level 4; 2-way crossover 2, 6; Feedback Suppressor 10,
+  13–30; Auto Mixer 4×4 2–5, 43, 44, 50, 51, 57, 58, 64, 65, 74, 75;
+  Matrix 2×2 2–4, 29, 30; Matrix 6×6 2–8, 129, 130. Meter 0x0400 answers
+  no index 0 … 9. The values were leftovers (see the upload sequence), so
+  only index and size are verified, not the conversions. Not tested on
+  hardware: Mix 4…9×1, Select 1 of 4…9, PEQ with 1, 10, 11, 13 and 14
+  filters.
 
 Code: the module registry in `@rackline/model` (`findModule`,
 `decodeParam` / `encodeParam`, `decodeBlockValues`) holds these indexes and
