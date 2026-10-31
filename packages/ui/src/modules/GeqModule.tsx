@@ -50,17 +50,14 @@ export function GeqModule({ module, blockIds, values, rackName, channelNames, ti
     >
       <div className="app-geq">
         <div className="app-geq-faders">
-          <GraphicEq label={owner} bands={bands} q={THIRD_OCTAVE_Q} rangeDb={rangeDb} onChange={(i, g) => linked.set({ [bands[i]?.key ?? '']: g })} />
-          <div className="app-peq-strip">
-            <span />
-            <ConfirmButton label="Flat" confirmLabel="Sure?" onConfirm={() => linked.set(Object.fromEntries(bands.map((b) => [b.key, 0])))} />
-          </div>
+          <GraphicEq label={owner} curveHeight={110} bands={bands} q={THIRD_OCTAVE_Q} rangeDb={rangeDb} onChange={(i, g) => linked.set({ [bands[i]?.key ?? '']: g })} />
         </div>
         <div className="app-geq-side">
           {SIDE.flatMap((key) => {
             const p = module.params.find((x) => x.key === key);
             return p ? [<ParamControl key={key} param={p} owner={owner} label={SHORT[key]} value={linked.value(key)} onChange={(v) => linked.set({ [key]: v })} />] : [];
           })}
+          <ConfirmButton label="Flat" confirmLabel="Sure?" onConfirm={() => linked.set(Object.fromEntries(bands.map((b) => [b.key, 0])))} />
         </div>
       </div>
     </ModuleCard>

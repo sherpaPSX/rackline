@@ -5,6 +5,7 @@ import { peqBands, peqBypassPatch, peqFilter, peqFilters, peqHasGain, readPeqBan
 import { formatParam, numberScale } from '../params.js';
 import type { NumberParam } from '../params.js';
 import { ChannelPicker } from './ChannelPicker.js';
+import { EXPANDED_CURVE_H } from './CrossoverModule.js';
 import type { ModuleViewProps } from './GenericModule.js';
 import { useLinkedModule } from './linked.js';
 
@@ -68,6 +69,7 @@ export function PeqModule({ module, blockIds, values, rackName, channelNames, ti
       <div className="app-peq">
         <div className="app-peq-graph">
           <EqCurve
+            height={EXPANDED_CURVE_H}
             label={`${owner} response`}
             lines={lines}
             handles={bands.map((b) => ({ id: String(b.band), freq: b.freq, gainDb: peqHasGain(b.typeLabel) ? b.gainDb : 0, label: String(b.band), name: `Filter ${b.band}`, off: !b.on }))}

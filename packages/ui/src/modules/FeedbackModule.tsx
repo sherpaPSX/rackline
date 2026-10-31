@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { EqCurve, ModuleCard } from '@rackline/ui-kit';
 import { peqBands, peqFilters, readPeqBand } from '../curves.js';
 import { ChannelPicker } from './ChannelPicker.js';
+import { EXPANDED_CURVE_H } from './CrossoverModule.js';
 import type { ModuleViewProps } from './GenericModule.js';
 import { useLinkedModule } from './linked.js';
 import { ParamControl } from './ParamControl.js';
@@ -31,7 +32,7 @@ export function FeedbackModule({ module, blockIds, values, rackName, channelName
     <ParamControl key={p.key} param={p} owner={owner} label={SHORT[p.key]} value={linked.value(p.key)} onChange={(v) => linked.set({ [p.key]: v })} />
   );
   const curve = (compact: boolean) => (
-    <EqCurve compact={compact} label={`${owner} notch filters`} lines={[{ id: 'notches', filters: peqFilters(notches), fill: true, color: 'var(--rl-warn)' }]} />
+    <EqCurve compact={compact} {...(compact ? {} : { height: EXPANDED_CURVE_H })} label={`${owner} notch filters`} lines={[{ id: 'notches', filters: peqFilters(notches), fill: true, color: 'var(--rl-warn)' }]} />
   );
   return (
     <ModuleCard
@@ -57,7 +58,7 @@ export function FeedbackModule({ module, blockIds, values, rackName, channelName
             {active} of {notches.length} filters set by the device
           </span>
         </div>
-        <div className="app-fbs-controls">{settings.map(control)}</div>
+        <div className="app-columns">{settings.map(control)}</div>
       </div>
     </ModuleCard>
   );

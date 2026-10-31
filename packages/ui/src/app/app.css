@@ -188,13 +188,13 @@ body {
 }
 .app-peq {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: var(--rl-s3) var(--rl-s4);
   align-items: center;
 }
 .app-peq-graph {
-  flex: 1 1 280px;
-  min-width: 0;
+  flex: none;
+  width: 360px;
   display: grid;
   gap: var(--rl-s2);
 }
@@ -218,20 +218,26 @@ body {
 .app-peq-controls > .app-span {
   grid-column: 1 / -1;
 }
-.app-xover-stage {
+.app-xover-stages,
+.app-xover-stage,
+.app-xover-edges {
+  display: flex;
+  gap: var(--rl-s4);
+  align-items: flex-start;
+}
+.app-xover-graph {
+  flex: none;
+  width: 340px;
   display: grid;
   gap: var(--rl-s2);
 }
 .app-xover-edges {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: var(--rl-s3);
+  gap: var(--rl-s2);
 }
 .app-xover-edge {
   display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
   gap: var(--rl-s2) var(--rl-s3);
   padding: var(--rl-s2);
   border: 1px solid var(--rl-line);
@@ -344,10 +350,10 @@ button.app-flow-chip:focus-visible {
   opacity: 0.42;
 }
 .app-grid-wrap {
-  display: grid;
-  gap: var(--rl-s4);
-  justify-items: start;
-  overflow-x: auto;
+  /* Crosspoints and per-input settings side by side, so the rack stays low. */
+  display: flex;
+  gap: var(--rl-s5);
+  align-items: flex-start;
 }
 .app-grid {
   display: grid;
@@ -398,20 +404,39 @@ button.app-flow-chip:focus-visible {
   gap: var(--rl-s2);
 }
 .app-geq-side,
-.app-fbs-controls {
+.app-columns,
+.app-many {
+  /* Two rows that grow sideways: a module widens instead of making the rack taller. */
   display: grid;
-  grid-template-columns: repeat(2, auto);
+  grid-auto-flow: column;
+  grid-template-rows: repeat(2, auto);
   gap: var(--rl-s3) var(--rl-s4);
   align-items: end;
+  justify-items: center;
 }
-.rl-module[data-wide][data-expanded]:has(.app-geq),
-.rl-module[data-wide][data-expanded]:has(.app-grid-wrap) {
+.app-geq {
+  --rl-fader-h: 96px;
+}
+/* Expanded modules take the width their content needs; the chain scrolls sideways. */
+.rl-module[data-wide][data-expanded] {
   width: auto;
-  max-width: 100%;
 }
 @media (max-width: 720px) {
-  .app-geq {
+  /* Phone: an expanded module stacks its controls under the curve instead. */
+  .rl-module[data-wide][data-expanded] {
+    width: 100%;
+  }
+  .app-geq,
+  .app-peq,
+  .app-xover-stage,
+  .app-xover-stages,
+  .app-xover-edges,
+  .app-grid-wrap {
     flex-wrap: wrap;
+  }
+  .app-peq-graph,
+  .app-xover-graph {
+    width: 100%;
   }
   .app-geq-faders {
     width: 100%;
@@ -427,13 +452,4 @@ button.app-flow-chip:focus-visible {
 }
 .app-meter-cell {
   height: 120px;
-}
-/* Modules with many controls wrap them into rows instead of one long strip. */
-.app-many {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: flex-end;
-  gap: var(--rl-s3) var(--rl-s2);
-  max-width: 440px;
 }

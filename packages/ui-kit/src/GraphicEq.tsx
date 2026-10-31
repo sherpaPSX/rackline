@@ -18,6 +18,8 @@ export interface GraphicEqProps {
   /** Q of each band's peak filter; 1.41 is one octave wide. */
   q?: number;
   touch?: boolean | undefined;
+  /** Height of the curve above the faders in px (EqCurve's default when left out). */
+  curveHeight?: number | undefined;
 }
 
 const MIN_FREQ = 20;
@@ -33,7 +35,7 @@ const shortDb = (db: number) =>
  * Fixed-frequency EQ: the summed curve with one fader per band, each fader
  * standing exactly under its point on the curve.
  */
-export function GraphicEq({ label, bands, onChange, rangeDb = 12, q = 1.41, touch }: GraphicEqProps) {
+export function GraphicEq({ label, bands, onChange, rangeDb = 12, q = 1.41, touch, curveHeight }: GraphicEqProps) {
   const scale = linearScale(-rangeDb, rangeDb);
   const filters: Filter[] = bands.map((b) => ({ kind: 'peak', freq: b.freq, gainDb: b.gainDb, q }));
   const positions = bands.map((b) => FREQ.toPosition(b.freq));
@@ -52,6 +54,7 @@ export function GraphicEq({ label, bands, onChange, rangeDb = 12, q = 1.41, touc
     <div className="rl-geq" role="group" aria-label={label}>
       <EqCurve
         label={`${label} response`}
+        {...(curveHeight === undefined ? {} : { height: curveHeight })}
         dbRange={[-rangeDb, rangeDb]}
         minFreq={MIN_FREQ}
         maxFreq={MAX_FREQ}
