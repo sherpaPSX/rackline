@@ -21,8 +21,8 @@ const SHORT: Record<string, string> = {
  * Feedback suppressor: its notch filters are placed by the device, so they
  * are shown read-only on a curve; the settings are ordinary controls.
  */
-export function FeedbackModule({ module, blockIds, values, rackName, channelNames, title = 'Feedback' }: ModuleViewProps) {
-  const [open, setOpen] = useState(false);
+export function FeedbackModule({ initiallyOpen, module, blockIds, values, rackName, channelNames, title = 'Feedback' }: ModuleViewProps) {
+  const [open, setOpen] = useState(initiallyOpen ?? false);
   const linked = useLinkedModule(values, blockIds, module.params.map((p) => p.key), channelNames);
   const owner = `${rackName} ${title}`;
   const notches = peqBands(module).map((n) => readPeqBand(module, linked.value, n));

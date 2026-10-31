@@ -38,8 +38,8 @@ const AUTOMIX_INPUT = [
  * per crosspoint (on/off + level). Compact form is a dot grid of which
  * crosspoints are on, so the routing reads at a glance.
  */
-export function GridModule({ module, blockIds, values, rackName, channelNames, title = module.name }: ModuleViewProps) {
-  const [open, setOpen] = useState(false);
+export function GridModule({ initiallyOpen, module, blockIds, values, rackName, channelNames, title = module.name }: ModuleViewProps) {
+  const [open, setOpen] = useState(initiallyOpen ?? false);
   const linked = useLinkedModule(values, blockIds, module.params.map((p) => p.key), channelNames);
   const owner = `${rackName} ${title}`;
   const { inputs, outputs } = gridSize(module.params);

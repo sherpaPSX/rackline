@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import type { CSSProperties } from 'react';
 import type { ModuleInfo, Rack, Setup, Values } from '@rackline/api';
-import { Button, MuteButton, RackCard } from '@rackline/ui-kit';
+import { Button, MuteButton, RackCard, Segmented } from '@rackline/ui-kit';
 import { useCoreClient } from '../app/core-context.js';
 import {
   anyMuted,
@@ -23,6 +23,7 @@ import {
 } from '../racks.js';
 import { CrossoverModule } from '../modules/CrossoverModule.js';
 import { ModuleView } from '../modules/ModuleView.js';
+import { SystemMap } from './SystemMap.js';
 import { FlowLine, RackFlow, SourcePicker } from './FlowChips.js';
 
 function UnknownModule({ blockIds, setup }: { blockIds: readonly number[]; setup: Setup }) {
@@ -170,14 +171,33 @@ function OutputsView({ setup, values }: { setup: Setup; values: Values }) {
 
 /** System, mode Tune: inputs on top, racks as a signal tree, outputs at the bottom; values only. */
 export function SystemScreen({ setup, values }: { setup: Setup; values: Values }) {
+  // Preview of the DriveRack-style signal map next to the racks, for Lukas to compare.
+  const [view, setView] = useState<'map' | 'racks'>('map');
   return (
     <div className="app-screen">
       <div className="app-toolbar">
         <span className="app-mode">Tune</span>
+        <Segmented
+          label="System view"
+          options={[
+            { value: 'map', label: 'Map' },
+            { value: 'racks', label: 'Racks' },
+          ]}
+          value={view}
+          onChange={setView}
+        />
         <Button disabled title="Editing the layout comes in phase 2">
           Edit layout
         </Button>
       </div>
+      {view === 'map' ? <SystemMap setup={setup} values={values} /> : <RackList setup={setup} values={values} />}
+    </div>
+  );
+}
+
+function RackList({ setup, values }: { setup: Setup; values: Values }) {
+  return (
+    <>
       <InputsView setup={setup} values={values} />
       {rackTree(setup).map(({ rack, depth }) => (
         <section key={rack.id} id={rackAnchor(rack.id)} className="app-rack" style={{ '--app-depth': depth } as CSSProperties}>
@@ -185,6 +205,6 @@ export function SystemScreen({ setup, values }: { setup: Setup; values: Values }
         </section>
       ))}
       <OutputsView setup={setup} values={values} />
-    </div>
+    </>
   );
 }

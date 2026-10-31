@@ -10,8 +10,8 @@ import type { ModuleViewProps } from './GenericModule.js';
 import { useLinkedModule } from './linked.js';
 
 /** Parametric EQ: compact curve in the chain, curve with draggable bands when expanded. */
-export function PeqModule({ module, blockIds, values, rackName, channelNames, title = 'PEQ' }: ModuleViewProps) {
-  const [open, setOpen] = useState(false);
+export function PeqModule({ initiallyOpen, module, blockIds, values, rackName, channelNames, title = 'PEQ' }: ModuleViewProps) {
+  const [open, setOpen] = useState(initiallyOpen ?? false);
   const [selected, setSelected] = useState(1);
   const numbers = peqBands(module);
   const linked = useLinkedModule(values, blockIds, module.params.map((p) => p.key), channelNames);

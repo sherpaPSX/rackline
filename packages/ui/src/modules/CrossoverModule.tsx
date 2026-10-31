@@ -17,6 +17,7 @@ export interface CrossoverModuleProps {
   channelNames: readonly string[];
   /** Colors of the racks fed by the first block's bands, high first, when known. */
   bandColors: readonly (string | undefined)[];
+  initiallyOpen?: boolean | undefined;
 }
 
 const DB_RANGE = [-36, 6] as const;
@@ -88,8 +89,8 @@ function CrossoverStage({
 }
 
 /** The crossover at the end of a rack. A cascade (3-way + 2-way) shows each block as a stage. */
-export function CrossoverModule({ blockIds, modules, values, rackName, channelNames, bandColors }: CrossoverModuleProps) {
-  const [open, setOpen] = useState(false);
+export function CrossoverModule({ initiallyOpen, blockIds, modules, values, rackName, channelNames, bandColors }: CrossoverModuleProps) {
+  const [open, setOpen] = useState(initiallyOpen ?? false);
   const owner = `${rackName} crossover`;
   // Stage s of the cascade: block s of every channel.
   const stages = (blockIds[0] ?? []).map((_, s) => blockIds.map((chain) => chain[s]).filter((id): id is number => id !== undefined));

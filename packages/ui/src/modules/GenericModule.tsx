@@ -17,6 +17,8 @@ export interface ModuleViewProps {
   channelNames?: readonly string[] | undefined;
   /** Name on the card; defaults to the module type. */
   title?: string | undefined;
+  /** Start expanded (the module editor of the system map). */
+  initiallyOpen?: boolean | undefined;
   /** More controls at the end of the card, e.g. the band's output polarity in its Level module. */
   extra?: ReactNode;
 }
@@ -57,8 +59,8 @@ function inactive(key: string, value: (key: string) => unknown): boolean {
 }
 
 /** A small module: every parameter visible, in the order the module lists them. */
-export function GenericModule({ module, blockIds, values, rackName, channelNames, title = module.name, extra }: ModuleViewProps) {
-  const [open, setOpen] = useState(false);
+export function GenericModule({ initiallyOpen, module, blockIds, values, rackName, channelNames, title = module.name, extra }: ModuleViewProps) {
+  const [open, setOpen] = useState(initiallyOpen ?? false);
   // A bypass switch is the card's power button, not a control.
   const params = module.params.filter((p) => !HIDDEN.has(p.key) && p.key !== 'bypass');
   const hasBypass = module.params.some((p) => p.key === 'bypass');

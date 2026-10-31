@@ -25,8 +25,8 @@ const SIDE = ['range', 'eqType', 'lowCut', 'inputLevel', 'outputLevel', 'lowLeve
 const SHORT: Record<string, string> = { eqType: 'Type', inputLevel: 'In', outputLevel: 'Out', lowLevel: 'Low', midLevel: 'Mid', highLevel: 'High' };
 
 /** 30-band graphic EQ: compact curve in the chain, faders under the curve when expanded. */
-export function GeqModule({ module, blockIds, values, rackName, channelNames, title = 'Graphic EQ' }: ModuleViewProps) {
-  const [open, setOpen] = useState(false);
+export function GeqModule({ initiallyOpen, module, blockIds, values, rackName, channelNames, title = 'Graphic EQ' }: ModuleViewProps) {
+  const [open, setOpen] = useState(initiallyOpen ?? false);
   const linked = useLinkedModule(values, blockIds, module.params.map((p) => p.key), channelNames);
   const owner = `${rackName} ${title}`;
   const bands = geqBands(module).map((b) => ({ ...b, gainDb: typeof linked.value(b.key) === 'number' ? (linked.value(b.key) as number) : 0 }));
