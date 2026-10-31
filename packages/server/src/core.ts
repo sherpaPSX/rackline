@@ -13,7 +13,7 @@ import {
   type Result,
 } from '@rackline/protocol';
 import type { Device } from './device.js';
-import { applyRecords, findParam, fromApiValue, paramRecord, toApiValue, toSetup, valueReadRecords } from './setup.js';
+import { applyRecords, decodeLevels, findParam, fromApiValue, meterReadRecords, paramRecord, toApiValue, toSetup, valueReadRecords } from './setup.js';
 import { Throttle } from './throttle.js';
 
 export interface CoreOptions {
@@ -29,6 +29,8 @@ export interface CoreOptions {
   throttleMs?: number;
   /** Liveness check while connected and reconnect attempts while unreachable (default 2 s). */
   pollMs?: number;
+  /** Pause between two meter reads while online (default 100 ms). */
+  meterMs?: number;
 }
 
 interface Loaded {
@@ -55,15 +57,18 @@ export class Core {
   private currentPreset: number | undefined;
   private device: Device | undefined;
   private poll: ReturnType<typeof setTimeout> | undefined;
+  private meterTimer: ReturnType<typeof setTimeout> | undefined;
   /** Bumped whenever the device is dropped, so a connect still opening can tell it was overtaken. */
   private generation = 0;
   private readonly throttle: Throttle;
   private readonly pollMs: number;
+  private readonly meterMs: number;
   private readonly listeners = new Set<(message: ServerMessage) => void>();
 
   constructor(private readonly options: CoreOptions) {
     this.throttle = new Throttle(options.throttleMs ?? 30);
     this.pollMs = options.pollMs ?? 2000;
+    this.meterMs = options.meterMs ?? 100;
   }
 
   /** `listener` gets every broadcast message until the returned function is called. */
@@ -200,6 +205,7 @@ export class Core {
     this.useDevice(loaded.value);
     this.emitState();
     this.schedulePoll(device);
+    this.scheduleMeters(device);
   }
 
   private useDevice(loaded: DeviceSnapshot): void {
@@ -264,6 +270,27 @@ export class Core {
     this.schedulePoll(device);
   }
 
+  /**
+   * While online, read every meter, broadcast the levels, wait `meterMs`,
+   * repeat. Reads only; a failed read is skipped (the liveness poll decides
+   * whether the device is gone).
+   */
+  private scheduleMeters(device: Device): void {
+    clearTimeout(this.meterTimer);
+    this.meterTimer = setTimeout(() => void this.readMeters(device), this.meterMs);
+  }
+
+  private async readMeters(device: Device): Promise<void> {
+    const table = this.loaded?.table;
+    const records = table === undefined ? [] : meterReadRecords(table);
+    if (table !== undefined && records.length > 0 && this.connection.status === 'online') {
+      const reply = await device.read(records);
+      if (device !== this.device) return;
+      if (reply.ok && this.loaded?.table === table) this.emit({ type: 'meters', levels: decodeLevels(table, reply.value) });
+    }
+    this.scheduleMeters(device);
+  }
+
   /** The device stopped answering: keep the state, say so, keep polling. */
   private lost(device: Device, error: string): void {
     if (device !== this.device || this.connection.status === 'unreachable') return;
@@ -274,6 +301,7 @@ export class Core {
   private async dropDevice(): Promise<void> {
     this.generation++;
     clearTimeout(this.poll);
+    clearTimeout(this.meterTimer);
     const device = this.device;
     this.device = undefined;
     await device?.close();

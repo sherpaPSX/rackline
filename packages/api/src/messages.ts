@@ -1,11 +1,11 @@
 import { z } from 'zod';
-import { AppState, Connection, FoundDevice, ParamValue } from './state.js';
+import { AppState, Connection, FoundDevice, Levels, ParamValue } from './state.js';
 
 /**
  * Bumped on every incompatible change, so a client served from an older
  * build (a cached phone page) can tell it is outdated.
  */
-export const API_VERSION = 1;
+export const API_VERSION = 2;
 
 /**
  * Client → core. Clients send intents; the core applies them and broadcasts
@@ -35,6 +35,8 @@ export const ServerMessage = z.discriminatedUnion('type', [
   /** One parameter changed (by any client or the device). */
   z.object({ type: z.literal('param'), blockId: z.number().int(), key: z.string(), value: ParamValue }),
   z.object({ type: z.literal('connection'), connection: Connection }),
+  /** Live levels of every metered block, several times per second while a device is online. */
+  z.object({ type: z.literal('meters'), levels: Levels }),
   /** Result of discovery. */
   z.object({ type: z.literal('devices'), devices: z.array(FoundDevice) }),
   /** A request was rejected or failed, in words for the engineer. */

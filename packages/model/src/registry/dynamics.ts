@@ -1,4 +1,5 @@
 import { ATTACK_MS, COMPRESSOR_THRESHOLD, dbRange, LIMITER_THRESHOLD, rate, RATIO, RELEASE_MS, SC_RATIO } from '../units.js';
+import { reductionMeter } from '../meters.js';
 import { bool, num, steps } from './params.js';
 import type { ModuleDef } from './types.js';
 
@@ -14,6 +15,7 @@ export const compressor: ModuleDef = {
     steps(5, 'ratio', 'Ratio', 'ratio', RATIO),
   ],
   compact: ['threshold', 'ratio'],
+  meters: [reductionMeter(0x8000)],
   dspPercent: 3,
 };
 

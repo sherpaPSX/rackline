@@ -1,11 +1,13 @@
-import type { ModuleInfo, ParamInfo, ParamValue, Setup, StepValue, Values } from '@rackline/api';
+import type { Levels, ModuleInfo, ParamInfo, ParamValue, Setup, StepValue, Values } from '@rackline/api';
 import {
   buildRacks,
+  decodeMeter,
   decodeParam,
   encodeParam,
   estimateDspLoad,
   findModule,
   fromRaw,
+  METER_SIZE,
   type ModuleDef,
   type ParamDef,
   type Rack as ModelRack,
@@ -60,6 +62,7 @@ export function moduleInfo(def: ModuleDef): ModuleInfo {
     evidence: def.evidence,
     params: def.params.map(paramInfo),
     compact: [...def.compact],
+    meters: (def.meters ?? []).map((m) => ({ key: m.key, label: m.label, unit: m.unit, reduction: m.reduction })),
   };
 }
 
@@ -134,4 +137,26 @@ export function applyRecords(table: BlockTable, values: Values, records: readonl
     const blockValues = (values[String(r.instance)] ??= {});
     blockValues[param.key] = toApiValue(param, r.value);
   }
+}
+
+/** Read requests for every meter of every block, in block table order. */
+export function meterReadRecords(table: BlockTable): ParamRecord[] {
+  return table.blocks.flatMap((b) =>
+    (findModule(b.blockType)?.meters ?? []).map((m) =>
+      readRecord({ target: 'block', instance: b.id, objectType: b.blockType, index: m.index }, METER_SIZE),
+    ),
+  );
+}
+
+/** Decode meter replies into levels by block id and meter key. */
+export function decodeLevels(table: BlockTable, records: readonly ParamRecord[]): Levels {
+  const levels: Levels = {};
+  for (const r of records) {
+    if (r.target !== 'block') continue;
+    const block = table.blocks.find((b) => b.id === r.instance && b.blockType === r.objectType);
+    const meter = block === undefined ? undefined : findModule(block.blockType)?.meters?.find((m) => m.index === r.index);
+    if (meter === undefined) continue;
+    (levels[String(r.instance)] ??= {})[meter.key] = decodeMeter(meter, r.value);
+  }
+  return levels;
 }

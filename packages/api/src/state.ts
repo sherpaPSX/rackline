@@ -56,6 +56,17 @@ export const Evidence = z.enum(['simulator', 'sample', 'guessed']);
 
 export const ModuleRole = z.enum(['input', 'output', 'processing', 'mixer', 'crossover', 'generator']);
 
+/** A live level of a block, sent in `meters` messages under `key`. */
+export const MeterInfo = z.object({
+  key: z.string(),
+  label: z.string(),
+  /** `dBu` / `dBFS` levels, or `dB` of gain reduction. */
+  unit: z.enum(['dBu', 'dBFS', 'dB']),
+  /** Gain reduction: 0 = none, larger = more. */
+  reduction: z.boolean(),
+});
+export type MeterInfo = z.infer<typeof MeterInfo>;
+
 /** A DSP block type the core knows how to tune. */
 export const ModuleInfo = z.object({
   blockType: z.number(),
@@ -65,6 +76,8 @@ export const ModuleInfo = z.object({
   params: z.array(ParamInfo),
   /** Keys of the 2–4 parameters shown in the compact module view. */
   compact: z.array(z.string()),
+  /** Live levels the device reports for blocks of this type. */
+  meters: z.array(MeterInfo),
 });
 export type ModuleInfo = z.infer<typeof ModuleInfo>;
 
@@ -143,6 +156,10 @@ export type Setup = z.infer<typeof Setup>;
 /** Parameter values by block id (as a string, JSON object key), then parameter key. */
 export const Values = z.record(z.string(), z.record(z.string(), ParamValue));
 export type Values = z.infer<typeof Values>;
+
+/** Live levels by block id (as a string), then meter key; dBu / dBFS or dB of gain reduction. */
+export const Levels = z.record(z.string(), z.record(z.string(), z.number()));
+export type Levels = z.infer<typeof Levels>;
 
 export const DeviceInfo = z.object({
   ip: z.string(),
