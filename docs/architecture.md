@@ -149,7 +149,9 @@ Every message is JSON validated by a zod schema on both sides
   High"), plus a quick mute; input channels list the speakers they feed as
   chips that jump to the row. Modules run left to right; PEQ and crossover
   expand sideways with a curve; limiters show the threshold until expanded;
-  PEQ bypass switches all filters off (the RPM has no bypass). A stereo row
+  a power button only where the RPM has a real bypass (GEQ, AGC,
+  side-chain compressors, noise compensator), never a made-up one; every
+  expanded module grows sideways so racks stay low. A stereo row
   has one link button in its header: linked, it is one chain and every edit
   sets both channels (an amber "5 ≠ 6" marks a module whose channels still
   differ); unlinked, it shows one lane per channel. It starts linked when

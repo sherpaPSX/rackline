@@ -1,9 +1,8 @@
 import { useState } from 'react';
 import type { ReactNode } from 'react';
 import type { ModuleInfo, Rack, Setup, Values } from '@rackline/api';
-import { Button, IconButton, MuteButton, RackCard } from '@rackline/ui-kit';
+import { Button, IconButton, MuteButton, RackCard, Segmented } from '@rackline/ui-kit';
 import { useCoreClient } from '../app/core-context.js';
-import { peqBands } from '../curves.js';
 import {
   anyMuted,
   blockById,
@@ -25,14 +24,9 @@ import {
 } from '../racks.js';
 import type { InputChannel, PathStep, Speaker } from '../racks.js';
 import { CrossoverModule } from '../modules/CrossoverModule.js';
-import { GenericModule } from '../modules/GenericModule.js';
-import type { ModuleViewProps } from '../modules/GenericModule.js';
-import { PeqModule } from '../modules/PeqModule.js';
+import { ModuleView } from '../modules/ModuleView.js';
 import { FlowLine, SourcePicker } from './FlowChips.js';
-
-function ModuleView(props: ModuleViewProps) {
-  return peqBands(props.module).length > 0 ? <PeqModule {...props} /> : <GenericModule {...props} />;
-}
+import { SystemMap } from './SystemMap.js';
 
 function UnknownModule({ blockIds, setup }: { blockIds: readonly number[]; setup: Setup }) {
   const name = blockById(setup, blockIds[0] ?? -1)?.name ?? 'Unknown block';
@@ -60,12 +54,18 @@ type ChainItem = { key: string; shared: string[]; anchor?: string } & (
 /** The cards of one rack on a row, its channels mapped to the row's channels. */
 function rackItems(setup: Setup, { rack, channels }: PathStep, shared: string[]): ChainItem[] {
   const mixerIds = channels.map((c) => rack.channels[c]?.mixerId ?? -1);
+  // A rack fed by the signal generator starts with the generator's own card.
+  const generators = [...new Set(rack.channels.flatMap((c) => c.sources.flatMap((t) => (t.kind === 'generator' ? [t.blockId] : []))))];
+  const gens: ChainItem[] = generators.map((id) => {
+    const title = blockById(setup, id)?.name;
+    return { kind: 'module', key: `gen-${id}`, ids: channels.map(() => id), shared, ...(title ? { title } : {}) };
+  });
   const sum: ChainItem[] =
     mixerIds[0] !== -1 && !sourceChoice(setup, rack) ? [{ kind: 'module', key: `sum-${rack.id}`, ids: mixerIds, title: 'Sum', shared }] : [];
   const modules: ChainItem[] = rack.modules.map((m) => ({ kind: 'module', key: m.blockIds.join('-'), ids: channels.map((c) => m.blockIds[c] ?? -1), shared }));
   const { crossover } = rack;
   const xover: ChainItem[] = crossover ? [{ kind: 'crossover', key: `xo-${rack.id}`, rack, ids: channels.map((c) => crossover.blockIds[c] ?? []), shared }] : [];
-  return [...sum, ...modules, ...xover];
+  return [...gens, ...sum, ...modules, ...xover];
 }
 
 /** Colors of the speakers fed by each band of a rack's crossover, so the curve matches the rows. */
@@ -290,15 +290,35 @@ function UnusedOutputs({ setup, values }: { setup: Setup; values: Values }) {
 
 /** System, mode Tune: input channels on top, then one row per speaker with its whole chain; values only. */
 export function SystemScreen({ setup, values }: { setup: Setup; values: Values }) {
-  const list = speakers(setup, values);
+  // Preview of the DriveRack-style signal map next to the racks, for Lukas to compare.
+  const [view, setView] = useState<'map' | 'racks'>('map');
   return (
     <div className="app-screen">
       <div className="app-toolbar">
         <span className="app-mode">Tune</span>
+        <Segmented
+          label="System view"
+          options={[
+            { value: 'map', label: 'Map' },
+            { value: 'racks', label: 'Racks' },
+          ]}
+          value={view}
+          onChange={setView}
+        />
         <Button disabled title="Editing the layout comes in phase 2">
           Edit layout
         </Button>
       </div>
+      {view === 'map' ? <SystemMap setup={setup} values={values} /> : <RackList setup={setup} values={values} />}
+    </div>
+  );
+}
+
+/** Input channels on top, then one row per speaker with its whole chain. */
+function RackList({ setup, values }: { setup: Setup; values: Values }) {
+  const list = speakers(setup, values);
+  return (
+    <>
       <h2 className="app-h2">Inputs</h2>
       {inputChannels(setup).map((ch) => (
         <InputRow key={ch.name} channel={ch} list={list} setup={setup} values={values} />
@@ -308,6 +328,6 @@ export function SystemScreen({ setup, values }: { setup: Setup; values: Values }
         <SpeakerRow key={s.end.id} speaker={s} list={list} setup={setup} values={values} />
       ))}
       <UnusedOutputs setup={setup} values={values} />
-    </div>
+    </>
   );
 }

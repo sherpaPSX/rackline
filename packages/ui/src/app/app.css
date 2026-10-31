@@ -187,13 +187,13 @@ body {
 }
 .app-peq {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: var(--rl-s3) var(--rl-s4);
   align-items: center;
 }
 .app-peq-graph {
-  flex: 1 1 280px;
-  min-width: 0;
+  flex: none;
+  width: 360px;
   display: grid;
   gap: var(--rl-s2);
 }
@@ -217,20 +217,26 @@ body {
 .app-peq-controls > .app-span {
   grid-column: 1 / -1;
 }
-.app-xover-stage {
+.app-xover-stages,
+.app-xover-stage,
+.app-xover-edges {
+  display: flex;
+  gap: var(--rl-s4);
+  align-items: flex-start;
+}
+.app-xover-graph {
+  flex: none;
+  width: 340px;
   display: grid;
   gap: var(--rl-s2);
 }
 .app-xover-edges {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: var(--rl-s3);
+  gap: var(--rl-s2);
 }
 .app-xover-edge {
   display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
   gap: var(--rl-s2) var(--rl-s3);
   padding: var(--rl-s2);
   border: 1px solid var(--rl-line);
@@ -339,6 +345,278 @@ button.app-flow-chip:focus-visible {
 }
 .app-source[data-differ] .rl-select {
   border-color: var(--rl-warn);
+}
+
+/* Table-form controls (matrix, auto mixer): a value box per cell, headers name the rows and columns. */
+.app-field[data-disabled] {
+  opacity: 0.42;
+}
+.app-grid-wrap {
+  /* Crosspoints and per-input settings side by side, so the rack stays low. */
+  display: flex;
+  gap: var(--rl-s5);
+  align-items: flex-start;
+}
+.app-grid {
+  display: grid;
+  grid-template-columns: auto repeat(var(--app-cols), auto);
+  gap: var(--rl-s1) var(--rl-s2);
+  align-items: center;
+}
+.app-grid-head {
+  white-space: nowrap;
+}
+.app-xp {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+.app-xp[data-off] .rl-vbox {
+  opacity: 0.42;
+}
+/* Compact routing: one dot per crosspoint, lit when on. */
+.app-dots {
+  display: grid;
+  grid-template-columns: repeat(var(--app-cols), 10px);
+  gap: 4px;
+  padding: var(--rl-s2);
+}
+.app-dots i {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1px solid var(--rl-line);
+}
+.app-dots i[data-on] {
+  background: var(--rl-accent);
+  border-color: var(--rl-accent);
+}
+
+/* Graphic EQ: faders under the curve, settings to the right (below on a phone). */
+.app-geq {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: var(--rl-s3) var(--rl-s4);
+  align-items: flex-start;
+}
+.app-geq-faders {
+  flex: none;
+  width: 560px;
+  display: grid;
+  gap: var(--rl-s2);
+}
+.app-geq-side,
+.app-columns,
+.app-many {
+  /* Two rows that grow sideways: a module widens instead of making the rack taller. */
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-rows: repeat(2, auto);
+  gap: var(--rl-s3) var(--rl-s4);
+  align-items: end;
+  justify-items: center;
+}
+.app-geq {
+  --rl-fader-h: 96px;
+}
+/* Expanded modules take the width their content needs; the chain scrolls sideways. */
+.rl-module[data-wide][data-expanded] {
+  width: auto;
+}
+@media (max-width: 720px) {
+  /* Phone: an expanded module stacks its controls under the curve instead. */
+  .rl-module[data-wide][data-expanded] {
+    width: 100%;
+  }
+  .app-geq,
+  .app-peq,
+  .app-xover-stage,
+  .app-xover-stages,
+  .app-xover-edges,
+  .app-grid-wrap {
+    flex-wrap: wrap;
+  }
+  .app-peq-graph,
+  .app-xover-graph {
+    width: 100%;
+  }
+  .app-geq-faders {
+    width: 100%;
+  }
+}
+.app-stack {
+  display: grid;
+  gap: var(--rl-s2);
+  justify-items: center;
+}
+.app-stack .app-note {
+  margin: 0;
+}
+.app-meter-cell {
+  height: 120px;
+}
+
+/* System map (DriveRack-style overview): racks as rows of tiles, crossovers as tall tiles, branches stacked to the right. */
+.app-map-wrap {
+  display: grid;
+  gap: var(--rl-s3);
+}
+.app-map {
+  display: grid;
+  gap: var(--rl-s5);
+  padding: var(--rl-s4);
+  background: var(--rl-panel);
+  border: 1px solid var(--rl-line);
+  border-radius: var(--rl-radius);
+  overflow-x: auto;
+}
+.app-map-root,
+.app-map-node {
+  display: flex;
+  align-items: stretch;
+}
+.app-map-in {
+  display: flex;
+  align-items: center;
+}
+.app-map-chain {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: var(--rl-s4) 0 var(--rl-s1);
+  position: relative;
+}
+.app-map-rack {
+  position: absolute;
+  top: 0;
+  left: var(--rl-s4);
+  display: flex;
+  gap: var(--rl-s2);
+  align-items: baseline;
+  white-space: nowrap;
+}
+.app-map-rack-name {
+  font: 600 12px var(--rl-font-label);
+  color: var(--app-rack, var(--rl-fg));
+  letter-spacing: 0.04em;
+}
+.app-map-rack-detail {
+  font: 11px var(--rl-font-label);
+  color: var(--rl-dim);
+}
+.app-map-children {
+  display: grid;
+  gap: var(--rl-s3);
+  align-content: center;
+  /* Bracket from the crossover (or chain end) to the branches. */
+  border-left: 2px solid var(--rl-line);
+  padding-left: var(--rl-s3);
+  margin: var(--rl-s4) 0;
+}
+.app-map-outs {
+  display: grid;
+  gap: var(--rl-s2);
+  align-content: center;
+  padding-top: var(--rl-s4);
+}
+.app-map-unused {
+  display: flex;
+  gap: var(--rl-s2);
+  align-items: center;
+  opacity: 0.7;
+}
+/* Wires between tiles. */
+.app-map-chain > .app-tile,
+.app-map-outs > .app-tile {
+  margin-left: var(--rl-s4);
+}
+.app-map-chain > .app-tile::before,
+.app-map-outs > .app-tile::before {
+  content: '';
+  position: absolute;
+  right: 100%;
+  top: 50%;
+  width: var(--rl-s4);
+  border-top: 2px solid var(--rl-line);
+}
+.app-tile {
+  position: relative;
+  flex: none;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: 2px;
+  justify-items: center;
+  align-items: center;
+  width: 104px;
+  min-height: 84px;
+  padding: var(--rl-s2) var(--rl-s1);
+  background: var(--rl-bg);
+  color: var(--rl-fg);
+  border: 1px solid var(--rl-line);
+  border-top: 3px solid var(--app-tile-k, var(--app-rack, var(--rl-line)));
+  border-radius: var(--rl-radius);
+  cursor: pointer;
+  font: inherit;
+  text-align: center;
+}
+.app-tile:hover {
+  border-color: var(--rl-dim);
+  border-top-color: var(--app-tile-k, var(--app-rack, var(--rl-dim)));
+}
+.app-tile[data-selected] {
+  outline: 2px solid var(--rl-accent);
+  outline-offset: 1px;
+}
+.app-tile[data-tall] {
+  align-self: stretch;
+  margin-top: calc(-1 * var(--rl-s1));
+}
+.app-tile-name {
+  font: 600 12px var(--rl-font-label);
+  letter-spacing: 0.03em;
+}
+.app-tile-body {
+  display: grid;
+  gap: 1px;
+  width: 100%;
+  font: 12px var(--rl-font-value);
+  color: var(--rl-dim);
+}
+.app-tile[data-muted] .app-tile-body::after {
+  content: 'MUTED';
+  font: 600 10px var(--rl-font-label);
+  color: var(--rl-danger);
+}
+.app-tile-width {
+  font: 10px var(--rl-font-label);
+  color: var(--rl-dim);
+}
+.app-map-editor {
+  position: sticky;
+  bottom: 0;
+  background: var(--rl-panel);
+  border: 1px solid var(--rl-accent);
+  border-radius: var(--rl-radius);
+  box-shadow: 0 -8px 24px rgb(0 0 0 / 0.35);
+}
+.app-map-editor-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 var(--rl-s2) 0 var(--rl-s3);
+}
+.app-map-editor-body {
+  display: flex;
+  padding: 0 var(--rl-s3) var(--rl-s3);
+  overflow-x: auto;
+}
+@media (max-width: 720px) {
+  .app-map-editor {
+    position: fixed;
+    inset: auto 0 0 0;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
 }
 
 /* An unlinked stereo row: one lane per channel, stacked. */

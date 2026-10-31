@@ -1,19 +1,18 @@
 import { useState } from 'react';
 import { ConfirmButton, EqCurve, Knob, ModuleCard, Select, ToggleButton } from '@rackline/ui-kit';
 import type { EqCurveLine } from '@rackline/ui-kit';
-import { peqBands, peqBypassPatch, peqFilter, peqFilters, peqHasGain, readPeqBand } from '../curves.js';
+import { peqBands, peqFilter, peqFilters, peqHasGain, readPeqBand } from '../curves.js';
 import { formatParam, numberScale } from '../params.js';
 import type { NumberParam } from '../params.js';
 import { ChannelsBadge } from './ChannelsBadge.js';
+import { EXPANDED_CURVE_H } from './CrossoverModule.js';
 import type { ModuleViewProps } from './GenericModule.js';
 import { useLinkedModule } from './linked.js';
 
 /** Parametric EQ: compact curve in the chain, curve with draggable bands when expanded. */
-export function PeqModule({ module, blockIds, values, rackName, channelNames, title = 'PEQ' }: ModuleViewProps) {
-  const [open, setOpen] = useState(false);
+export function PeqModule({ initiallyOpen, module, blockIds, values, rackName, channelNames, title = 'PEQ' }: ModuleViewProps) {
+  const [open, setOpen] = useState(initiallyOpen ?? false);
   const [selected, setSelected] = useState(1);
-  /** Filters that were on when this window bypassed the PEQ. */
-  const [remembered, setRemembered] = useState<number[] | undefined>(undefined);
   const numbers = peqBands(module);
   const linked = useLinkedModule(values, blockIds, module.params.map((p) => p.key), channelNames);
   const bands = numbers.map((n) => readPeqBand(module, linked.value, n));
@@ -50,11 +49,6 @@ export function PeqModule({ module, blockIds, values, rackName, channelNames, ti
   return (
     <ModuleCard
       name={title}
-      on={bands.some((b) => b.on)}
-      onOnChange={(on) => {
-        linked.set(peqBypassPatch(bands, on, remembered));
-        setRemembered(on ? undefined : bands.filter((b) => b.on).map((b) => b.band));
-      }}
       badge={linked.stereo ? <ChannelsBadge linked={linked} /> : undefined}
       expanded={open}
       onExpandedChange={setOpen}
@@ -68,6 +62,7 @@ export function PeqModule({ module, blockIds, values, rackName, channelNames, ti
       <div className="app-peq">
         <div className="app-peq-graph">
           <EqCurve
+            height={EXPANDED_CURVE_H}
             label={`${owner} response`}
             lines={lines}
             handles={bands.map((b) => ({ id: String(b.band), freq: b.freq, gainDb: peqHasGain(b.typeLabel) ? b.gainDb : 0, label: String(b.band), name: `Filter ${b.band}`, off: !b.on }))}

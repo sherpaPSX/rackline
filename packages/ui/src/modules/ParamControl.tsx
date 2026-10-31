@@ -15,7 +15,7 @@ export interface ParamControlProps {
 }
 
 /** Value a double click returns to. */
-function defaultOf(p: NumberParam): number {
+export function defaultOf(p: NumberParam): number {
   const preferred = p.unit === 'Hz' ? 1000 : p.unit === 'oct' ? 1 : 0;
   return Math.min(p.max, Math.max(p.min, preferred));
 }
@@ -117,5 +117,57 @@ export function ParamControl({ param: p, value, onChange, owner, label = p.label
         </div>
       );
     }
+  }
+}
+
+/**
+ * The same editor in table form (matrix cells, per-input rows): a value box
+ * instead of a knob, no label (the row and column headers name it).
+ */
+export function ParamField({ param: p, value, onChange, owner, disabled }: Omit<ParamControlProps, 'label'>) {
+  const name = `${owner} ${p.label}`;
+  switch (p.kind) {
+    case 'number': {
+      const n = typeof value === 'number' ? value : defaultOf(p);
+      return (
+        <div className="app-field" data-disabled={disabled || undefined}>
+          <ValueBox label={name} value={n} onChange={onChange} format={(v) => formatParam(p, v)} scale={numberScale(p)} defaultValue={defaultOf(p)} />
+        </div>
+      );
+    }
+    case 'steps':
+      return (
+        <div className="app-field" data-disabled={disabled || undefined}>
+          <ValueBox
+            label={name}
+            value={typeof value === 'number' ? value : 0}
+            onChange={(i) => onChange(Math.round(i))}
+            format={(i) => formatParam(p, Math.round(i))}
+            scale={stepsScale(p)}
+            defaultValue={0}
+            step={1 / Math.max(1, p.steps.length - 1)}
+          />
+        </div>
+      );
+    case 'enum':
+      return (
+        <Select
+          label={name}
+          options={p.options}
+          value={typeof value === 'number' ? value : (p.options[0]?.value ?? 0)}
+          onChange={onChange}
+          disabled={disabled}
+        />
+      );
+    case 'bool':
+      return p.key.toLowerCase().endsWith('mute') ? (
+        <MuteButton muted={value === true} onChange={onChange} target={`${owner} ${p.label.replace(/ mute$/i, '')}`} />
+      ) : (
+        <ToggleButton square pressed={value === true} onChange={onChange} aria-label={name}>
+          {p.key.toLowerCase().endsWith('invert') ? 'Ø' : 'On'}
+        </ToggleButton>
+      );
+    case 'flags':
+      return <ParamControl param={p} value={value} onChange={onChange} owner={owner} label="" />;
   }
 }

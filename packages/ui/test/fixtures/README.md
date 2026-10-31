@@ -9,3 +9,9 @@ const core = new Core({ openDevice: () => Promise.reject(new Error('none')), dis
 await core.handle({ type: 'openProject', fileName: 'PSX_RCF_FINAL.r26', text });
 JSON.stringify(core.state(), null, 2);
 ```
+
+`module-catalog-state.json` is a made-up setup that uses every module the
+core knows (`packages/server/test/module-catalog.ts`). `pnpm --filter
+@rackline/ui preview` turns it into `dist/modules.html`, a gallery of all
+module cards. Regenerate it with `UPDATE_CATALOG=1 pnpm test` after a
+registry or API change; a test fails while it is out of date.
