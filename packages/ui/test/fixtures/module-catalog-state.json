@@ -1,0 +1,7880 @@
+{
+  "connection": {
+    "status": "offline"
+  },
+  "devices": [],
+  "setup": {
+    "name": "Rackline module catalog",
+    "source": {
+      "kind": "file",
+      "fileName": "module-catalog.r26"
+    },
+    "blocks": [
+      {
+        "id": 1,
+        "blockType": 261,
+        "name": "Analog 1",
+        "channel": 1
+      },
+      {
+        "id": 2,
+        "blockType": 261,
+        "name": "Analog 2",
+        "channel": 2
+      },
+      {
+        "id": 3,
+        "blockType": 259,
+        "name": "Digital A",
+        "channel": 1
+      },
+      {
+        "id": 4,
+        "blockType": 259,
+        "name": "Digital B",
+        "channel": 2
+      },
+      {
+        "id": 5,
+        "blockType": 262,
+        "name": "Out 1",
+        "channel": 1
+      },
+      {
+        "id": 6,
+        "blockType": 262,
+        "name": "Out 2",
+        "channel": 2
+      },
+      {
+        "id": 7,
+        "blockType": 262,
+        "name": "Out 3",
+        "channel": 3
+      },
+      {
+        "id": 8,
+        "blockType": 262,
+        "name": "Out 4",
+        "channel": 4
+      },
+      {
+        "id": 9,
+        "blockType": 262,
+        "name": "Out 5",
+        "channel": 5
+      },
+      {
+        "id": 10,
+        "blockType": 262,
+        "name": "Out 6",
+        "channel": 6
+      },
+      {
+        "id": 11,
+        "blockType": 1792,
+        "name": "Generator",
+        "channel": 0
+      },
+      {
+        "id": 12,
+        "blockType": 1281,
+        "name": "TOPS Limiter",
+        "channel": 0
+      },
+      {
+        "id": 13,
+        "blockType": 1281,
+        "name": "TOPS Limiter",
+        "channel": 0
+      },
+      {
+        "id": 14,
+        "blockType": 1280,
+        "name": "TOPS Compressor",
+        "channel": 0
+      },
+      {
+        "id": 15,
+        "blockType": 1280,
+        "name": "TOPS Compressor",
+        "channel": 0
+      },
+      {
+        "id": 16,
+        "blockType": 1539,
+        "name": "TOPS PEQ",
+        "channel": 0
+      },
+      {
+        "id": 17,
+        "blockType": 1539,
+        "name": "TOPS PEQ",
+        "channel": 0
+      },
+      {
+        "id": 18,
+        "blockType": 769,
+        "name": "TOPS Delay",
+        "channel": 0
+      },
+      {
+        "id": 19,
+        "blockType": 769,
+        "name": "TOPS Delay",
+        "channel": 0
+      },
+      {
+        "id": 20,
+        "blockType": 384,
+        "name": "TOPS Level",
+        "channel": 0
+      },
+      {
+        "id": 21,
+        "blockType": 384,
+        "name": "TOPS Level",
+        "channel": 0
+      },
+      {
+        "id": 22,
+        "blockType": 1552,
+        "name": "TOPS Crossover",
+        "channel": 0
+      },
+      {
+        "id": 23,
+        "blockType": 1552,
+        "name": "TOPS Crossover",
+        "channel": 0
+      },
+      {
+        "id": 24,
+        "blockType": 1544,
+        "name": "HIGH PEQ",
+        "channel": 0
+      },
+      {
+        "id": 25,
+        "blockType": 1544,
+        "name": "HIGH PEQ",
+        "channel": 0
+      },
+      {
+        "id": 26,
+        "blockType": 769,
+        "name": "HIGH Delay",
+        "channel": 0
+      },
+      {
+        "id": 27,
+        "blockType": 769,
+        "name": "HIGH Delay",
+        "channel": 0
+      },
+      {
+        "id": 28,
+        "blockType": 384,
+        "name": "HIGH Level",
+        "channel": 0
+      },
+      {
+        "id": 29,
+        "blockType": 384,
+        "name": "HIGH Level",
+        "channel": 0
+      },
+      {
+        "id": 30,
+        "blockType": 1281,
+        "name": "HIGH Limiter",
+        "channel": 0
+      },
+      {
+        "id": 31,
+        "blockType": 1281,
+        "name": "HIGH Limiter",
+        "channel": 0
+      },
+      {
+        "id": 32,
+        "blockType": 1539,
+        "name": "MID PEQ",
+        "channel": 0
+      },
+      {
+        "id": 33,
+        "blockType": 1539,
+        "name": "MID PEQ",
+        "channel": 0
+      },
+      {
+        "id": 34,
+        "blockType": 384,
+        "name": "MID Level",
+        "channel": 0
+      },
+      {
+        "id": 35,
+        "blockType": 384,
+        "name": "MID Level",
+        "channel": 0
+      },
+      {
+        "id": 36,
+        "blockType": 1281,
+        "name": "MID Limiter",
+        "channel": 0
+      },
+      {
+        "id": 37,
+        "blockType": 1281,
+        "name": "MID Limiter",
+        "channel": 0
+      },
+      {
+        "id": 38,
+        "blockType": 512,
+        "name": "SUB Mix",
+        "channel": 0
+      },
+      {
+        "id": 39,
+        "blockType": 1551,
+        "name": "SUB Crossover",
+        "channel": 0
+      },
+      {
+        "id": 40,
+        "blockType": 769,
+        "name": "SUB Delay",
+        "channel": 0
+      },
+      {
+        "id": 41,
+        "blockType": 1024,
+        "name": "SUB Meter",
+        "channel": 0
+      },
+      {
+        "id": 42,
+        "blockType": 1539,
+        "name": "SUB PEQ",
+        "channel": 0
+      },
+      {
+        "id": 43,
+        "blockType": 384,
+        "name": "SUB Level",
+        "channel": 0
+      },
+      {
+        "id": 44,
+        "blockType": 1281,
+        "name": "SUB Limiter",
+        "channel": 0
+      },
+      {
+        "id": 45,
+        "blockType": 514,
+        "name": "ROUTING Mix",
+        "channel": 0
+      },
+      {
+        "id": 46,
+        "blockType": 2049,
+        "name": "ROUTING Matrix 2",
+        "channel": 0
+      },
+      {
+        "id": 47,
+        "blockType": 2071,
+        "name": "ROUTING Matrix 6",
+        "channel": 0
+      },
+      {
+        "id": 48,
+        "blockType": 1555,
+        "name": "SPEECH Graphic EQ",
+        "channel": 0
+      },
+      {
+        "id": 49,
+        "blockType": 2561,
+        "name": "SPEECH Feedback",
+        "channel": 0
+      },
+      {
+        "id": 50,
+        "blockType": 1282,
+        "name": "SPEECH AGC",
+        "channel": 0
+      },
+      {
+        "id": 51,
+        "blockType": 1289,
+        "name": "SPEECH Ducker",
+        "channel": 0
+      },
+      {
+        "id": 52,
+        "blockType": 1290,
+        "name": "SPEECH Stereo Ducker",
+        "channel": 0
+      },
+      {
+        "id": 53,
+        "blockType": 1283,
+        "name": "SPEECH Noise Comp",
+        "channel": 0
+      },
+      {
+        "id": 54,
+        "blockType": 2828,
+        "name": "SPEECH Automix",
+        "channel": 0
+      }
+    ],
+    "inputIds": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "outputIds": [
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "racks": [
+      {
+        "id": "tops",
+        "name": "TOPS",
+        "channels": [
+          {
+            "sources": [
+              {
+                "kind": "input",
+                "blockId": 1
+              }
+            ],
+            "outputIds": []
+          },
+          {
+            "sources": [
+              {
+                "kind": "input",
+                "blockId": 2
+              }
+            ],
+            "outputIds": []
+          }
+        ],
+        "modules": [
+          {
+            "blockType": 1281,
+            "blockIds": [
+              12,
+              13
+            ]
+          },
+          {
+            "blockType": 1280,
+            "blockIds": [
+              14,
+              15
+            ]
+          },
+          {
+            "blockType": 1539,
+            "blockIds": [
+              16,
+              17
+            ]
+          },
+          {
+            "blockType": 769,
+            "blockIds": [
+              18,
+              19
+            ]
+          },
+          {
+            "blockType": 384,
+            "blockIds": [
+              20,
+              21
+            ]
+          }
+        ],
+        "crossover": {
+          "blockIds": [
+            [
+              22
+            ],
+            [
+              23
+            ]
+          ],
+          "bands": [
+            {
+              "name": "High"
+            },
+            {
+              "name": "Mid"
+            },
+            {
+              "name": "Low"
+            }
+          ]
+        }
+      },
+      {
+        "id": "high",
+        "name": "HIGH",
+        "channels": [
+          {
+            "sources": [
+              {
+                "kind": "band",
+                "rackId": "tops",
+                "channel": 0,
+                "band": 0
+              }
+            ],
+            "outputIds": [
+              9
+            ]
+          },
+          {
+            "sources": [
+              {
+                "kind": "band",
+                "rackId": "tops",
+                "channel": 1,
+                "band": 0
+              }
+            ],
+            "outputIds": [
+              10
+            ]
+          }
+        ],
+        "modules": [
+          {
+            "blockType": 1544,
+            "blockIds": [
+              24,
+              25
+            ]
+          },
+          {
+            "blockType": 769,
+            "blockIds": [
+              26,
+              27
+            ]
+          },
+          {
+            "blockType": 384,
+            "blockIds": [
+              28,
+              29
+            ]
+          },
+          {
+            "blockType": 1281,
+            "blockIds": [
+              30,
+              31
+            ]
+          }
+        ]
+      },
+      {
+        "id": "mid",
+        "name": "MID",
+        "channels": [
+          {
+            "sources": [
+              {
+                "kind": "band",
+                "rackId": "tops",
+                "channel": 0,
+                "band": 1
+              }
+            ],
+            "outputIds": [
+              7
+            ]
+          },
+          {
+            "sources": [
+              {
+                "kind": "band",
+                "rackId": "tops",
+                "channel": 1,
+                "band": 1
+              }
+            ],
+            "outputIds": [
+              8
+            ]
+          }
+        ],
+        "modules": [
+          {
+            "blockType": 1539,
+            "blockIds": [
+              32,
+              33
+            ]
+          },
+          {
+            "blockType": 384,
+            "blockIds": [
+              34,
+              35
+            ]
+          },
+          {
+            "blockType": 1281,
+            "blockIds": [
+              36,
+              37
+            ]
+          }
+        ]
+      },
+      {
+        "id": "sub",
+        "name": "SUB",
+        "channels": [
+          {
+            "sources": [
+              {
+                "kind": "input",
+                "blockId": 1
+              },
+              {
+                "kind": "input",
+                "blockId": 2
+              }
+            ],
+            "mixerId": 38,
+            "mixerInputs": [
+              0,
+              1
+            ],
+            "outputIds": []
+          }
+        ],
+        "modules": [
+          {
+            "blockType": 769,
+            "blockIds": [
+              40
+            ]
+          },
+          {
+            "blockType": 1024,
+            "blockIds": [
+              41
+            ]
+          }
+        ],
+        "crossover": {
+          "blockIds": [
+            [
+              39
+            ]
+          ],
+          "bands": [
+            {
+              "name": "High"
+            },
+            {
+              "name": "Low"
+            }
+          ]
+        }
+      },
+      {
+        "id": "sub-low",
+        "name": "SUB LOW",
+        "channels": [
+          {
+            "sources": [
+              {
+                "kind": "band",
+                "rackId": "sub",
+                "channel": 0,
+                "band": 1
+              }
+            ],
+            "outputIds": [
+              5,
+              6
+            ]
+          }
+        ],
+        "modules": [
+          {
+            "blockType": 1539,
+            "blockIds": [
+              42
+            ]
+          },
+          {
+            "blockType": 384,
+            "blockIds": [
+              43
+            ]
+          },
+          {
+            "blockType": 1281,
+            "blockIds": [
+              44
+            ]
+          }
+        ]
+      },
+      {
+        "id": "routing",
+        "name": "ROUTING",
+        "channels": [
+          {
+            "sources": [
+              {
+                "kind": "input",
+                "blockId": 3
+              }
+            ],
+            "outputIds": []
+          }
+        ],
+        "modules": [
+          {
+            "blockType": 514,
+            "blockIds": [
+              45
+            ]
+          },
+          {
+            "blockType": 2049,
+            "blockIds": [
+              46
+            ]
+          },
+          {
+            "blockType": 2071,
+            "blockIds": [
+              47
+            ]
+          }
+        ]
+      },
+      {
+        "id": "speech",
+        "name": "SPEECH",
+        "channels": [
+          {
+            "sources": [
+              {
+                "kind": "input",
+                "blockId": 4
+              }
+            ],
+            "outputIds": []
+          }
+        ],
+        "modules": [
+          {
+            "blockType": 1555,
+            "blockIds": [
+              48
+            ]
+          },
+          {
+            "blockType": 2561,
+            "blockIds": [
+              49
+            ]
+          },
+          {
+            "blockType": 1282,
+            "blockIds": [
+              50
+            ]
+          },
+          {
+            "blockType": 1289,
+            "blockIds": [
+              51
+            ]
+          },
+          {
+            "blockType": 1290,
+            "blockIds": [
+              52
+            ]
+          },
+          {
+            "blockType": 1283,
+            "blockIds": [
+              53
+            ]
+          },
+          {
+            "blockType": 2828,
+            "blockIds": [
+              54
+            ]
+          }
+        ]
+      },
+      {
+        "id": "noise",
+        "name": "NOISE",
+        "channels": [
+          {
+            "sources": [
+              {
+                "kind": "generator",
+                "blockId": 11
+              }
+            ],
+            "outputIds": []
+          }
+        ],
+        "modules": []
+      }
+    ],
+    "modules": [
+      {
+        "blockType": 261,
+        "name": "Analog Input",
+        "role": "input",
+        "evidence": "simulator",
+        "params": [
+          {
+            "key": "sensitivity",
+            "label": "Sensitivity",
+            "kind": "enum",
+            "options": [
+              {
+                "value": 0,
+                "label": "Pro (0 dB)"
+              },
+              {
+                "value": 1,
+                "label": "Consumer (+12 dB)"
+              },
+              {
+                "value": 2,
+                "label": "User"
+              }
+            ]
+          },
+          {
+            "key": "userTrim",
+            "label": "User gain",
+            "kind": "number",
+            "unit": "dB",
+            "min": -15,
+            "max": 15,
+            "step": 0.5
+          },
+          {
+            "key": "trim",
+            "label": "Trim",
+            "kind": "number",
+            "unit": "dB",
+            "min": -20,
+            "max": 16,
+            "step": 1
+          },
+          {
+            "key": "mute",
+            "label": "Mute",
+            "kind": "bool"
+          }
+        ],
+        "compact": [
+          "trim",
+          "mute"
+        ]
+      },
+      {
+        "blockType": 259,
+        "name": "Digital Input",
+        "role": "input",
+        "evidence": "simulator",
+        "params": [
+          {
+            "key": "trim",
+            "label": "Trim",
+            "kind": "number",
+            "unit": "dB",
+            "min": -20,
+            "max": 16,
+            "step": 1
+          },
+          {
+            "key": "mute",
+            "label": "Mute",
+            "kind": "bool"
+          }
+        ],
+        "compact": [
+          "trim",
+          "mute"
+        ]
+      },
+      {
+        "blockType": 262,
+        "name": "Output",
+        "role": "output",
+        "evidence": "simulator",
+        "params": [
+          {
+            "key": "trim",
+            "label": "Trim",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 16,
+            "step": 0.5
+          },
+          {
+            "key": "mute",
+            "label": "Mute",
+            "kind": "bool"
+          },
+          {
+            "key": "invert",
+            "label": "Polarity invert",
+            "kind": "bool"
+          }
+        ],
+        "compact": [
+          "trim",
+          "mute",
+          "invert"
+        ]
+      },
+      {
+        "blockType": 384,
+        "name": "Level",
+        "role": "processing",
+        "evidence": "simulator",
+        "params": [
+          {
+            "key": "level",
+            "label": "Level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 16,
+            "step": 0.5
+          },
+          {
+            "key": "options",
+            "label": "Mute / off at minimum",
+            "kind": "flags",
+            "flags": [
+              "mute",
+              "offAtMin"
+            ]
+          },
+          {
+            "key": "min",
+            "label": "Minimum",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 16,
+            "step": 0.5
+          },
+          {
+            "key": "max",
+            "label": "Maximum",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 16,
+            "step": 0.5
+          }
+        ],
+        "compact": [
+          "level",
+          "options"
+        ]
+      },
+      {
+        "blockType": 512,
+        "name": "Mix 2 × 1",
+        "role": "mixer",
+        "evidence": "simulator",
+        "params": [
+          {
+            "key": "input1Level",
+            "label": "Input 1 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 0,
+            "step": 0.5
+          },
+          {
+            "key": "input1Mute",
+            "label": "Input 1 mute",
+            "kind": "bool"
+          },
+          {
+            "key": "input2Level",
+            "label": "Input 2 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 0,
+            "step": 0.5
+          },
+          {
+            "key": "input2Mute",
+            "label": "Input 2 mute",
+            "kind": "bool"
+          },
+          {
+            "key": "outputLevel",
+            "label": "Output level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 16,
+            "step": 0.5
+          },
+          {
+            "key": "outputMute",
+            "label": "Output mute",
+            "kind": "bool"
+          }
+        ],
+        "compact": [
+          "input1Level",
+          "input2Level",
+          "outputLevel"
+        ]
+      },
+      {
+        "blockType": 514,
+        "name": "Mix 4 × 1",
+        "role": "mixer",
+        "evidence": "guessed",
+        "params": [
+          {
+            "key": "input1Level",
+            "label": "Input 1 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 0,
+            "step": 0.5
+          },
+          {
+            "key": "input1Mute",
+            "label": "Input 1 mute",
+            "kind": "bool"
+          },
+          {
+            "key": "input2Level",
+            "label": "Input 2 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 0,
+            "step": 0.5
+          },
+          {
+            "key": "input2Mute",
+            "label": "Input 2 mute",
+            "kind": "bool"
+          },
+          {
+            "key": "input3Level",
+            "label": "Input 3 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 0,
+            "step": 0.5
+          },
+          {
+            "key": "input3Mute",
+            "label": "Input 3 mute",
+            "kind": "bool"
+          },
+          {
+            "key": "input4Level",
+            "label": "Input 4 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 0,
+            "step": 0.5
+          },
+          {
+            "key": "input4Mute",
+            "label": "Input 4 mute",
+            "kind": "bool"
+          },
+          {
+            "key": "outputLevel",
+            "label": "Output level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 16,
+            "step": 0.5
+          },
+          {
+            "key": "outputMute",
+            "label": "Output mute",
+            "kind": "bool"
+          }
+        ],
+        "compact": [
+          "input1Level",
+          "input2Level",
+          "outputLevel"
+        ]
+      },
+      {
+        "blockType": 2049,
+        "name": "Matrix Mix 2 × 2",
+        "role": "mixer",
+        "evidence": "simulator",
+        "params": [
+          {
+            "key": "out1In1Level",
+            "label": "Out 1 ← In 1 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 0,
+            "step": 0.5
+          },
+          {
+            "key": "out1In1Mute",
+            "label": "Out 1 ← In 1 mute",
+            "kind": "bool"
+          },
+          {
+            "key": "out1In2Level",
+            "label": "Out 1 ← In 2 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 0,
+            "step": 0.5
+          },
+          {
+            "key": "out1In2Mute",
+            "label": "Out 1 ← In 2 mute",
+            "kind": "bool"
+          },
+          {
+            "key": "out2In1Level",
+            "label": "Out 2 ← In 1 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 0,
+            "step": 0.5
+          },
+          {
+            "key": "out2In1Mute",
+            "label": "Out 2 ← In 1 mute",
+            "kind": "bool"
+          },
+          {
+            "key": "out2In2Level",
+            "label": "Out 2 ← In 2 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 0,
+            "step": 0.5
+          },
+          {
+            "key": "out2In2Mute",
+            "label": "Out 2 ← In 2 mute",
+            "kind": "bool"
+          },
+          {
+            "key": "input1Level",
+            "label": "Input 1 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -60,
+            "max": 0,
+            "step": 0.5
+          },
+          {
+            "key": "input1Solo",
+            "label": "Input 1 solo",
+            "kind": "bool"
+          },
+          {
+            "key": "input1Mute",
+            "label": "Input 1 mute",
+            "kind": "bool"
+          },
+          {
+            "key": "input1Invert",
+            "label": "Input 1 invert",
+            "kind": "bool"
+          },
+          {
+            "key": "input2Level",
+            "label": "Input 2 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -60,
+            "max": 0,
+            "step": 0.5
+          },
+          {
+            "key": "input2Solo",
+            "label": "Input 2 solo",
+            "kind": "bool"
+          },
+          {
+            "key": "input2Mute",
+            "label": "Input 2 mute",
+            "kind": "bool"
+          },
+          {
+            "key": "input2Invert",
+            "label": "Input 2 invert",
+            "kind": "bool"
+          },
+          {
+            "key": "output1Level",
+            "label": "Output 1 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 16,
+            "step": 0.5
+          },
+          {
+            "key": "output1Solo",
+            "label": "Output 1 solo",
+            "kind": "bool"
+          },
+          {
+            "key": "output1Mute",
+            "label": "Output 1 mute",
+            "kind": "bool"
+          },
+          {
+            "key": "output1Invert",
+            "label": "Output 1 invert",
+            "kind": "bool"
+          },
+          {
+            "key": "output2Level",
+            "label": "Output 2 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 16,
+            "step": 0.5
+          },
+          {
+            "key": "output2Solo",
+            "label": "Output 2 solo",
+            "kind": "bool"
+          },
+          {
+            "key": "output2Mute",
+            "label": "Output 2 mute",
+            "kind": "bool"
+          },
+          {
+            "key": "output2Invert",
+            "label": "Output 2 invert",
+            "kind": "bool"
+          },
+          {
+            "key": "autoCancel",
+            "label": "Auto-cancel solo",
+            "kind": "bool"
+          }
+        ],
+        "compact": [
+          "output1Level",
+          "output2Level"
+        ]
+      },
+      {
+        "blockType": 2071,
+        "name": "Matrix Mix 6 × 6",
+        "role": "mixer",
+        "evidence": "simulator",
+        "params": [
+          {
+            "key": "out1In1Level",
+            "label": "Out 1 ← In 1 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 0,
+            "step": 0.5
+          },
+          {
+            "key": "out1In1Mute",
+            "label": "Out 1 ← In 1 mute",
+            "kind": "bool"
+          },
+          {
+            "key": "out1In2Level",
+            "label": "Out 1 ← In 2 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 0,
+            "step": 0.5
+          },
+          {
+            "key": "out1In2Mute",
+            "label": "Out 1 ← In 2 mute",
+            "kind": "bool"
+          },
+          {
+            "key": "out1In3Level",
+            "label": "Out 1 ← In 3 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 0,
+            "step": 0.5
+          },
+          {
+            "key": "out1In3Mute",
+            "label": "Out 1 ← In 3 mute",
+            "kind": "bool"
+          },
+          {
+            "key": "out1In4Level",
+            "label": "Out 1 ← In 4 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 0,
+            "step": 0.5
+          },
+          {
+            "key": "out1In4Mute",
+            "label": "Out 1 ← In 4 mute",
+            "kind": "bool"
+          },
+          {
+            "key": "out1In5Level",
+            "label": "Out 1 ← In 5 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 0,
+            "step": 0.5
+          },
+          {
+            "key": "out1In5Mute",
+            "label": "Out 1 ← In 5 mute",
+            "kind": "bool"
+          },
+          {
+            "key": "out1In6Level",
+            "label": "Out 1 ← In 6 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 0,
+            "step": 0.5
+          },
+          {
+            "key": "out1In6Mute",
+            "label": "Out 1 ← In 6 mute",
+            "kind": "bool"
+          },
+          {
+            "key": "out2In1Level",
+            "label": "Out 2 ← In 1 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 0,
+            "step": 0.5
+          },
+          {
+            "key": "out2In1Mute",
+            "label": "Out 2 ← In 1 mute",
+            "kind": "bool"
+          },
+          {
+            "key": "out2In2Level",
+            "label": "Out 2 ← In 2 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 0,
+            "step": 0.5
+          },
+          {
+            "key": "out2In2Mute",
+            "label": "Out 2 ← In 2 mute",
+            "kind": "bool"
+          },
+          {
+            "key": "out2In3Level",
+            "label": "Out 2 ← In 3 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 0,
+            "step": 0.5
+          },
+          {
+            "key": "out2In3Mute",
+            "label": "Out 2 ← In 3 mute",
+            "kind": "bool"
+          },
+          {
+            "key": "out2In4Level",
+            "label": "Out 2 ← In 4 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 0,
+            "step": 0.5
+          },
+          {
+            "key": "out2In4Mute",
+            "label": "Out 2 ← In 4 mute",
+            "kind": "bool"
+          },
+          {
+            "key": "out2In5Level",
+            "label": "Out 2 ← In 5 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 0,
+            "step": 0.5
+          },
+          {
+            "key": "out2In5Mute",
+            "label": "Out 2 ← In 5 mute",
+            "kind": "bool"
+          },
+          {
+            "key": "out2In6Level",
+            "label": "Out 2 ← In 6 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 0,
+            "step": 0.5
+          },
+          {
+            "key": "out2In6Mute",
+            "label": "Out 2 ← In 6 mute",
+            "kind": "bool"
+          },
+          {
+            "key": "out3In1Level",
+            "label": "Out 3 ← In 1 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 0,
+            "step": 0.5
+          },
+          {
+            "key": "out3In1Mute",
+            "label": "Out 3 ← In 1 mute",
+            "kind": "bool"
+          },
+          {
+            "key": "out3In2Level",
+            "label": "Out 3 ← In 2 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 0,
+            "step": 0.5
+          },
+          {
+            "key": "out3In2Mute",
+            "label": "Out 3 ← In 2 mute",
+            "kind": "bool"
+          },
+          {
+            "key": "out3In3Level",
+            "label": "Out 3 ← In 3 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 0,
+            "step": 0.5
+          },
+          {
+            "key": "out3In3Mute",
+            "label": "Out 3 ← In 3 mute",
+            "kind": "bool"
+          },
+          {
+            "key": "out3In4Level",
+            "label": "Out 3 ← In 4 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 0,
+            "step": 0.5
+          },
+          {
+            "key": "out3In4Mute",
+            "label": "Out 3 ← In 4 mute",
+            "kind": "bool"
+          },
+          {
+            "key": "out3In5Level",
+            "label": "Out 3 ← In 5 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 0,
+            "step": 0.5
+          },
+          {
+            "key": "out3In5Mute",
+            "label": "Out 3 ← In 5 mute",
+            "kind": "bool"
+          },
+          {
+            "key": "out3In6Level",
+            "label": "Out 3 ← In 6 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 0,
+            "step": 0.5
+          },
+          {
+            "key": "out3In6Mute",
+            "label": "Out 3 ← In 6 mute",
+            "kind": "bool"
+          },
+          {
+            "key": "out4In1Level",
+            "label": "Out 4 ← In 1 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 0,
+            "step": 0.5
+          },
+          {
+            "key": "out4In1Mute",
+            "label": "Out 4 ← In 1 mute",
+            "kind": "bool"
+          },
+          {
+            "key": "out4In2Level",
+            "label": "Out 4 ← In 2 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 0,
+            "step": 0.5
+          },
+          {
+            "key": "out4In2Mute",
+            "label": "Out 4 ← In 2 mute",
+            "kind": "bool"
+          },
+          {
+            "key": "out4In3Level",
+            "label": "Out 4 ← In 3 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 0,
+            "step": 0.5
+          },
+          {
+            "key": "out4In3Mute",
+            "label": "Out 4 ← In 3 mute",
+            "kind": "bool"
+          },
+          {
+            "key": "out4In4Level",
+            "label": "Out 4 ← In 4 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 0,
+            "step": 0.5
+          },
+          {
+            "key": "out4In4Mute",
+            "label": "Out 4 ← In 4 mute",
+            "kind": "bool"
+          },
+          {
+            "key": "out4In5Level",
+            "label": "Out 4 ← In 5 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 0,
+            "step": 0.5
+          },
+          {
+            "key": "out4In5Mute",
+            "label": "Out 4 ← In 5 mute",
+            "kind": "bool"
+          },
+          {
+            "key": "out4In6Level",
+            "label": "Out 4 ← In 6 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 0,
+            "step": 0.5
+          },
+          {
+            "key": "out4In6Mute",
+            "label": "Out 4 ← In 6 mute",
+            "kind": "bool"
+          },
+          {
+            "key": "out5In1Level",
+            "label": "Out 5 ← In 1 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 0,
+            "step": 0.5
+          },
+          {
+            "key": "out5In1Mute",
+            "label": "Out 5 ← In 1 mute",
+            "kind": "bool"
+          },
+          {
+            "key": "out5In2Level",
+            "label": "Out 5 ← In 2 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 0,
+            "step": 0.5
+          },
+          {
+            "key": "out5In2Mute",
+            "label": "Out 5 ← In 2 mute",
+            "kind": "bool"
+          },
+          {
+            "key": "out5In3Level",
+            "label": "Out 5 ← In 3 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 0,
+            "step": 0.5
+          },
+          {
+            "key": "out5In3Mute",
+            "label": "Out 5 ← In 3 mute",
+            "kind": "bool"
+          },
+          {
+            "key": "out5In4Level",
+            "label": "Out 5 ← In 4 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 0,
+            "step": 0.5
+          },
+          {
+            "key": "out5In4Mute",
+            "label": "Out 5 ← In 4 mute",
+            "kind": "bool"
+          },
+          {
+            "key": "out5In5Level",
+            "label": "Out 5 ← In 5 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 0,
+            "step": 0.5
+          },
+          {
+            "key": "out5In5Mute",
+            "label": "Out 5 ← In 5 mute",
+            "kind": "bool"
+          },
+          {
+            "key": "out5In6Level",
+            "label": "Out 5 ← In 6 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 0,
+            "step": 0.5
+          },
+          {
+            "key": "out5In6Mute",
+            "label": "Out 5 ← In 6 mute",
+            "kind": "bool"
+          },
+          {
+            "key": "out6In1Level",
+            "label": "Out 6 ← In 1 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 0,
+            "step": 0.5
+          },
+          {
+            "key": "out6In1Mute",
+            "label": "Out 6 ← In 1 mute",
+            "kind": "bool"
+          },
+          {
+            "key": "out6In2Level",
+            "label": "Out 6 ← In 2 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 0,
+            "step": 0.5
+          },
+          {
+            "key": "out6In2Mute",
+            "label": "Out 6 ← In 2 mute",
+            "kind": "bool"
+          },
+          {
+            "key": "out6In3Level",
+            "label": "Out 6 ← In 3 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 0,
+            "step": 0.5
+          },
+          {
+            "key": "out6In3Mute",
+            "label": "Out 6 ← In 3 mute",
+            "kind": "bool"
+          },
+          {
+            "key": "out6In4Level",
+            "label": "Out 6 ← In 4 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 0,
+            "step": 0.5
+          },
+          {
+            "key": "out6In4Mute",
+            "label": "Out 6 ← In 4 mute",
+            "kind": "bool"
+          },
+          {
+            "key": "out6In5Level",
+            "label": "Out 6 ← In 5 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 0,
+            "step": 0.5
+          },
+          {
+            "key": "out6In5Mute",
+            "label": "Out 6 ← In 5 mute",
+            "kind": "bool"
+          },
+          {
+            "key": "out6In6Level",
+            "label": "Out 6 ← In 6 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 0,
+            "step": 0.5
+          },
+          {
+            "key": "out6In6Mute",
+            "label": "Out 6 ← In 6 mute",
+            "kind": "bool"
+          },
+          {
+            "key": "input1Level",
+            "label": "Input 1 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -60,
+            "max": 0,
+            "step": 0.5
+          },
+          {
+            "key": "input1Solo",
+            "label": "Input 1 solo",
+            "kind": "bool"
+          },
+          {
+            "key": "input1Mute",
+            "label": "Input 1 mute",
+            "kind": "bool"
+          },
+          {
+            "key": "input1Invert",
+            "label": "Input 1 invert",
+            "kind": "bool"
+          },
+          {
+            "key": "input2Level",
+            "label": "Input 2 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -60,
+            "max": 0,
+            "step": 0.5
+          },
+          {
+            "key": "input2Solo",
+            "label": "Input 2 solo",
+            "kind": "bool"
+          },
+          {
+            "key": "input2Mute",
+            "label": "Input 2 mute",
+            "kind": "bool"
+          },
+          {
+            "key": "input2Invert",
+            "label": "Input 2 invert",
+            "kind": "bool"
+          },
+          {
+            "key": "input3Level",
+            "label": "Input 3 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -60,
+            "max": 0,
+            "step": 0.5
+          },
+          {
+            "key": "input3Solo",
+            "label": "Input 3 solo",
+            "kind": "bool"
+          },
+          {
+            "key": "input3Mute",
+            "label": "Input 3 mute",
+            "kind": "bool"
+          },
+          {
+            "key": "input3Invert",
+            "label": "Input 3 invert",
+            "kind": "bool"
+          },
+          {
+            "key": "input4Level",
+            "label": "Input 4 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -60,
+            "max": 0,
+            "step": 0.5
+          },
+          {
+            "key": "input4Solo",
+            "label": "Input 4 solo",
+            "kind": "bool"
+          },
+          {
+            "key": "input4Mute",
+            "label": "Input 4 mute",
+            "kind": "bool"
+          },
+          {
+            "key": "input4Invert",
+            "label": "Input 4 invert",
+            "kind": "bool"
+          },
+          {
+            "key": "input5Level",
+            "label": "Input 5 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -60,
+            "max": 0,
+            "step": 0.5
+          },
+          {
+            "key": "input5Solo",
+            "label": "Input 5 solo",
+            "kind": "bool"
+          },
+          {
+            "key": "input5Mute",
+            "label": "Input 5 mute",
+            "kind": "bool"
+          },
+          {
+            "key": "input5Invert",
+            "label": "Input 5 invert",
+            "kind": "bool"
+          },
+          {
+            "key": "input6Level",
+            "label": "Input 6 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -60,
+            "max": 0,
+            "step": 0.5
+          },
+          {
+            "key": "input6Solo",
+            "label": "Input 6 solo",
+            "kind": "bool"
+          },
+          {
+            "key": "input6Mute",
+            "label": "Input 6 mute",
+            "kind": "bool"
+          },
+          {
+            "key": "input6Invert",
+            "label": "Input 6 invert",
+            "kind": "bool"
+          },
+          {
+            "key": "output1Level",
+            "label": "Output 1 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 16,
+            "step": 0.5
+          },
+          {
+            "key": "output1Solo",
+            "label": "Output 1 solo",
+            "kind": "bool"
+          },
+          {
+            "key": "output1Mute",
+            "label": "Output 1 mute",
+            "kind": "bool"
+          },
+          {
+            "key": "output1Invert",
+            "label": "Output 1 invert",
+            "kind": "bool"
+          },
+          {
+            "key": "output2Level",
+            "label": "Output 2 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 16,
+            "step": 0.5
+          },
+          {
+            "key": "output2Solo",
+            "label": "Output 2 solo",
+            "kind": "bool"
+          },
+          {
+            "key": "output2Mute",
+            "label": "Output 2 mute",
+            "kind": "bool"
+          },
+          {
+            "key": "output2Invert",
+            "label": "Output 2 invert",
+            "kind": "bool"
+          },
+          {
+            "key": "output3Level",
+            "label": "Output 3 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 16,
+            "step": 0.5
+          },
+          {
+            "key": "output3Solo",
+            "label": "Output 3 solo",
+            "kind": "bool"
+          },
+          {
+            "key": "output3Mute",
+            "label": "Output 3 mute",
+            "kind": "bool"
+          },
+          {
+            "key": "output3Invert",
+            "label": "Output 3 invert",
+            "kind": "bool"
+          },
+          {
+            "key": "output4Level",
+            "label": "Output 4 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 16,
+            "step": 0.5
+          },
+          {
+            "key": "output4Solo",
+            "label": "Output 4 solo",
+            "kind": "bool"
+          },
+          {
+            "key": "output4Mute",
+            "label": "Output 4 mute",
+            "kind": "bool"
+          },
+          {
+            "key": "output4Invert",
+            "label": "Output 4 invert",
+            "kind": "bool"
+          },
+          {
+            "key": "output5Level",
+            "label": "Output 5 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 16,
+            "step": 0.5
+          },
+          {
+            "key": "output5Solo",
+            "label": "Output 5 solo",
+            "kind": "bool"
+          },
+          {
+            "key": "output5Mute",
+            "label": "Output 5 mute",
+            "kind": "bool"
+          },
+          {
+            "key": "output5Invert",
+            "label": "Output 5 invert",
+            "kind": "bool"
+          },
+          {
+            "key": "output6Level",
+            "label": "Output 6 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 16,
+            "step": 0.5
+          },
+          {
+            "key": "output6Solo",
+            "label": "Output 6 solo",
+            "kind": "bool"
+          },
+          {
+            "key": "output6Mute",
+            "label": "Output 6 mute",
+            "kind": "bool"
+          },
+          {
+            "key": "output6Invert",
+            "label": "Output 6 invert",
+            "kind": "bool"
+          },
+          {
+            "key": "autoCancel",
+            "label": "Auto-cancel solo",
+            "kind": "bool"
+          }
+        ],
+        "compact": [
+          "output1Level",
+          "output2Level"
+        ]
+      },
+      {
+        "blockType": 2828,
+        "name": "Auto Mixer / Ducker 4 × 4",
+        "role": "mixer",
+        "evidence": "simulator",
+        "params": [
+          {
+            "key": "out1In1Level",
+            "label": "Out 1 ← In 1 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 0,
+            "step": 0.5
+          },
+          {
+            "key": "out1In1Assign",
+            "label": "Out 1 ← In 1 assigned",
+            "kind": "bool"
+          },
+          {
+            "key": "out1In2Level",
+            "label": "Out 1 ← In 2 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 0,
+            "step": 0.5
+          },
+          {
+            "key": "out1In2Assign",
+            "label": "Out 1 ← In 2 assigned",
+            "kind": "bool"
+          },
+          {
+            "key": "out1In3Level",
+            "label": "Out 1 ← In 3 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 0,
+            "step": 0.5
+          },
+          {
+            "key": "out1In3Assign",
+            "label": "Out 1 ← In 3 assigned",
+            "kind": "bool"
+          },
+          {
+            "key": "out1In4Level",
+            "label": "Out 1 ← In 4 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 0,
+            "step": 0.5
+          },
+          {
+            "key": "out1In4Assign",
+            "label": "Out 1 ← In 4 assigned",
+            "kind": "bool"
+          },
+          {
+            "key": "out2In1Level",
+            "label": "Out 2 ← In 1 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 0,
+            "step": 0.5
+          },
+          {
+            "key": "out2In1Assign",
+            "label": "Out 2 ← In 1 assigned",
+            "kind": "bool"
+          },
+          {
+            "key": "out2In2Level",
+            "label": "Out 2 ← In 2 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 0,
+            "step": 0.5
+          },
+          {
+            "key": "out2In2Assign",
+            "label": "Out 2 ← In 2 assigned",
+            "kind": "bool"
+          },
+          {
+            "key": "out2In3Level",
+            "label": "Out 2 ← In 3 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 0,
+            "step": 0.5
+          },
+          {
+            "key": "out2In3Assign",
+            "label": "Out 2 ← In 3 assigned",
+            "kind": "bool"
+          },
+          {
+            "key": "out2In4Level",
+            "label": "Out 2 ← In 4 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 0,
+            "step": 0.5
+          },
+          {
+            "key": "out2In4Assign",
+            "label": "Out 2 ← In 4 assigned",
+            "kind": "bool"
+          },
+          {
+            "key": "out3In1Level",
+            "label": "Out 3 ← In 1 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 0,
+            "step": 0.5
+          },
+          {
+            "key": "out3In1Assign",
+            "label": "Out 3 ← In 1 assigned",
+            "kind": "bool"
+          },
+          {
+            "key": "out3In2Level",
+            "label": "Out 3 ← In 2 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 0,
+            "step": 0.5
+          },
+          {
+            "key": "out3In2Assign",
+            "label": "Out 3 ← In 2 assigned",
+            "kind": "bool"
+          },
+          {
+            "key": "out3In3Level",
+            "label": "Out 3 ← In 3 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 0,
+            "step": 0.5
+          },
+          {
+            "key": "out3In3Assign",
+            "label": "Out 3 ← In 3 assigned",
+            "kind": "bool"
+          },
+          {
+            "key": "out3In4Level",
+            "label": "Out 3 ← In 4 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 0,
+            "step": 0.5
+          },
+          {
+            "key": "out3In4Assign",
+            "label": "Out 3 ← In 4 assigned",
+            "kind": "bool"
+          },
+          {
+            "key": "out4In1Level",
+            "label": "Out 4 ← In 1 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 0,
+            "step": 0.5
+          },
+          {
+            "key": "out4In1Assign",
+            "label": "Out 4 ← In 1 assigned",
+            "kind": "bool"
+          },
+          {
+            "key": "out4In2Level",
+            "label": "Out 4 ← In 2 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 0,
+            "step": 0.5
+          },
+          {
+            "key": "out4In2Assign",
+            "label": "Out 4 ← In 2 assigned",
+            "kind": "bool"
+          },
+          {
+            "key": "out4In3Level",
+            "label": "Out 4 ← In 3 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 0,
+            "step": 0.5
+          },
+          {
+            "key": "out4In3Assign",
+            "label": "Out 4 ← In 3 assigned",
+            "kind": "bool"
+          },
+          {
+            "key": "out4In4Level",
+            "label": "Out 4 ← In 4 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 0,
+            "step": 0.5
+          },
+          {
+            "key": "out4In4Assign",
+            "label": "Out 4 ← In 4 assigned",
+            "kind": "bool"
+          },
+          {
+            "key": "input1Threshold",
+            "label": "Input 1 detect threshold",
+            "kind": "number",
+            "unit": "dBFS",
+            "min": -70,
+            "max": -12,
+            "step": 1
+          },
+          {
+            "key": "input1HoldOff",
+            "label": "Input 1 hold-off",
+            "kind": "number",
+            "unit": "s",
+            "min": 0,
+            "max": 63,
+            "step": 1
+          },
+          {
+            "key": "input1Priority",
+            "label": "Input 1 priority",
+            "kind": "enum",
+            "options": [
+              {
+                "value": 2,
+                "label": "1"
+              },
+              {
+                "value": 3,
+                "label": "2"
+              },
+              {
+                "value": 4,
+                "label": "3"
+              },
+              {
+                "value": 5,
+                "label": "4"
+              },
+              {
+                "value": 6,
+                "label": "5"
+              },
+              {
+                "value": 7,
+                "label": "6"
+              },
+              {
+                "value": 8,
+                "label": "7"
+              },
+              {
+                "value": 9,
+                "label": "8"
+              }
+            ]
+          },
+          {
+            "key": "input1DuckDepth",
+            "label": "Input 1 duck depth",
+            "kind": "number",
+            "unit": "dB",
+            "min": -80,
+            "max": 0,
+            "step": 1
+          },
+          {
+            "key": "input1RampBack",
+            "label": "Input 1 ramp-back",
+            "kind": "number",
+            "unit": "s",
+            "min": 0,
+            "max": 63,
+            "step": 1
+          },
+          {
+            "key": "input1GateDepth",
+            "label": "Input 1 gate depth",
+            "kind": "steps",
+            "unit": "dB",
+            "steps": [
+              "-inf",
+              -95,
+              -94,
+              -93,
+              -92,
+              -91,
+              -90,
+              -89,
+              -88,
+              -87,
+              -86,
+              -85,
+              -84,
+              -83,
+              -82,
+              -81,
+              -80,
+              -79,
+              -78,
+              -77,
+              -76,
+              -75,
+              -74,
+              -73,
+              -72,
+              -71,
+              -70,
+              -69,
+              -68,
+              -67,
+              -66,
+              -65,
+              -64,
+              -63,
+              -62,
+              -61,
+              -60,
+              -59,
+              -58,
+              -57,
+              -56,
+              -55,
+              -54,
+              -53,
+              -52,
+              -51,
+              -50,
+              -49,
+              -48,
+              -47,
+              -46,
+              -45,
+              -44,
+              -43,
+              -42,
+              -41,
+              -40,
+              -39,
+              -38,
+              -37,
+              -36,
+              -35,
+              -34,
+              -33,
+              -32,
+              -31,
+              -30,
+              -29,
+              -28,
+              -27,
+              -26,
+              -25,
+              -24,
+              -23,
+              -22,
+              -21,
+              -20,
+              -19,
+              -18,
+              -17,
+              -16,
+              -15,
+              -14,
+              -13,
+              -12,
+              -11,
+              -10,
+              -9,
+              -8,
+              -7,
+              -6,
+              -5,
+              -4,
+              -3,
+              -2,
+              -1,
+              0
+            ]
+          },
+          {
+            "key": "input2Threshold",
+            "label": "Input 2 detect threshold",
+            "kind": "number",
+            "unit": "dBFS",
+            "min": -70,
+            "max": -12,
+            "step": 1
+          },
+          {
+            "key": "input2HoldOff",
+            "label": "Input 2 hold-off",
+            "kind": "number",
+            "unit": "s",
+            "min": 0,
+            "max": 63,
+            "step": 1
+          },
+          {
+            "key": "input2Priority",
+            "label": "Input 2 priority",
+            "kind": "enum",
+            "options": [
+              {
+                "value": 2,
+                "label": "1"
+              },
+              {
+                "value": 3,
+                "label": "2"
+              },
+              {
+                "value": 4,
+                "label": "3"
+              },
+              {
+                "value": 5,
+                "label": "4"
+              },
+              {
+                "value": 6,
+                "label": "5"
+              },
+              {
+                "value": 7,
+                "label": "6"
+              },
+              {
+                "value": 8,
+                "label": "7"
+              },
+              {
+                "value": 9,
+                "label": "8"
+              }
+            ]
+          },
+          {
+            "key": "input2DuckDepth",
+            "label": "Input 2 duck depth",
+            "kind": "number",
+            "unit": "dB",
+            "min": -80,
+            "max": 0,
+            "step": 1
+          },
+          {
+            "key": "input2RampBack",
+            "label": "Input 2 ramp-back",
+            "kind": "number",
+            "unit": "s",
+            "min": 0,
+            "max": 63,
+            "step": 1
+          },
+          {
+            "key": "input2GateDepth",
+            "label": "Input 2 gate depth",
+            "kind": "steps",
+            "unit": "dB",
+            "steps": [
+              "-inf",
+              -95,
+              -94,
+              -93,
+              -92,
+              -91,
+              -90,
+              -89,
+              -88,
+              -87,
+              -86,
+              -85,
+              -84,
+              -83,
+              -82,
+              -81,
+              -80,
+              -79,
+              -78,
+              -77,
+              -76,
+              -75,
+              -74,
+              -73,
+              -72,
+              -71,
+              -70,
+              -69,
+              -68,
+              -67,
+              -66,
+              -65,
+              -64,
+              -63,
+              -62,
+              -61,
+              -60,
+              -59,
+              -58,
+              -57,
+              -56,
+              -55,
+              -54,
+              -53,
+              -52,
+              -51,
+              -50,
+              -49,
+              -48,
+              -47,
+              -46,
+              -45,
+              -44,
+              -43,
+              -42,
+              -41,
+              -40,
+              -39,
+              -38,
+              -37,
+              -36,
+              -35,
+              -34,
+              -33,
+              -32,
+              -31,
+              -30,
+              -29,
+              -28,
+              -27,
+              -26,
+              -25,
+              -24,
+              -23,
+              -22,
+              -21,
+              -20,
+              -19,
+              -18,
+              -17,
+              -16,
+              -15,
+              -14,
+              -13,
+              -12,
+              -11,
+              -10,
+              -9,
+              -8,
+              -7,
+              -6,
+              -5,
+              -4,
+              -3,
+              -2,
+              -1,
+              0
+            ]
+          },
+          {
+            "key": "input3Threshold",
+            "label": "Input 3 detect threshold",
+            "kind": "number",
+            "unit": "dBFS",
+            "min": -70,
+            "max": -12,
+            "step": 1
+          },
+          {
+            "key": "input3HoldOff",
+            "label": "Input 3 hold-off",
+            "kind": "number",
+            "unit": "s",
+            "min": 0,
+            "max": 63,
+            "step": 1
+          },
+          {
+            "key": "input3Priority",
+            "label": "Input 3 priority",
+            "kind": "enum",
+            "options": [
+              {
+                "value": 2,
+                "label": "1"
+              },
+              {
+                "value": 3,
+                "label": "2"
+              },
+              {
+                "value": 4,
+                "label": "3"
+              },
+              {
+                "value": 5,
+                "label": "4"
+              },
+              {
+                "value": 6,
+                "label": "5"
+              },
+              {
+                "value": 7,
+                "label": "6"
+              },
+              {
+                "value": 8,
+                "label": "7"
+              },
+              {
+                "value": 9,
+                "label": "8"
+              }
+            ]
+          },
+          {
+            "key": "input3DuckDepth",
+            "label": "Input 3 duck depth",
+            "kind": "number",
+            "unit": "dB",
+            "min": -80,
+            "max": 0,
+            "step": 1
+          },
+          {
+            "key": "input3RampBack",
+            "label": "Input 3 ramp-back",
+            "kind": "number",
+            "unit": "s",
+            "min": 0,
+            "max": 63,
+            "step": 1
+          },
+          {
+            "key": "input3GateDepth",
+            "label": "Input 3 gate depth",
+            "kind": "steps",
+            "unit": "dB",
+            "steps": [
+              "-inf",
+              -95,
+              -94,
+              -93,
+              -92,
+              -91,
+              -90,
+              -89,
+              -88,
+              -87,
+              -86,
+              -85,
+              -84,
+              -83,
+              -82,
+              -81,
+              -80,
+              -79,
+              -78,
+              -77,
+              -76,
+              -75,
+              -74,
+              -73,
+              -72,
+              -71,
+              -70,
+              -69,
+              -68,
+              -67,
+              -66,
+              -65,
+              -64,
+              -63,
+              -62,
+              -61,
+              -60,
+              -59,
+              -58,
+              -57,
+              -56,
+              -55,
+              -54,
+              -53,
+              -52,
+              -51,
+              -50,
+              -49,
+              -48,
+              -47,
+              -46,
+              -45,
+              -44,
+              -43,
+              -42,
+              -41,
+              -40,
+              -39,
+              -38,
+              -37,
+              -36,
+              -35,
+              -34,
+              -33,
+              -32,
+              -31,
+              -30,
+              -29,
+              -28,
+              -27,
+              -26,
+              -25,
+              -24,
+              -23,
+              -22,
+              -21,
+              -20,
+              -19,
+              -18,
+              -17,
+              -16,
+              -15,
+              -14,
+              -13,
+              -12,
+              -11,
+              -10,
+              -9,
+              -8,
+              -7,
+              -6,
+              -5,
+              -4,
+              -3,
+              -2,
+              -1,
+              0
+            ]
+          },
+          {
+            "key": "input4Threshold",
+            "label": "Input 4 detect threshold",
+            "kind": "number",
+            "unit": "dBFS",
+            "min": -70,
+            "max": -12,
+            "step": 1
+          },
+          {
+            "key": "input4HoldOff",
+            "label": "Input 4 hold-off",
+            "kind": "number",
+            "unit": "s",
+            "min": 0,
+            "max": 63,
+            "step": 1
+          },
+          {
+            "key": "input4Priority",
+            "label": "Input 4 priority",
+            "kind": "enum",
+            "options": [
+              {
+                "value": 2,
+                "label": "1"
+              },
+              {
+                "value": 3,
+                "label": "2"
+              },
+              {
+                "value": 4,
+                "label": "3"
+              },
+              {
+                "value": 5,
+                "label": "4"
+              },
+              {
+                "value": 6,
+                "label": "5"
+              },
+              {
+                "value": 7,
+                "label": "6"
+              },
+              {
+                "value": 8,
+                "label": "7"
+              },
+              {
+                "value": 9,
+                "label": "8"
+              }
+            ]
+          },
+          {
+            "key": "input4DuckDepth",
+            "label": "Input 4 duck depth",
+            "kind": "number",
+            "unit": "dB",
+            "min": -80,
+            "max": 0,
+            "step": 1
+          },
+          {
+            "key": "input4RampBack",
+            "label": "Input 4 ramp-back",
+            "kind": "number",
+            "unit": "s",
+            "min": 0,
+            "max": 63,
+            "step": 1
+          },
+          {
+            "key": "input4GateDepth",
+            "label": "Input 4 gate depth",
+            "kind": "steps",
+            "unit": "dB",
+            "steps": [
+              "-inf",
+              -95,
+              -94,
+              -93,
+              -92,
+              -91,
+              -90,
+              -89,
+              -88,
+              -87,
+              -86,
+              -85,
+              -84,
+              -83,
+              -82,
+              -81,
+              -80,
+              -79,
+              -78,
+              -77,
+              -76,
+              -75,
+              -74,
+              -73,
+              -72,
+              -71,
+              -70,
+              -69,
+              -68,
+              -67,
+              -66,
+              -65,
+              -64,
+              -63,
+              -62,
+              -61,
+              -60,
+              -59,
+              -58,
+              -57,
+              -56,
+              -55,
+              -54,
+              -53,
+              -52,
+              -51,
+              -50,
+              -49,
+              -48,
+              -47,
+              -46,
+              -45,
+              -44,
+              -43,
+              -42,
+              -41,
+              -40,
+              -39,
+              -38,
+              -37,
+              -36,
+              -35,
+              -34,
+              -33,
+              -32,
+              -31,
+              -30,
+              -29,
+              -28,
+              -27,
+              -26,
+              -25,
+              -24,
+              -23,
+              -22,
+              -21,
+              -20,
+              -19,
+              -18,
+              -17,
+              -16,
+              -15,
+              -14,
+              -13,
+              -12,
+              -11,
+              -10,
+              -9,
+              -8,
+              -7,
+              -6,
+              -5,
+              -4,
+              -3,
+              -2,
+              -1,
+              0
+            ]
+          },
+          {
+            "key": "output1Level",
+            "label": "Output 1 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 16,
+            "step": 0.5
+          },
+          {
+            "key": "output1Mute",
+            "label": "Output 1 mute",
+            "kind": "bool"
+          },
+          {
+            "key": "output2Level",
+            "label": "Output 2 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 16,
+            "step": 0.5
+          },
+          {
+            "key": "output2Mute",
+            "label": "Output 2 mute",
+            "kind": "bool"
+          },
+          {
+            "key": "output3Level",
+            "label": "Output 3 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 16,
+            "step": 0.5
+          },
+          {
+            "key": "output3Mute",
+            "label": "Output 3 mute",
+            "kind": "bool"
+          },
+          {
+            "key": "output4Level",
+            "label": "Output 4 level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 16,
+            "step": 0.5
+          },
+          {
+            "key": "output4Mute",
+            "label": "Output 4 mute",
+            "kind": "bool"
+          },
+          {
+            "key": "nomMode",
+            "label": "NOM mode",
+            "kind": "bool"
+          }
+        ],
+        "compact": [
+          "output1Level"
+        ]
+      },
+      {
+        "blockType": 1024,
+        "name": "Meter",
+        "role": "processing",
+        "evidence": "simulator",
+        "params": [],
+        "compact": []
+      },
+      {
+        "blockType": 769,
+        "name": "Delay",
+        "role": "processing",
+        "evidence": "simulator",
+        "params": [
+          {
+            "key": "delay",
+            "label": "Delay",
+            "kind": "number",
+            "unit": "ms",
+            "min": 0,
+            "max": 1365,
+            "step": 0.020833333333333332
+          }
+        ],
+        "compact": [
+          "delay"
+        ]
+      },
+      {
+        "blockType": 1280,
+        "name": "Compressor",
+        "role": "processing",
+        "evidence": "simulator",
+        "params": [
+          {
+            "key": "threshold",
+            "label": "Threshold",
+            "kind": "number",
+            "unit": "dBFS",
+            "min": -40,
+            "max": 0,
+            "step": 1
+          },
+          {
+            "key": "attack",
+            "label": "Attack",
+            "kind": "steps",
+            "unit": "ms",
+            "steps": [
+              0.5,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              20,
+              25,
+              50,
+              75,
+              100
+            ]
+          },
+          {
+            "key": "release",
+            "label": "Release",
+            "kind": "steps",
+            "unit": "ms",
+            "steps": [
+              1,
+              5,
+              10,
+              25,
+              50,
+              75,
+              100,
+              250,
+              500,
+              750,
+              1000,
+              2000,
+              3000,
+              4000,
+              5000
+            ]
+          },
+          {
+            "key": "ratio",
+            "label": "Ratio",
+            "kind": "steps",
+            "unit": "ratio",
+            "steps": [
+              1,
+              1.1,
+              1.2,
+              1.3,
+              1.4,
+              1.5,
+              1.6,
+              1.7,
+              1.8,
+              1.9,
+              2,
+              2.2,
+              2.4,
+              2.6,
+              2.8,
+              3,
+              3.25,
+              3.5,
+              3.75,
+              4,
+              4.5,
+              5,
+              6,
+              8,
+              10,
+              12,
+              15,
+              20,
+              "inf"
+            ]
+          }
+        ],
+        "compact": [
+          "threshold",
+          "ratio"
+        ]
+      },
+      {
+        "blockType": 1281,
+        "name": "Limiter",
+        "role": "processing",
+        "evidence": "simulator",
+        "params": [
+          {
+            "key": "threshold",
+            "label": "Threshold",
+            "kind": "number",
+            "unit": "dBFS",
+            "min": -40,
+            "max": 0,
+            "step": 0.5
+          },
+          {
+            "key": "attack",
+            "label": "Attack",
+            "kind": "steps",
+            "unit": "ms",
+            "steps": [
+              0.5,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              20,
+              25,
+              50,
+              75,
+              100
+            ]
+          },
+          {
+            "key": "release",
+            "label": "Release",
+            "kind": "steps",
+            "unit": "ms",
+            "steps": [
+              1,
+              5,
+              10,
+              25,
+              50,
+              75,
+              100,
+              250,
+              500,
+              750,
+              1000,
+              2000,
+              3000,
+              4000,
+              5000
+            ]
+          }
+        ],
+        "compact": [
+          "threshold"
+        ]
+      },
+      {
+        "blockType": 1289,
+        "name": "Mono S-C Compressor",
+        "role": "processing",
+        "evidence": "simulator",
+        "params": [
+          {
+            "key": "threshold",
+            "label": "Threshold",
+            "kind": "number",
+            "unit": "dBFS",
+            "min": -40,
+            "max": 0,
+            "step": 1
+          },
+          {
+            "key": "ratio",
+            "label": "Ratio",
+            "kind": "steps",
+            "unit": "ratio",
+            "steps": [
+              1,
+              1.1,
+              1.2,
+              1.3,
+              1.4,
+              1.5,
+              1.6,
+              1.7,
+              1.8,
+              1.9,
+              2,
+              2.1,
+              2.2,
+              2.3,
+              2.4,
+              2.5,
+              2.6,
+              2.7,
+              2.8,
+              2.9,
+              3,
+              3.1,
+              3.2,
+              3.3,
+              3.4,
+              3.5,
+              3.6,
+              3.7,
+              3.8,
+              3.9,
+              4,
+              4.1,
+              4.2,
+              4.3,
+              4.4,
+              4.5,
+              4.6,
+              4.7,
+              4.8,
+              4.9,
+              5,
+              5.1,
+              5.2,
+              5.3,
+              5.4,
+              5.5,
+              5.6,
+              5.7,
+              5.8,
+              5.9,
+              6,
+              6.1,
+              6.2,
+              6.3,
+              6.4,
+              6.5,
+              6.6,
+              6.7,
+              6.8,
+              6.9,
+              7,
+              7.1,
+              7.2,
+              7.3,
+              7.4,
+              7.5,
+              7.6,
+              7.7,
+              7.8,
+              7.9,
+              8,
+              8.1,
+              8.2,
+              8.3,
+              8.4,
+              8.5,
+              8.6,
+              8.7,
+              8.8,
+              8.9,
+              9,
+              9.1,
+              9.2,
+              9.3,
+              9.4,
+              9.5,
+              9.6,
+              9.7,
+              9.8,
+              9.9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              16,
+              17,
+              18,
+              19,
+              20,
+              21,
+              22,
+              23,
+              24,
+              25,
+              26,
+              27,
+              28,
+              29,
+              30,
+              31,
+              32,
+              33,
+              34,
+              35,
+              36,
+              37,
+              38,
+              39,
+              40,
+              41,
+              42,
+              43,
+              44,
+              45,
+              46,
+              47
+            ]
+          },
+          {
+            "key": "attack",
+            "label": "Attack",
+            "kind": "number",
+            "unit": "dB/s",
+            "min": 0,
+            "max": 255,
+            "step": 1
+          },
+          {
+            "key": "release",
+            "label": "Release",
+            "kind": "number",
+            "unit": "dB/s",
+            "min": 0,
+            "max": 255,
+            "step": 1
+          },
+          {
+            "key": "knee",
+            "label": "Knee",
+            "kind": "number",
+            "unit": "dB",
+            "min": 0,
+            "max": 20,
+            "step": 1
+          },
+          {
+            "key": "bypass",
+            "label": "Bypass",
+            "kind": "bool"
+          }
+        ],
+        "compact": [
+          "threshold",
+          "ratio"
+        ]
+      },
+      {
+        "blockType": 1290,
+        "name": "Stereo S-C Compressor",
+        "role": "processing",
+        "evidence": "simulator",
+        "params": [
+          {
+            "key": "threshold",
+            "label": "Threshold",
+            "kind": "number",
+            "unit": "dBFS",
+            "min": -40,
+            "max": 0,
+            "step": 1
+          },
+          {
+            "key": "ratio",
+            "label": "Ratio",
+            "kind": "steps",
+            "unit": "ratio",
+            "steps": [
+              1,
+              1.1,
+              1.2,
+              1.3,
+              1.4,
+              1.5,
+              1.6,
+              1.7,
+              1.8,
+              1.9,
+              2,
+              2.1,
+              2.2,
+              2.3,
+              2.4,
+              2.5,
+              2.6,
+              2.7,
+              2.8,
+              2.9,
+              3,
+              3.1,
+              3.2,
+              3.3,
+              3.4,
+              3.5,
+              3.6,
+              3.7,
+              3.8,
+              3.9,
+              4,
+              4.1,
+              4.2,
+              4.3,
+              4.4,
+              4.5,
+              4.6,
+              4.7,
+              4.8,
+              4.9,
+              5,
+              5.1,
+              5.2,
+              5.3,
+              5.4,
+              5.5,
+              5.6,
+              5.7,
+              5.8,
+              5.9,
+              6,
+              6.1,
+              6.2,
+              6.3,
+              6.4,
+              6.5,
+              6.6,
+              6.7,
+              6.8,
+              6.9,
+              7,
+              7.1,
+              7.2,
+              7.3,
+              7.4,
+              7.5,
+              7.6,
+              7.7,
+              7.8,
+              7.9,
+              8,
+              8.1,
+              8.2,
+              8.3,
+              8.4,
+              8.5,
+              8.6,
+              8.7,
+              8.8,
+              8.9,
+              9,
+              9.1,
+              9.2,
+              9.3,
+              9.4,
+              9.5,
+              9.6,
+              9.7,
+              9.8,
+              9.9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              16,
+              17,
+              18,
+              19,
+              20,
+              21,
+              22,
+              23,
+              24,
+              25,
+              26,
+              27,
+              28,
+              29,
+              30,
+              31,
+              32,
+              33,
+              34,
+              35,
+              36,
+              37,
+              38,
+              39,
+              40,
+              41,
+              42,
+              43,
+              44,
+              45,
+              46,
+              47
+            ]
+          },
+          {
+            "key": "attack",
+            "label": "Attack",
+            "kind": "number",
+            "unit": "dB/s",
+            "min": 0,
+            "max": 255,
+            "step": 1
+          },
+          {
+            "key": "release",
+            "label": "Release",
+            "kind": "number",
+            "unit": "dB/s",
+            "min": 0,
+            "max": 255,
+            "step": 1
+          },
+          {
+            "key": "knee",
+            "label": "Knee",
+            "kind": "number",
+            "unit": "dB",
+            "min": 0,
+            "max": 20,
+            "step": 1
+          },
+          {
+            "key": "bypass",
+            "label": "Bypass",
+            "kind": "bool"
+          }
+        ],
+        "compact": [
+          "threshold",
+          "ratio"
+        ]
+      },
+      {
+        "blockType": 1282,
+        "name": "AGC",
+        "role": "processing",
+        "evidence": "simulator",
+        "params": [
+          {
+            "key": "bypass",
+            "label": "Bypass",
+            "kind": "bool"
+          },
+          {
+            "key": "target",
+            "label": "Target",
+            "kind": "number",
+            "unit": "dBFS",
+            "min": -50,
+            "max": -5,
+            "step": 1
+          },
+          {
+            "key": "threshold",
+            "label": "Threshold (rel. to target)",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 0,
+            "step": 1
+          },
+          {
+            "key": "ratio",
+            "label": "Ratio",
+            "kind": "number",
+            "unit": "ratio",
+            "min": 1,
+            "max": 25.5,
+            "step": 0.1
+          },
+          {
+            "key": "gainIncrease",
+            "label": "Gain increase",
+            "kind": "number",
+            "unit": "dB/s",
+            "min": 1,
+            "max": 30,
+            "step": 1
+          },
+          {
+            "key": "gainDecrease",
+            "label": "Gain decrease",
+            "kind": "number",
+            "unit": "dB/s",
+            "min": 1,
+            "max": 30,
+            "step": 1
+          },
+          {
+            "key": "hold",
+            "label": "Gain hold",
+            "kind": "steps",
+            "unit": "s",
+            "steps": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              16,
+              17,
+              18,
+              19,
+              20,
+              21,
+              22,
+              23,
+              24,
+              25,
+              26,
+              27,
+              28,
+              29,
+              30,
+              "inf"
+            ]
+          },
+          {
+            "key": "gainNormalize",
+            "label": "Gain normalize",
+            "kind": "number",
+            "unit": "dB/s",
+            "min": 0,
+            "max": 30,
+            "step": 1
+          }
+        ],
+        "compact": [
+          "target",
+          "bypass"
+        ]
+      },
+      {
+        "blockType": 1283,
+        "name": "Ambient Noise Compensator",
+        "role": "processing",
+        "evidence": "simulator",
+        "params": [
+          {
+            "key": "minGain",
+            "label": "Minimum gain",
+            "kind": "number",
+            "unit": "dB",
+            "min": -95,
+            "max": 31,
+            "step": 1
+          },
+          {
+            "key": "maxGain",
+            "label": "Maximum gain",
+            "kind": "number",
+            "unit": "dB",
+            "min": -95,
+            "max": 31,
+            "step": 1
+          },
+          {
+            "key": "gainIncreaseTime",
+            "label": "Gain increase time",
+            "kind": "number",
+            "unit": "s",
+            "min": 0,
+            "max": 255,
+            "step": 1
+          },
+          {
+            "key": "gainDecreaseTime",
+            "label": "Gain decrease time",
+            "kind": "number",
+            "unit": "s",
+            "min": 0,
+            "max": 255,
+            "step": 1
+          },
+          {
+            "key": "threshold",
+            "label": "Threshold (rms)",
+            "kind": "number",
+            "unit": "dBFS",
+            "min": -95,
+            "max": 31,
+            "step": 1
+          },
+          {
+            "key": "ratio",
+            "label": "Gain ratio",
+            "kind": "steps",
+            "unit": "ratio",
+            "steps": [
+              0.1,
+              0.2,
+              0.3,
+              0.4,
+              0.5,
+              0.6,
+              0.7,
+              0.8,
+              0.9,
+              1,
+              1.5,
+              2,
+              2.5,
+              3,
+              4
+            ]
+          },
+          {
+            "key": "acousticCoupling",
+            "label": "Acoustic coupling",
+            "kind": "number",
+            "unit": "dB",
+            "min": -96,
+            "max": 31,
+            "step": 1
+          },
+          {
+            "key": "mode",
+            "label": "Mode",
+            "kind": "enum",
+            "options": [
+              {
+                "value": 0,
+                "label": "Paging"
+              },
+              {
+                "value": 1,
+                "label": "Continuous program"
+              }
+            ]
+          },
+          {
+            "key": "bypass",
+            "label": "Bypass",
+            "kind": "bool"
+          },
+          {
+            "key": "programMute",
+            "label": "Program mute",
+            "kind": "bool"
+          },
+          {
+            "key": "freeze",
+            "label": "Freeze gain",
+            "kind": "bool"
+          }
+        ],
+        "compact": [
+          "minGain",
+          "maxGain",
+          "bypass"
+        ]
+      },
+      {
+        "blockType": 1539,
+        "name": "Parametric EQ (4)",
+        "role": "processing",
+        "evidence": "sample",
+        "params": [
+          {
+            "key": "band1Enable",
+            "label": "Filter 1 on",
+            "kind": "bool"
+          },
+          {
+            "key": "band1Type",
+            "label": "Filter 1 type",
+            "kind": "enum",
+            "options": [
+              {
+                "value": 0,
+                "label": "Band"
+              },
+              {
+                "value": 1,
+                "label": "Low shelf"
+              },
+              {
+                "value": 2,
+                "label": "High shelf"
+              },
+              {
+                "value": 3,
+                "label": "Low cut"
+              },
+              {
+                "value": 4,
+                "label": "High cut"
+              },
+              {
+                "value": 5,
+                "label": "Horn EQ"
+              },
+              {
+                "value": 6,
+                "label": "All-pass (1st order)"
+              },
+              {
+                "value": 7,
+                "label": "All-pass (2nd order)"
+              }
+            ]
+          },
+          {
+            "key": "band1Freq",
+            "label": "Filter 1 frequency",
+            "kind": "number",
+            "unit": "Hz",
+            "min": 20,
+            "max": 20000,
+            "step": 1
+          },
+          {
+            "key": "band1Width",
+            "label": "Filter 1 bandwidth",
+            "kind": "number",
+            "unit": "oct",
+            "min": 0.025,
+            "max": 6.4,
+            "step": 0.025
+          },
+          {
+            "key": "band1Gain",
+            "label": "Filter 1 gain",
+            "kind": "number",
+            "unit": "dB",
+            "min": -15,
+            "max": 12,
+            "step": 0.25
+          },
+          {
+            "key": "band2Enable",
+            "label": "Filter 2 on",
+            "kind": "bool"
+          },
+          {
+            "key": "band2Type",
+            "label": "Filter 2 type",
+            "kind": "enum",
+            "options": [
+              {
+                "value": 0,
+                "label": "Band"
+              },
+              {
+                "value": 1,
+                "label": "Low shelf"
+              },
+              {
+                "value": 2,
+                "label": "High shelf"
+              },
+              {
+                "value": 3,
+                "label": "Low cut"
+              },
+              {
+                "value": 4,
+                "label": "High cut"
+              },
+              {
+                "value": 5,
+                "label": "Horn EQ"
+              },
+              {
+                "value": 6,
+                "label": "All-pass (1st order)"
+              },
+              {
+                "value": 7,
+                "label": "All-pass (2nd order)"
+              }
+            ]
+          },
+          {
+            "key": "band2Freq",
+            "label": "Filter 2 frequency",
+            "kind": "number",
+            "unit": "Hz",
+            "min": 20,
+            "max": 20000,
+            "step": 1
+          },
+          {
+            "key": "band2Width",
+            "label": "Filter 2 bandwidth",
+            "kind": "number",
+            "unit": "oct",
+            "min": 0.025,
+            "max": 6.4,
+            "step": 0.025
+          },
+          {
+            "key": "band2Gain",
+            "label": "Filter 2 gain",
+            "kind": "number",
+            "unit": "dB",
+            "min": -15,
+            "max": 12,
+            "step": 0.25
+          },
+          {
+            "key": "band3Enable",
+            "label": "Filter 3 on",
+            "kind": "bool"
+          },
+          {
+            "key": "band3Type",
+            "label": "Filter 3 type",
+            "kind": "enum",
+            "options": [
+              {
+                "value": 0,
+                "label": "Band"
+              },
+              {
+                "value": 1,
+                "label": "Low shelf"
+              },
+              {
+                "value": 2,
+                "label": "High shelf"
+              },
+              {
+                "value": 3,
+                "label": "Low cut"
+              },
+              {
+                "value": 4,
+                "label": "High cut"
+              },
+              {
+                "value": 5,
+                "label": "Horn EQ"
+              },
+              {
+                "value": 6,
+                "label": "All-pass (1st order)"
+              },
+              {
+                "value": 7,
+                "label": "All-pass (2nd order)"
+              }
+            ]
+          },
+          {
+            "key": "band3Freq",
+            "label": "Filter 3 frequency",
+            "kind": "number",
+            "unit": "Hz",
+            "min": 20,
+            "max": 20000,
+            "step": 1
+          },
+          {
+            "key": "band3Width",
+            "label": "Filter 3 bandwidth",
+            "kind": "number",
+            "unit": "oct",
+            "min": 0.025,
+            "max": 6.4,
+            "step": 0.025
+          },
+          {
+            "key": "band3Gain",
+            "label": "Filter 3 gain",
+            "kind": "number",
+            "unit": "dB",
+            "min": -15,
+            "max": 12,
+            "step": 0.25
+          },
+          {
+            "key": "band4Enable",
+            "label": "Filter 4 on",
+            "kind": "bool"
+          },
+          {
+            "key": "band4Type",
+            "label": "Filter 4 type",
+            "kind": "enum",
+            "options": [
+              {
+                "value": 0,
+                "label": "Band"
+              },
+              {
+                "value": 1,
+                "label": "Low shelf"
+              },
+              {
+                "value": 2,
+                "label": "High shelf"
+              },
+              {
+                "value": 3,
+                "label": "Low cut"
+              },
+              {
+                "value": 4,
+                "label": "High cut"
+              },
+              {
+                "value": 5,
+                "label": "Horn EQ"
+              },
+              {
+                "value": 6,
+                "label": "All-pass (1st order)"
+              },
+              {
+                "value": 7,
+                "label": "All-pass (2nd order)"
+              }
+            ]
+          },
+          {
+            "key": "band4Freq",
+            "label": "Filter 4 frequency",
+            "kind": "number",
+            "unit": "Hz",
+            "min": 20,
+            "max": 20000,
+            "step": 1
+          },
+          {
+            "key": "band4Width",
+            "label": "Filter 4 bandwidth",
+            "kind": "number",
+            "unit": "oct",
+            "min": 0.025,
+            "max": 6.4,
+            "step": 0.025
+          },
+          {
+            "key": "band4Gain",
+            "label": "Filter 4 gain",
+            "kind": "number",
+            "unit": "dB",
+            "min": -15,
+            "max": 12,
+            "step": 0.25
+          }
+        ],
+        "compact": []
+      },
+      {
+        "blockType": 1544,
+        "name": "Parametric EQ (9)",
+        "role": "processing",
+        "evidence": "simulator",
+        "params": [
+          {
+            "key": "band1Enable",
+            "label": "Filter 1 on",
+            "kind": "bool"
+          },
+          {
+            "key": "band1Type",
+            "label": "Filter 1 type",
+            "kind": "enum",
+            "options": [
+              {
+                "value": 0,
+                "label": "Band"
+              },
+              {
+                "value": 1,
+                "label": "Low shelf"
+              },
+              {
+                "value": 2,
+                "label": "High shelf"
+              },
+              {
+                "value": 3,
+                "label": "Low cut"
+              },
+              {
+                "value": 4,
+                "label": "High cut"
+              },
+              {
+                "value": 5,
+                "label": "Horn EQ"
+              },
+              {
+                "value": 6,
+                "label": "All-pass (1st order)"
+              },
+              {
+                "value": 7,
+                "label": "All-pass (2nd order)"
+              }
+            ]
+          },
+          {
+            "key": "band1Freq",
+            "label": "Filter 1 frequency",
+            "kind": "number",
+            "unit": "Hz",
+            "min": 20,
+            "max": 20000,
+            "step": 1
+          },
+          {
+            "key": "band1Width",
+            "label": "Filter 1 bandwidth",
+            "kind": "number",
+            "unit": "oct",
+            "min": 0.025,
+            "max": 6.4,
+            "step": 0.025
+          },
+          {
+            "key": "band1Gain",
+            "label": "Filter 1 gain",
+            "kind": "number",
+            "unit": "dB",
+            "min": -15,
+            "max": 12,
+            "step": 0.25
+          },
+          {
+            "key": "band2Enable",
+            "label": "Filter 2 on",
+            "kind": "bool"
+          },
+          {
+            "key": "band2Type",
+            "label": "Filter 2 type",
+            "kind": "enum",
+            "options": [
+              {
+                "value": 0,
+                "label": "Band"
+              },
+              {
+                "value": 1,
+                "label": "Low shelf"
+              },
+              {
+                "value": 2,
+                "label": "High shelf"
+              },
+              {
+                "value": 3,
+                "label": "Low cut"
+              },
+              {
+                "value": 4,
+                "label": "High cut"
+              },
+              {
+                "value": 5,
+                "label": "Horn EQ"
+              },
+              {
+                "value": 6,
+                "label": "All-pass (1st order)"
+              },
+              {
+                "value": 7,
+                "label": "All-pass (2nd order)"
+              }
+            ]
+          },
+          {
+            "key": "band2Freq",
+            "label": "Filter 2 frequency",
+            "kind": "number",
+            "unit": "Hz",
+            "min": 20,
+            "max": 20000,
+            "step": 1
+          },
+          {
+            "key": "band2Width",
+            "label": "Filter 2 bandwidth",
+            "kind": "number",
+            "unit": "oct",
+            "min": 0.025,
+            "max": 6.4,
+            "step": 0.025
+          },
+          {
+            "key": "band2Gain",
+            "label": "Filter 2 gain",
+            "kind": "number",
+            "unit": "dB",
+            "min": -15,
+            "max": 12,
+            "step": 0.25
+          },
+          {
+            "key": "band3Enable",
+            "label": "Filter 3 on",
+            "kind": "bool"
+          },
+          {
+            "key": "band3Type",
+            "label": "Filter 3 type",
+            "kind": "enum",
+            "options": [
+              {
+                "value": 0,
+                "label": "Band"
+              },
+              {
+                "value": 1,
+                "label": "Low shelf"
+              },
+              {
+                "value": 2,
+                "label": "High shelf"
+              },
+              {
+                "value": 3,
+                "label": "Low cut"
+              },
+              {
+                "value": 4,
+                "label": "High cut"
+              },
+              {
+                "value": 5,
+                "label": "Horn EQ"
+              },
+              {
+                "value": 6,
+                "label": "All-pass (1st order)"
+              },
+              {
+                "value": 7,
+                "label": "All-pass (2nd order)"
+              }
+            ]
+          },
+          {
+            "key": "band3Freq",
+            "label": "Filter 3 frequency",
+            "kind": "number",
+            "unit": "Hz",
+            "min": 20,
+            "max": 20000,
+            "step": 1
+          },
+          {
+            "key": "band3Width",
+            "label": "Filter 3 bandwidth",
+            "kind": "number",
+            "unit": "oct",
+            "min": 0.025,
+            "max": 6.4,
+            "step": 0.025
+          },
+          {
+            "key": "band3Gain",
+            "label": "Filter 3 gain",
+            "kind": "number",
+            "unit": "dB",
+            "min": -15,
+            "max": 12,
+            "step": 0.25
+          },
+          {
+            "key": "band4Enable",
+            "label": "Filter 4 on",
+            "kind": "bool"
+          },
+          {
+            "key": "band4Type",
+            "label": "Filter 4 type",
+            "kind": "enum",
+            "options": [
+              {
+                "value": 0,
+                "label": "Band"
+              },
+              {
+                "value": 1,
+                "label": "Low shelf"
+              },
+              {
+                "value": 2,
+                "label": "High shelf"
+              },
+              {
+                "value": 3,
+                "label": "Low cut"
+              },
+              {
+                "value": 4,
+                "label": "High cut"
+              },
+              {
+                "value": 5,
+                "label": "Horn EQ"
+              },
+              {
+                "value": 6,
+                "label": "All-pass (1st order)"
+              },
+              {
+                "value": 7,
+                "label": "All-pass (2nd order)"
+              }
+            ]
+          },
+          {
+            "key": "band4Freq",
+            "label": "Filter 4 frequency",
+            "kind": "number",
+            "unit": "Hz",
+            "min": 20,
+            "max": 20000,
+            "step": 1
+          },
+          {
+            "key": "band4Width",
+            "label": "Filter 4 bandwidth",
+            "kind": "number",
+            "unit": "oct",
+            "min": 0.025,
+            "max": 6.4,
+            "step": 0.025
+          },
+          {
+            "key": "band4Gain",
+            "label": "Filter 4 gain",
+            "kind": "number",
+            "unit": "dB",
+            "min": -15,
+            "max": 12,
+            "step": 0.25
+          },
+          {
+            "key": "band5Enable",
+            "label": "Filter 5 on",
+            "kind": "bool"
+          },
+          {
+            "key": "band5Type",
+            "label": "Filter 5 type",
+            "kind": "enum",
+            "options": [
+              {
+                "value": 0,
+                "label": "Band"
+              },
+              {
+                "value": 1,
+                "label": "Low shelf"
+              },
+              {
+                "value": 2,
+                "label": "High shelf"
+              },
+              {
+                "value": 3,
+                "label": "Low cut"
+              },
+              {
+                "value": 4,
+                "label": "High cut"
+              },
+              {
+                "value": 5,
+                "label": "Horn EQ"
+              },
+              {
+                "value": 6,
+                "label": "All-pass (1st order)"
+              },
+              {
+                "value": 7,
+                "label": "All-pass (2nd order)"
+              }
+            ]
+          },
+          {
+            "key": "band5Freq",
+            "label": "Filter 5 frequency",
+            "kind": "number",
+            "unit": "Hz",
+            "min": 20,
+            "max": 20000,
+            "step": 1
+          },
+          {
+            "key": "band5Width",
+            "label": "Filter 5 bandwidth",
+            "kind": "number",
+            "unit": "oct",
+            "min": 0.025,
+            "max": 6.4,
+            "step": 0.025
+          },
+          {
+            "key": "band5Gain",
+            "label": "Filter 5 gain",
+            "kind": "number",
+            "unit": "dB",
+            "min": -15,
+            "max": 12,
+            "step": 0.25
+          },
+          {
+            "key": "band6Enable",
+            "label": "Filter 6 on",
+            "kind": "bool"
+          },
+          {
+            "key": "band6Type",
+            "label": "Filter 6 type",
+            "kind": "enum",
+            "options": [
+              {
+                "value": 0,
+                "label": "Band"
+              },
+              {
+                "value": 1,
+                "label": "Low shelf"
+              },
+              {
+                "value": 2,
+                "label": "High shelf"
+              },
+              {
+                "value": 3,
+                "label": "Low cut"
+              },
+              {
+                "value": 4,
+                "label": "High cut"
+              },
+              {
+                "value": 5,
+                "label": "Horn EQ"
+              },
+              {
+                "value": 6,
+                "label": "All-pass (1st order)"
+              },
+              {
+                "value": 7,
+                "label": "All-pass (2nd order)"
+              }
+            ]
+          },
+          {
+            "key": "band6Freq",
+            "label": "Filter 6 frequency",
+            "kind": "number",
+            "unit": "Hz",
+            "min": 20,
+            "max": 20000,
+            "step": 1
+          },
+          {
+            "key": "band6Width",
+            "label": "Filter 6 bandwidth",
+            "kind": "number",
+            "unit": "oct",
+            "min": 0.025,
+            "max": 6.4,
+            "step": 0.025
+          },
+          {
+            "key": "band6Gain",
+            "label": "Filter 6 gain",
+            "kind": "number",
+            "unit": "dB",
+            "min": -15,
+            "max": 12,
+            "step": 0.25
+          },
+          {
+            "key": "band7Enable",
+            "label": "Filter 7 on",
+            "kind": "bool"
+          },
+          {
+            "key": "band7Type",
+            "label": "Filter 7 type",
+            "kind": "enum",
+            "options": [
+              {
+                "value": 0,
+                "label": "Band"
+              },
+              {
+                "value": 1,
+                "label": "Low shelf"
+              },
+              {
+                "value": 2,
+                "label": "High shelf"
+              },
+              {
+                "value": 3,
+                "label": "Low cut"
+              },
+              {
+                "value": 4,
+                "label": "High cut"
+              },
+              {
+                "value": 5,
+                "label": "Horn EQ"
+              },
+              {
+                "value": 6,
+                "label": "All-pass (1st order)"
+              },
+              {
+                "value": 7,
+                "label": "All-pass (2nd order)"
+              }
+            ]
+          },
+          {
+            "key": "band7Freq",
+            "label": "Filter 7 frequency",
+            "kind": "number",
+            "unit": "Hz",
+            "min": 20,
+            "max": 20000,
+            "step": 1
+          },
+          {
+            "key": "band7Width",
+            "label": "Filter 7 bandwidth",
+            "kind": "number",
+            "unit": "oct",
+            "min": 0.025,
+            "max": 6.4,
+            "step": 0.025
+          },
+          {
+            "key": "band7Gain",
+            "label": "Filter 7 gain",
+            "kind": "number",
+            "unit": "dB",
+            "min": -15,
+            "max": 12,
+            "step": 0.25
+          },
+          {
+            "key": "band8Enable",
+            "label": "Filter 8 on",
+            "kind": "bool"
+          },
+          {
+            "key": "band8Type",
+            "label": "Filter 8 type",
+            "kind": "enum",
+            "options": [
+              {
+                "value": 0,
+                "label": "Band"
+              },
+              {
+                "value": 1,
+                "label": "Low shelf"
+              },
+              {
+                "value": 2,
+                "label": "High shelf"
+              },
+              {
+                "value": 3,
+                "label": "Low cut"
+              },
+              {
+                "value": 4,
+                "label": "High cut"
+              },
+              {
+                "value": 5,
+                "label": "Horn EQ"
+              },
+              {
+                "value": 6,
+                "label": "All-pass (1st order)"
+              },
+              {
+                "value": 7,
+                "label": "All-pass (2nd order)"
+              }
+            ]
+          },
+          {
+            "key": "band8Freq",
+            "label": "Filter 8 frequency",
+            "kind": "number",
+            "unit": "Hz",
+            "min": 20,
+            "max": 20000,
+            "step": 1
+          },
+          {
+            "key": "band8Width",
+            "label": "Filter 8 bandwidth",
+            "kind": "number",
+            "unit": "oct",
+            "min": 0.025,
+            "max": 6.4,
+            "step": 0.025
+          },
+          {
+            "key": "band8Gain",
+            "label": "Filter 8 gain",
+            "kind": "number",
+            "unit": "dB",
+            "min": -15,
+            "max": 12,
+            "step": 0.25
+          },
+          {
+            "key": "band9Enable",
+            "label": "Filter 9 on",
+            "kind": "bool"
+          },
+          {
+            "key": "band9Type",
+            "label": "Filter 9 type",
+            "kind": "enum",
+            "options": [
+              {
+                "value": 0,
+                "label": "Band"
+              },
+              {
+                "value": 1,
+                "label": "Low shelf"
+              },
+              {
+                "value": 2,
+                "label": "High shelf"
+              },
+              {
+                "value": 3,
+                "label": "Low cut"
+              },
+              {
+                "value": 4,
+                "label": "High cut"
+              },
+              {
+                "value": 5,
+                "label": "Horn EQ"
+              },
+              {
+                "value": 6,
+                "label": "All-pass (1st order)"
+              },
+              {
+                "value": 7,
+                "label": "All-pass (2nd order)"
+              }
+            ]
+          },
+          {
+            "key": "band9Freq",
+            "label": "Filter 9 frequency",
+            "kind": "number",
+            "unit": "Hz",
+            "min": 20,
+            "max": 20000,
+            "step": 1
+          },
+          {
+            "key": "band9Width",
+            "label": "Filter 9 bandwidth",
+            "kind": "number",
+            "unit": "oct",
+            "min": 0.025,
+            "max": 6.4,
+            "step": 0.025
+          },
+          {
+            "key": "band9Gain",
+            "label": "Filter 9 gain",
+            "kind": "number",
+            "unit": "dB",
+            "min": -15,
+            "max": 12,
+            "step": 0.25
+          }
+        ],
+        "compact": []
+      },
+      {
+        "blockType": 1551,
+        "name": "2-way Crossover",
+        "role": "crossover",
+        "evidence": "simulator",
+        "params": [
+          {
+            "key": "lowUpperType",
+            "label": "Low band upper type",
+            "kind": "enum",
+            "options": [
+              {
+                "value": 0,
+                "label": "Off"
+              },
+              {
+                "value": 1,
+                "label": "LR12"
+              },
+              {
+                "value": 2,
+                "label": "LR24"
+              },
+              {
+                "value": 3,
+                "label": "BW12"
+              },
+              {
+                "value": 4,
+                "label": "BW18"
+              },
+              {
+                "value": 5,
+                "label": "BW24"
+              },
+              {
+                "value": 6,
+                "label": "Bessel12"
+              },
+              {
+                "value": 7,
+                "label": "Bessel18"
+              },
+              {
+                "value": 8,
+                "label": "Bessel24"
+              },
+              {
+                "value": 9,
+                "label": "1st order"
+              }
+            ]
+          },
+          {
+            "key": "lowUpperFreq",
+            "label": "Low band upper frequency",
+            "kind": "number",
+            "unit": "Hz",
+            "min": 20,
+            "max": 20000,
+            "step": 1
+          },
+          {
+            "key": "lowUpperInvert",
+            "label": "Low band upper invert",
+            "kind": "bool"
+          },
+          {
+            "key": "highLowerType",
+            "label": "High band lower type",
+            "kind": "enum",
+            "options": [
+              {
+                "value": 0,
+                "label": "Off"
+              },
+              {
+                "value": 1,
+                "label": "LR12"
+              },
+              {
+                "value": 2,
+                "label": "LR24"
+              },
+              {
+                "value": 3,
+                "label": "BW12"
+              },
+              {
+                "value": 4,
+                "label": "BW18"
+              },
+              {
+                "value": 5,
+                "label": "BW24"
+              },
+              {
+                "value": 6,
+                "label": "Bessel12"
+              },
+              {
+                "value": 7,
+                "label": "Bessel18"
+              },
+              {
+                "value": 8,
+                "label": "Bessel24"
+              },
+              {
+                "value": 9,
+                "label": "1st order"
+              }
+            ]
+          },
+          {
+            "key": "highLowerFreq",
+            "label": "High band lower frequency",
+            "kind": "number",
+            "unit": "Hz",
+            "min": 20,
+            "max": 20000,
+            "step": 1
+          },
+          {
+            "key": "highLowerInvert",
+            "label": "High band lower invert",
+            "kind": "bool"
+          }
+        ],
+        "compact": [
+          "lowUpperFreq",
+          "highLowerFreq"
+        ]
+      },
+      {
+        "blockType": 1552,
+        "name": "3-way Crossover",
+        "role": "crossover",
+        "evidence": "sample",
+        "params": [
+          {
+            "key": "lowUpperType",
+            "label": "Low band upper type",
+            "kind": "enum",
+            "options": [
+              {
+                "value": 0,
+                "label": "Off"
+              },
+              {
+                "value": 1,
+                "label": "LR12"
+              },
+              {
+                "value": 2,
+                "label": "LR24"
+              },
+              {
+                "value": 3,
+                "label": "BW12"
+              },
+              {
+                "value": 4,
+                "label": "BW18"
+              },
+              {
+                "value": 5,
+                "label": "BW24"
+              },
+              {
+                "value": 6,
+                "label": "Bessel12"
+              },
+              {
+                "value": 7,
+                "label": "Bessel18"
+              },
+              {
+                "value": 8,
+                "label": "Bessel24"
+              },
+              {
+                "value": 9,
+                "label": "1st order"
+              }
+            ]
+          },
+          {
+            "key": "lowUpperFreq",
+            "label": "Low band upper frequency",
+            "kind": "number",
+            "unit": "Hz",
+            "min": 20,
+            "max": 20000,
+            "step": 1
+          },
+          {
+            "key": "lowUpperInvert",
+            "label": "Low band upper invert",
+            "kind": "bool"
+          },
+          {
+            "key": "midLowerType",
+            "label": "Mid band lower type",
+            "kind": "enum",
+            "options": [
+              {
+                "value": 0,
+                "label": "Off"
+              },
+              {
+                "value": 1,
+                "label": "LR12"
+              },
+              {
+                "value": 2,
+                "label": "LR24"
+              },
+              {
+                "value": 3,
+                "label": "BW12"
+              },
+              {
+                "value": 4,
+                "label": "BW18"
+              },
+              {
+                "value": 5,
+                "label": "BW24"
+              },
+              {
+                "value": 6,
+                "label": "Bessel12"
+              },
+              {
+                "value": 7,
+                "label": "Bessel18"
+              },
+              {
+                "value": 8,
+                "label": "Bessel24"
+              },
+              {
+                "value": 9,
+                "label": "1st order"
+              }
+            ]
+          },
+          {
+            "key": "midLowerFreq",
+            "label": "Mid band lower frequency",
+            "kind": "number",
+            "unit": "Hz",
+            "min": 20,
+            "max": 20000,
+            "step": 1
+          },
+          {
+            "key": "midLowerInvert",
+            "label": "Mid band lower invert",
+            "kind": "bool"
+          },
+          {
+            "key": "midUpperType",
+            "label": "Mid band upper type",
+            "kind": "enum",
+            "options": [
+              {
+                "value": 0,
+                "label": "Off"
+              },
+              {
+                "value": 1,
+                "label": "LR12"
+              },
+              {
+                "value": 2,
+                "label": "LR24"
+              },
+              {
+                "value": 3,
+                "label": "BW12"
+              },
+              {
+                "value": 4,
+                "label": "BW18"
+              },
+              {
+                "value": 5,
+                "label": "BW24"
+              },
+              {
+                "value": 6,
+                "label": "Bessel12"
+              },
+              {
+                "value": 7,
+                "label": "Bessel18"
+              },
+              {
+                "value": 8,
+                "label": "Bessel24"
+              },
+              {
+                "value": 9,
+                "label": "1st order"
+              }
+            ]
+          },
+          {
+            "key": "midUpperFreq",
+            "label": "Mid band upper frequency",
+            "kind": "number",
+            "unit": "Hz",
+            "min": 20,
+            "max": 20000,
+            "step": 1
+          },
+          {
+            "key": "midUpperInvert",
+            "label": "Mid band upper invert",
+            "kind": "bool"
+          },
+          {
+            "key": "highLowerType",
+            "label": "High band lower type",
+            "kind": "enum",
+            "options": [
+              {
+                "value": 0,
+                "label": "Off"
+              },
+              {
+                "value": 1,
+                "label": "LR12"
+              },
+              {
+                "value": 2,
+                "label": "LR24"
+              },
+              {
+                "value": 3,
+                "label": "BW12"
+              },
+              {
+                "value": 4,
+                "label": "BW18"
+              },
+              {
+                "value": 5,
+                "label": "BW24"
+              },
+              {
+                "value": 6,
+                "label": "Bessel12"
+              },
+              {
+                "value": 7,
+                "label": "Bessel18"
+              },
+              {
+                "value": 8,
+                "label": "Bessel24"
+              },
+              {
+                "value": 9,
+                "label": "1st order"
+              }
+            ]
+          },
+          {
+            "key": "highLowerFreq",
+            "label": "High band lower frequency",
+            "kind": "number",
+            "unit": "Hz",
+            "min": 20,
+            "max": 20000,
+            "step": 1
+          },
+          {
+            "key": "highLowerInvert",
+            "label": "High band lower invert",
+            "kind": "bool"
+          }
+        ],
+        "compact": [
+          "lowUpperFreq",
+          "midLowerFreq",
+          "midUpperFreq",
+          "highLowerFreq"
+        ]
+      },
+      {
+        "blockType": 1555,
+        "name": "30-Band Graphic EQ",
+        "role": "processing",
+        "evidence": "simulator",
+        "params": [
+          {
+            "key": "band1Gain",
+            "label": "25 Hz",
+            "kind": "number",
+            "unit": "dB",
+            "min": -12,
+            "max": 12,
+            "step": 0.25
+          },
+          {
+            "key": "band2Gain",
+            "label": "31.5 Hz",
+            "kind": "number",
+            "unit": "dB",
+            "min": -12,
+            "max": 12,
+            "step": 0.25
+          },
+          {
+            "key": "band3Gain",
+            "label": "40 Hz",
+            "kind": "number",
+            "unit": "dB",
+            "min": -12,
+            "max": 12,
+            "step": 0.25
+          },
+          {
+            "key": "band4Gain",
+            "label": "50 Hz",
+            "kind": "number",
+            "unit": "dB",
+            "min": -12,
+            "max": 12,
+            "step": 0.25
+          },
+          {
+            "key": "band5Gain",
+            "label": "63 Hz",
+            "kind": "number",
+            "unit": "dB",
+            "min": -12,
+            "max": 12,
+            "step": 0.25
+          },
+          {
+            "key": "band6Gain",
+            "label": "80 Hz",
+            "kind": "number",
+            "unit": "dB",
+            "min": -12,
+            "max": 12,
+            "step": 0.25
+          },
+          {
+            "key": "band7Gain",
+            "label": "100 Hz",
+            "kind": "number",
+            "unit": "dB",
+            "min": -12,
+            "max": 12,
+            "step": 0.25
+          },
+          {
+            "key": "band8Gain",
+            "label": "125 Hz",
+            "kind": "number",
+            "unit": "dB",
+            "min": -12,
+            "max": 12,
+            "step": 0.25
+          },
+          {
+            "key": "band9Gain",
+            "label": "160 Hz",
+            "kind": "number",
+            "unit": "dB",
+            "min": -12,
+            "max": 12,
+            "step": 0.25
+          },
+          {
+            "key": "band10Gain",
+            "label": "200 Hz",
+            "kind": "number",
+            "unit": "dB",
+            "min": -12,
+            "max": 12,
+            "step": 0.25
+          },
+          {
+            "key": "band11Gain",
+            "label": "250 Hz",
+            "kind": "number",
+            "unit": "dB",
+            "min": -12,
+            "max": 12,
+            "step": 0.25
+          },
+          {
+            "key": "band12Gain",
+            "label": "315 Hz",
+            "kind": "number",
+            "unit": "dB",
+            "min": -12,
+            "max": 12,
+            "step": 0.25
+          },
+          {
+            "key": "band13Gain",
+            "label": "400 Hz",
+            "kind": "number",
+            "unit": "dB",
+            "min": -12,
+            "max": 12,
+            "step": 0.25
+          },
+          {
+            "key": "band14Gain",
+            "label": "500 Hz",
+            "kind": "number",
+            "unit": "dB",
+            "min": -12,
+            "max": 12,
+            "step": 0.25
+          },
+          {
+            "key": "band15Gain",
+            "label": "630 Hz",
+            "kind": "number",
+            "unit": "dB",
+            "min": -12,
+            "max": 12,
+            "step": 0.25
+          },
+          {
+            "key": "band16Gain",
+            "label": "800 Hz",
+            "kind": "number",
+            "unit": "dB",
+            "min": -12,
+            "max": 12,
+            "step": 0.25
+          },
+          {
+            "key": "band17Gain",
+            "label": "1k Hz",
+            "kind": "number",
+            "unit": "dB",
+            "min": -12,
+            "max": 12,
+            "step": 0.25
+          },
+          {
+            "key": "band18Gain",
+            "label": "1.25k Hz",
+            "kind": "number",
+            "unit": "dB",
+            "min": -12,
+            "max": 12,
+            "step": 0.25
+          },
+          {
+            "key": "band19Gain",
+            "label": "1.6k Hz",
+            "kind": "number",
+            "unit": "dB",
+            "min": -12,
+            "max": 12,
+            "step": 0.25
+          },
+          {
+            "key": "band20Gain",
+            "label": "2k Hz",
+            "kind": "number",
+            "unit": "dB",
+            "min": -12,
+            "max": 12,
+            "step": 0.25
+          },
+          {
+            "key": "band21Gain",
+            "label": "2.5k Hz",
+            "kind": "number",
+            "unit": "dB",
+            "min": -12,
+            "max": 12,
+            "step": 0.25
+          },
+          {
+            "key": "band22Gain",
+            "label": "3.15k Hz",
+            "kind": "number",
+            "unit": "dB",
+            "min": -12,
+            "max": 12,
+            "step": 0.25
+          },
+          {
+            "key": "band23Gain",
+            "label": "4k Hz",
+            "kind": "number",
+            "unit": "dB",
+            "min": -12,
+            "max": 12,
+            "step": 0.25
+          },
+          {
+            "key": "band24Gain",
+            "label": "5k Hz",
+            "kind": "number",
+            "unit": "dB",
+            "min": -12,
+            "max": 12,
+            "step": 0.25
+          },
+          {
+            "key": "band25Gain",
+            "label": "6.3k Hz",
+            "kind": "number",
+            "unit": "dB",
+            "min": -12,
+            "max": 12,
+            "step": 0.25
+          },
+          {
+            "key": "band26Gain",
+            "label": "8k Hz",
+            "kind": "number",
+            "unit": "dB",
+            "min": -12,
+            "max": 12,
+            "step": 0.25
+          },
+          {
+            "key": "band27Gain",
+            "label": "10k Hz",
+            "kind": "number",
+            "unit": "dB",
+            "min": -12,
+            "max": 12,
+            "step": 0.25
+          },
+          {
+            "key": "band28Gain",
+            "label": "12.5k Hz",
+            "kind": "number",
+            "unit": "dB",
+            "min": -12,
+            "max": 12,
+            "step": 0.25
+          },
+          {
+            "key": "band29Gain",
+            "label": "16k Hz",
+            "kind": "number",
+            "unit": "dB",
+            "min": -12,
+            "max": 12,
+            "step": 0.25
+          },
+          {
+            "key": "band30Gain",
+            "label": "20k Hz",
+            "kind": "number",
+            "unit": "dB",
+            "min": -12,
+            "max": 12,
+            "step": 0.25
+          },
+          {
+            "key": "lowLevel",
+            "label": "Low tone",
+            "kind": "steps",
+            "unit": "dB",
+            "steps": [
+              "-inf",
+              -56.875,
+              -53.75,
+              -50.625,
+              -47.5,
+              -44.375,
+              -41.25,
+              -38.125,
+              -35,
+              -31.875,
+              -28.75,
+              -25.625,
+              -22.5,
+              -19.375,
+              -16.25,
+              -13.125,
+              -10,
+              -9.375,
+              -8.75,
+              -8.125,
+              -7.5,
+              -6.875,
+              -6.25,
+              -5.625,
+              -5,
+              -4.375,
+              -3.75,
+              -3.125,
+              -2.5,
+              -1.875,
+              -1.25,
+              -0.625,
+              0,
+              0.1935483870967742,
+              0.3870967741935484,
+              0.5806451612903226,
+              0.7741935483870968,
+              0.967741935483871,
+              1.1612903225806452,
+              1.3548387096774193,
+              1.5483870967741935,
+              1.7419354838709677,
+              1.935483870967742,
+              2.129032258064516,
+              2.3225806451612905,
+              2.5161290322580645,
+              2.7096774193548385,
+              2.903225806451613,
+              3.096774193548387,
+              3.2903225806451615,
+              3.4838709677419355,
+              3.6774193548387095,
+              3.870967741935484,
+              4.064516129032258,
+              4.258064516129032,
+              4.451612903225806,
+              4.645161290322581,
+              4.838709677419355,
+              5.032258064516129,
+              5.225806451612903,
+              5.419354838709677,
+              5.612903225806452,
+              5.806451612903226,
+              6
+            ]
+          },
+          {
+            "key": "midLevel",
+            "label": "Mid tone",
+            "kind": "steps",
+            "unit": "dB",
+            "steps": [
+              -60,
+              -56.875,
+              -53.75,
+              -50.625,
+              -47.5,
+              -44.375,
+              -41.25,
+              -38.125,
+              -35,
+              -31.875,
+              -28.75,
+              -25.625,
+              -22.5,
+              -19.375,
+              -16.25,
+              -13.125,
+              -10,
+              -9.375,
+              -8.75,
+              -8.125,
+              -7.5,
+              -6.875,
+              -6.25,
+              -5.625,
+              -5,
+              -4.375,
+              -3.75,
+              -3.125,
+              -2.5,
+              -1.875,
+              -1.25,
+              -0.625,
+              0,
+              0.1935483870967742,
+              0.3870967741935484,
+              0.5806451612903226,
+              0.7741935483870968,
+              0.967741935483871,
+              1.1612903225806452,
+              1.3548387096774193,
+              1.5483870967741935,
+              1.7419354838709677,
+              1.935483870967742,
+              2.129032258064516,
+              2.3225806451612905,
+              2.5161290322580645,
+              2.7096774193548385,
+              2.903225806451613,
+              3.096774193548387,
+              3.2903225806451615,
+              3.4838709677419355,
+              3.6774193548387095,
+              3.870967741935484,
+              4.064516129032258,
+              4.258064516129032,
+              4.451612903225806,
+              4.645161290322581,
+              4.838709677419355,
+              5.032258064516129,
+              5.225806451612903,
+              5.419354838709677,
+              5.612903225806452,
+              5.806451612903226,
+              6
+            ]
+          },
+          {
+            "key": "highLevel",
+            "label": "High tone",
+            "kind": "steps",
+            "unit": "dB",
+            "steps": [
+              "-inf",
+              -56.875,
+              -53.75,
+              -50.625,
+              -47.5,
+              -44.375,
+              -41.25,
+              -38.125,
+              -35,
+              -31.875,
+              -28.75,
+              -25.625,
+              -22.5,
+              -19.375,
+              -16.25,
+              -13.125,
+              -10,
+              -9.375,
+              -8.75,
+              -8.125,
+              -7.5,
+              -6.875,
+              -6.25,
+              -5.625,
+              -5,
+              -4.375,
+              -3.75,
+              -3.125,
+              -2.5,
+              -1.875,
+              -1.25,
+              -0.625,
+              0,
+              0.1935483870967742,
+              0.3870967741935484,
+              0.5806451612903226,
+              0.7741935483870968,
+              0.967741935483871,
+              1.1612903225806452,
+              1.3548387096774193,
+              1.5483870967741935,
+              1.7419354838709677,
+              1.935483870967742,
+              2.129032258064516,
+              2.3225806451612905,
+              2.5161290322580645,
+              2.7096774193548385,
+              2.903225806451613,
+              3.096774193548387,
+              3.2903225806451615,
+              3.4838709677419355,
+              3.6774193548387095,
+              3.870967741935484,
+              4.064516129032258,
+              4.258064516129032,
+              4.451612903225806,
+              4.645161290322581,
+              4.838709677419355,
+              5.032258064516129,
+              5.225806451612903,
+              5.419354838709677,
+              5.612903225806452,
+              5.806451612903226,
+              6
+            ]
+          },
+          {
+            "key": "lowCut",
+            "label": "Low cut",
+            "kind": "steps",
+            "unit": "Hz",
+            "steps": [
+              15,
+              15.674881801237845,
+              16.380127965518493,
+              17.117104649910193,
+              17.887239477784064,
+              18.69202430431337,
+              19.533018106398476,
+              20.411850002615655,
+              21.330222409039788,
+              22.289914337054228,
+              23.29278483953612,
+              24.340776612092903,
+              25.43591975632605,
+              26.580335712412094,
+              27.77624136861871,
+              29.025953355716748,
+              30.331892534606865,
+              31.696588685854085,
+              33.122685410214366,
+              34.612945249646366,
+              36.17025503872825,
+              37.79763149684619,
+              39.498227071987245,
+              41.27533604745686,
+              43.13240092335053,
+              45.07301908514144,
+              47.10094977230197,
+              49.22012136045827,
+              51.43463897118437,
+              53.74879242417711,
+              56.167064547216285,
+              58.69413986000747,
+              61.33491364872933,
+              64.09450144886414,
+              66.97824895468086,
+              69.99174237456701,
+              73.14081925226853,
+              76.43157977500071,
+              79.87039859033446,
+              83.46393715474979,
+              87.21915663777642,
+              91.14333140671965,
+              95.24406311809196,
+              99.52929544304857,
+              104.0073294553511,
+              108.68683971166881,
+              113.57689105536612,
+              118.6869561763288,
+              124.02693396084332,
+              129.60716866707676,
+              135.43846996330166,
+              141.53213386768374,
+              147.89996463019423,
+              154.5542975990369,
+              161.5080231158827,
+              168.77461148620344,
+              176.36813907307183,
+              184.30331556497862,
+              192.59551247048523,
+              201.2607928949124,
+              210.31594265674406,
+              219.77850280402535,
+              229.66680359374112,
+              240
+            ]
+          },
+          {
+            "key": "inputLevel",
+            "label": "Input level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -12,
+            "max": 12,
+            "step": 0.25
+          },
+          {
+            "key": "outputLevel",
+            "label": "Output level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -12,
+            "max": 12,
+            "step": 0.25
+          },
+          {
+            "key": "bypass",
+            "label": "Bypass",
+            "kind": "bool"
+          },
+          {
+            "key": "range",
+            "label": "Range",
+            "kind": "enum",
+            "options": [
+              {
+                "value": 0,
+                "label": "±12 dB"
+              },
+              {
+                "value": 1,
+                "label": "±6 dB"
+              }
+            ]
+          },
+          {
+            "key": "eqType",
+            "label": "EQ type",
+            "kind": "enum",
+            "options": [
+              {
+                "value": 0,
+                "label": "Perfect-Q"
+              },
+              {
+                "value": 1,
+                "label": "Proportional-Q"
+              }
+            ]
+          }
+        ],
+        "compact": []
+      },
+      {
+        "blockType": 2561,
+        "name": "Feedback Suppressor (15)",
+        "role": "processing",
+        "evidence": "simulator",
+        "params": [
+          {
+            "key": "mode",
+            "label": "Mode",
+            "kind": "enum",
+            "options": [
+              {
+                "value": 0,
+                "label": "Speech (more sensitive)"
+              },
+              {
+                "value": 1,
+                "label": "Music (less sensitive)"
+              }
+            ]
+          },
+          {
+            "key": "dynamicLevel",
+            "label": "Dynamic level",
+            "kind": "bool"
+          },
+          {
+            "key": "releaseRate",
+            "label": "Release rate",
+            "kind": "steps",
+            "unit": "dB/s",
+            "steps": [
+              0,
+              0.001,
+              0.002,
+              0.005,
+              0.01,
+              0.02,
+              0.05,
+              0.1,
+              0.2,
+              0.5,
+              1,
+              1.5,
+              2,
+              3,
+              5,
+              10
+            ]
+          },
+          {
+            "key": "maxAttenuation",
+            "label": "Max attenuation",
+            "kind": "number",
+            "unit": "dB",
+            "min": -30,
+            "max": 0,
+            "step": 0.25
+          },
+          {
+            "key": "newFilterWidth",
+            "label": "New filter bandwidth",
+            "kind": "number",
+            "unit": "oct",
+            "min": 0.025,
+            "max": 6.4,
+            "step": 0.025
+          },
+          {
+            "key": "cycleClear",
+            "label": "Cycle clear",
+            "kind": "bool"
+          },
+          {
+            "key": "timeoutClear",
+            "label": "Timeout clear",
+            "kind": "bool"
+          },
+          {
+            "key": "timeout",
+            "label": "Timeout",
+            "kind": "steps",
+            "unit": "h",
+            "steps": [
+              0.1,
+              0.2,
+              0.3,
+              0.4,
+              0.5,
+              0.6,
+              0.7,
+              0.8,
+              0.9,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ]
+          },
+          {
+            "key": "threshold",
+            "label": "Threshold",
+            "kind": "number",
+            "unit": "dBFS",
+            "min": -60,
+            "max": 0,
+            "step": 0.5
+          },
+          {
+            "key": "freeze",
+            "label": "Freeze filters",
+            "kind": "bool"
+          },
+          {
+            "key": "band1Enable",
+            "label": "Filter 1 on",
+            "kind": "bool"
+          },
+          {
+            "key": "band1Type",
+            "label": "Filter 1 type",
+            "kind": "enum",
+            "options": [
+              {
+                "value": 0,
+                "label": "Band"
+              },
+              {
+                "value": 1,
+                "label": "Low shelf"
+              },
+              {
+                "value": 2,
+                "label": "High shelf"
+              },
+              {
+                "value": 3,
+                "label": "Low cut"
+              },
+              {
+                "value": 4,
+                "label": "High cut"
+              },
+              {
+                "value": 5,
+                "label": "Horn EQ"
+              },
+              {
+                "value": 6,
+                "label": "All-pass (1st order)"
+              },
+              {
+                "value": 7,
+                "label": "All-pass (2nd order)"
+              }
+            ]
+          },
+          {
+            "key": "band1Freq",
+            "label": "Filter 1 frequency",
+            "kind": "number",
+            "unit": "Hz",
+            "min": 20,
+            "max": 20000,
+            "step": 1
+          },
+          {
+            "key": "band1Width",
+            "label": "Filter 1 bandwidth",
+            "kind": "number",
+            "unit": "oct",
+            "min": 0.025,
+            "max": 6.4,
+            "step": 0.025
+          },
+          {
+            "key": "band1Gain",
+            "label": "Filter 1 gain",
+            "kind": "number",
+            "unit": "dB",
+            "min": -15,
+            "max": 12,
+            "step": 0.25
+          },
+          {
+            "key": "band2Enable",
+            "label": "Filter 2 on",
+            "kind": "bool"
+          },
+          {
+            "key": "band2Type",
+            "label": "Filter 2 type",
+            "kind": "enum",
+            "options": [
+              {
+                "value": 0,
+                "label": "Band"
+              },
+              {
+                "value": 1,
+                "label": "Low shelf"
+              },
+              {
+                "value": 2,
+                "label": "High shelf"
+              },
+              {
+                "value": 3,
+                "label": "Low cut"
+              },
+              {
+                "value": 4,
+                "label": "High cut"
+              },
+              {
+                "value": 5,
+                "label": "Horn EQ"
+              },
+              {
+                "value": 6,
+                "label": "All-pass (1st order)"
+              },
+              {
+                "value": 7,
+                "label": "All-pass (2nd order)"
+              }
+            ]
+          },
+          {
+            "key": "band2Freq",
+            "label": "Filter 2 frequency",
+            "kind": "number",
+            "unit": "Hz",
+            "min": 20,
+            "max": 20000,
+            "step": 1
+          },
+          {
+            "key": "band2Width",
+            "label": "Filter 2 bandwidth",
+            "kind": "number",
+            "unit": "oct",
+            "min": 0.025,
+            "max": 6.4,
+            "step": 0.025
+          },
+          {
+            "key": "band2Gain",
+            "label": "Filter 2 gain",
+            "kind": "number",
+            "unit": "dB",
+            "min": -15,
+            "max": 12,
+            "step": 0.25
+          },
+          {
+            "key": "band3Enable",
+            "label": "Filter 3 on",
+            "kind": "bool"
+          },
+          {
+            "key": "band3Type",
+            "label": "Filter 3 type",
+            "kind": "enum",
+            "options": [
+              {
+                "value": 0,
+                "label": "Band"
+              },
+              {
+                "value": 1,
+                "label": "Low shelf"
+              },
+              {
+                "value": 2,
+                "label": "High shelf"
+              },
+              {
+                "value": 3,
+                "label": "Low cut"
+              },
+              {
+                "value": 4,
+                "label": "High cut"
+              },
+              {
+                "value": 5,
+                "label": "Horn EQ"
+              },
+              {
+                "value": 6,
+                "label": "All-pass (1st order)"
+              },
+              {
+                "value": 7,
+                "label": "All-pass (2nd order)"
+              }
+            ]
+          },
+          {
+            "key": "band3Freq",
+            "label": "Filter 3 frequency",
+            "kind": "number",
+            "unit": "Hz",
+            "min": 20,
+            "max": 20000,
+            "step": 1
+          },
+          {
+            "key": "band3Width",
+            "label": "Filter 3 bandwidth",
+            "kind": "number",
+            "unit": "oct",
+            "min": 0.025,
+            "max": 6.4,
+            "step": 0.025
+          },
+          {
+            "key": "band3Gain",
+            "label": "Filter 3 gain",
+            "kind": "number",
+            "unit": "dB",
+            "min": -15,
+            "max": 12,
+            "step": 0.25
+          },
+          {
+            "key": "band4Enable",
+            "label": "Filter 4 on",
+            "kind": "bool"
+          },
+          {
+            "key": "band4Type",
+            "label": "Filter 4 type",
+            "kind": "enum",
+            "options": [
+              {
+                "value": 0,
+                "label": "Band"
+              },
+              {
+                "value": 1,
+                "label": "Low shelf"
+              },
+              {
+                "value": 2,
+                "label": "High shelf"
+              },
+              {
+                "value": 3,
+                "label": "Low cut"
+              },
+              {
+                "value": 4,
+                "label": "High cut"
+              },
+              {
+                "value": 5,
+                "label": "Horn EQ"
+              },
+              {
+                "value": 6,
+                "label": "All-pass (1st order)"
+              },
+              {
+                "value": 7,
+                "label": "All-pass (2nd order)"
+              }
+            ]
+          },
+          {
+            "key": "band4Freq",
+            "label": "Filter 4 frequency",
+            "kind": "number",
+            "unit": "Hz",
+            "min": 20,
+            "max": 20000,
+            "step": 1
+          },
+          {
+            "key": "band4Width",
+            "label": "Filter 4 bandwidth",
+            "kind": "number",
+            "unit": "oct",
+            "min": 0.025,
+            "max": 6.4,
+            "step": 0.025
+          },
+          {
+            "key": "band4Gain",
+            "label": "Filter 4 gain",
+            "kind": "number",
+            "unit": "dB",
+            "min": -15,
+            "max": 12,
+            "step": 0.25
+          },
+          {
+            "key": "band5Enable",
+            "label": "Filter 5 on",
+            "kind": "bool"
+          },
+          {
+            "key": "band5Type",
+            "label": "Filter 5 type",
+            "kind": "enum",
+            "options": [
+              {
+                "value": 0,
+                "label": "Band"
+              },
+              {
+                "value": 1,
+                "label": "Low shelf"
+              },
+              {
+                "value": 2,
+                "label": "High shelf"
+              },
+              {
+                "value": 3,
+                "label": "Low cut"
+              },
+              {
+                "value": 4,
+                "label": "High cut"
+              },
+              {
+                "value": 5,
+                "label": "Horn EQ"
+              },
+              {
+                "value": 6,
+                "label": "All-pass (1st order)"
+              },
+              {
+                "value": 7,
+                "label": "All-pass (2nd order)"
+              }
+            ]
+          },
+          {
+            "key": "band5Freq",
+            "label": "Filter 5 frequency",
+            "kind": "number",
+            "unit": "Hz",
+            "min": 20,
+            "max": 20000,
+            "step": 1
+          },
+          {
+            "key": "band5Width",
+            "label": "Filter 5 bandwidth",
+            "kind": "number",
+            "unit": "oct",
+            "min": 0.025,
+            "max": 6.4,
+            "step": 0.025
+          },
+          {
+            "key": "band5Gain",
+            "label": "Filter 5 gain",
+            "kind": "number",
+            "unit": "dB",
+            "min": -15,
+            "max": 12,
+            "step": 0.25
+          },
+          {
+            "key": "band6Enable",
+            "label": "Filter 6 on",
+            "kind": "bool"
+          },
+          {
+            "key": "band6Type",
+            "label": "Filter 6 type",
+            "kind": "enum",
+            "options": [
+              {
+                "value": 0,
+                "label": "Band"
+              },
+              {
+                "value": 1,
+                "label": "Low shelf"
+              },
+              {
+                "value": 2,
+                "label": "High shelf"
+              },
+              {
+                "value": 3,
+                "label": "Low cut"
+              },
+              {
+                "value": 4,
+                "label": "High cut"
+              },
+              {
+                "value": 5,
+                "label": "Horn EQ"
+              },
+              {
+                "value": 6,
+                "label": "All-pass (1st order)"
+              },
+              {
+                "value": 7,
+                "label": "All-pass (2nd order)"
+              }
+            ]
+          },
+          {
+            "key": "band6Freq",
+            "label": "Filter 6 frequency",
+            "kind": "number",
+            "unit": "Hz",
+            "min": 20,
+            "max": 20000,
+            "step": 1
+          },
+          {
+            "key": "band6Width",
+            "label": "Filter 6 bandwidth",
+            "kind": "number",
+            "unit": "oct",
+            "min": 0.025,
+            "max": 6.4,
+            "step": 0.025
+          },
+          {
+            "key": "band6Gain",
+            "label": "Filter 6 gain",
+            "kind": "number",
+            "unit": "dB",
+            "min": -15,
+            "max": 12,
+            "step": 0.25
+          },
+          {
+            "key": "band7Enable",
+            "label": "Filter 7 on",
+            "kind": "bool"
+          },
+          {
+            "key": "band7Type",
+            "label": "Filter 7 type",
+            "kind": "enum",
+            "options": [
+              {
+                "value": 0,
+                "label": "Band"
+              },
+              {
+                "value": 1,
+                "label": "Low shelf"
+              },
+              {
+                "value": 2,
+                "label": "High shelf"
+              },
+              {
+                "value": 3,
+                "label": "Low cut"
+              },
+              {
+                "value": 4,
+                "label": "High cut"
+              },
+              {
+                "value": 5,
+                "label": "Horn EQ"
+              },
+              {
+                "value": 6,
+                "label": "All-pass (1st order)"
+              },
+              {
+                "value": 7,
+                "label": "All-pass (2nd order)"
+              }
+            ]
+          },
+          {
+            "key": "band7Freq",
+            "label": "Filter 7 frequency",
+            "kind": "number",
+            "unit": "Hz",
+            "min": 20,
+            "max": 20000,
+            "step": 1
+          },
+          {
+            "key": "band7Width",
+            "label": "Filter 7 bandwidth",
+            "kind": "number",
+            "unit": "oct",
+            "min": 0.025,
+            "max": 6.4,
+            "step": 0.025
+          },
+          {
+            "key": "band7Gain",
+            "label": "Filter 7 gain",
+            "kind": "number",
+            "unit": "dB",
+            "min": -15,
+            "max": 12,
+            "step": 0.25
+          },
+          {
+            "key": "band8Enable",
+            "label": "Filter 8 on",
+            "kind": "bool"
+          },
+          {
+            "key": "band8Type",
+            "label": "Filter 8 type",
+            "kind": "enum",
+            "options": [
+              {
+                "value": 0,
+                "label": "Band"
+              },
+              {
+                "value": 1,
+                "label": "Low shelf"
+              },
+              {
+                "value": 2,
+                "label": "High shelf"
+              },
+              {
+                "value": 3,
+                "label": "Low cut"
+              },
+              {
+                "value": 4,
+                "label": "High cut"
+              },
+              {
+                "value": 5,
+                "label": "Horn EQ"
+              },
+              {
+                "value": 6,
+                "label": "All-pass (1st order)"
+              },
+              {
+                "value": 7,
+                "label": "All-pass (2nd order)"
+              }
+            ]
+          },
+          {
+            "key": "band8Freq",
+            "label": "Filter 8 frequency",
+            "kind": "number",
+            "unit": "Hz",
+            "min": 20,
+            "max": 20000,
+            "step": 1
+          },
+          {
+            "key": "band8Width",
+            "label": "Filter 8 bandwidth",
+            "kind": "number",
+            "unit": "oct",
+            "min": 0.025,
+            "max": 6.4,
+            "step": 0.025
+          },
+          {
+            "key": "band8Gain",
+            "label": "Filter 8 gain",
+            "kind": "number",
+            "unit": "dB",
+            "min": -15,
+            "max": 12,
+            "step": 0.25
+          },
+          {
+            "key": "band9Enable",
+            "label": "Filter 9 on",
+            "kind": "bool"
+          },
+          {
+            "key": "band9Type",
+            "label": "Filter 9 type",
+            "kind": "enum",
+            "options": [
+              {
+                "value": 0,
+                "label": "Band"
+              },
+              {
+                "value": 1,
+                "label": "Low shelf"
+              },
+              {
+                "value": 2,
+                "label": "High shelf"
+              },
+              {
+                "value": 3,
+                "label": "Low cut"
+              },
+              {
+                "value": 4,
+                "label": "High cut"
+              },
+              {
+                "value": 5,
+                "label": "Horn EQ"
+              },
+              {
+                "value": 6,
+                "label": "All-pass (1st order)"
+              },
+              {
+                "value": 7,
+                "label": "All-pass (2nd order)"
+              }
+            ]
+          },
+          {
+            "key": "band9Freq",
+            "label": "Filter 9 frequency",
+            "kind": "number",
+            "unit": "Hz",
+            "min": 20,
+            "max": 20000,
+            "step": 1
+          },
+          {
+            "key": "band9Width",
+            "label": "Filter 9 bandwidth",
+            "kind": "number",
+            "unit": "oct",
+            "min": 0.025,
+            "max": 6.4,
+            "step": 0.025
+          },
+          {
+            "key": "band9Gain",
+            "label": "Filter 9 gain",
+            "kind": "number",
+            "unit": "dB",
+            "min": -15,
+            "max": 12,
+            "step": 0.25
+          },
+          {
+            "key": "band10Enable",
+            "label": "Filter 10 on",
+            "kind": "bool"
+          },
+          {
+            "key": "band10Type",
+            "label": "Filter 10 type",
+            "kind": "enum",
+            "options": [
+              {
+                "value": 0,
+                "label": "Band"
+              },
+              {
+                "value": 1,
+                "label": "Low shelf"
+              },
+              {
+                "value": 2,
+                "label": "High shelf"
+              },
+              {
+                "value": 3,
+                "label": "Low cut"
+              },
+              {
+                "value": 4,
+                "label": "High cut"
+              },
+              {
+                "value": 5,
+                "label": "Horn EQ"
+              },
+              {
+                "value": 6,
+                "label": "All-pass (1st order)"
+              },
+              {
+                "value": 7,
+                "label": "All-pass (2nd order)"
+              }
+            ]
+          },
+          {
+            "key": "band10Freq",
+            "label": "Filter 10 frequency",
+            "kind": "number",
+            "unit": "Hz",
+            "min": 20,
+            "max": 20000,
+            "step": 1
+          },
+          {
+            "key": "band10Width",
+            "label": "Filter 10 bandwidth",
+            "kind": "number",
+            "unit": "oct",
+            "min": 0.025,
+            "max": 6.4,
+            "step": 0.025
+          },
+          {
+            "key": "band10Gain",
+            "label": "Filter 10 gain",
+            "kind": "number",
+            "unit": "dB",
+            "min": -15,
+            "max": 12,
+            "step": 0.25
+          },
+          {
+            "key": "band11Enable",
+            "label": "Filter 11 on",
+            "kind": "bool"
+          },
+          {
+            "key": "band11Type",
+            "label": "Filter 11 type",
+            "kind": "enum",
+            "options": [
+              {
+                "value": 0,
+                "label": "Band"
+              },
+              {
+                "value": 1,
+                "label": "Low shelf"
+              },
+              {
+                "value": 2,
+                "label": "High shelf"
+              },
+              {
+                "value": 3,
+                "label": "Low cut"
+              },
+              {
+                "value": 4,
+                "label": "High cut"
+              },
+              {
+                "value": 5,
+                "label": "Horn EQ"
+              },
+              {
+                "value": 6,
+                "label": "All-pass (1st order)"
+              },
+              {
+                "value": 7,
+                "label": "All-pass (2nd order)"
+              }
+            ]
+          },
+          {
+            "key": "band11Freq",
+            "label": "Filter 11 frequency",
+            "kind": "number",
+            "unit": "Hz",
+            "min": 20,
+            "max": 20000,
+            "step": 1
+          },
+          {
+            "key": "band11Width",
+            "label": "Filter 11 bandwidth",
+            "kind": "number",
+            "unit": "oct",
+            "min": 0.025,
+            "max": 6.4,
+            "step": 0.025
+          },
+          {
+            "key": "band11Gain",
+            "label": "Filter 11 gain",
+            "kind": "number",
+            "unit": "dB",
+            "min": -15,
+            "max": 12,
+            "step": 0.25
+          },
+          {
+            "key": "band12Enable",
+            "label": "Filter 12 on",
+            "kind": "bool"
+          },
+          {
+            "key": "band12Type",
+            "label": "Filter 12 type",
+            "kind": "enum",
+            "options": [
+              {
+                "value": 0,
+                "label": "Band"
+              },
+              {
+                "value": 1,
+                "label": "Low shelf"
+              },
+              {
+                "value": 2,
+                "label": "High shelf"
+              },
+              {
+                "value": 3,
+                "label": "Low cut"
+              },
+              {
+                "value": 4,
+                "label": "High cut"
+              },
+              {
+                "value": 5,
+                "label": "Horn EQ"
+              },
+              {
+                "value": 6,
+                "label": "All-pass (1st order)"
+              },
+              {
+                "value": 7,
+                "label": "All-pass (2nd order)"
+              }
+            ]
+          },
+          {
+            "key": "band12Freq",
+            "label": "Filter 12 frequency",
+            "kind": "number",
+            "unit": "Hz",
+            "min": 20,
+            "max": 20000,
+            "step": 1
+          },
+          {
+            "key": "band12Width",
+            "label": "Filter 12 bandwidth",
+            "kind": "number",
+            "unit": "oct",
+            "min": 0.025,
+            "max": 6.4,
+            "step": 0.025
+          },
+          {
+            "key": "band12Gain",
+            "label": "Filter 12 gain",
+            "kind": "number",
+            "unit": "dB",
+            "min": -15,
+            "max": 12,
+            "step": 0.25
+          },
+          {
+            "key": "band13Enable",
+            "label": "Filter 13 on",
+            "kind": "bool"
+          },
+          {
+            "key": "band13Type",
+            "label": "Filter 13 type",
+            "kind": "enum",
+            "options": [
+              {
+                "value": 0,
+                "label": "Band"
+              },
+              {
+                "value": 1,
+                "label": "Low shelf"
+              },
+              {
+                "value": 2,
+                "label": "High shelf"
+              },
+              {
+                "value": 3,
+                "label": "Low cut"
+              },
+              {
+                "value": 4,
+                "label": "High cut"
+              },
+              {
+                "value": 5,
+                "label": "Horn EQ"
+              },
+              {
+                "value": 6,
+                "label": "All-pass (1st order)"
+              },
+              {
+                "value": 7,
+                "label": "All-pass (2nd order)"
+              }
+            ]
+          },
+          {
+            "key": "band13Freq",
+            "label": "Filter 13 frequency",
+            "kind": "number",
+            "unit": "Hz",
+            "min": 20,
+            "max": 20000,
+            "step": 1
+          },
+          {
+            "key": "band13Width",
+            "label": "Filter 13 bandwidth",
+            "kind": "number",
+            "unit": "oct",
+            "min": 0.025,
+            "max": 6.4,
+            "step": 0.025
+          },
+          {
+            "key": "band13Gain",
+            "label": "Filter 13 gain",
+            "kind": "number",
+            "unit": "dB",
+            "min": -15,
+            "max": 12,
+            "step": 0.25
+          },
+          {
+            "key": "band14Enable",
+            "label": "Filter 14 on",
+            "kind": "bool"
+          },
+          {
+            "key": "band14Type",
+            "label": "Filter 14 type",
+            "kind": "enum",
+            "options": [
+              {
+                "value": 0,
+                "label": "Band"
+              },
+              {
+                "value": 1,
+                "label": "Low shelf"
+              },
+              {
+                "value": 2,
+                "label": "High shelf"
+              },
+              {
+                "value": 3,
+                "label": "Low cut"
+              },
+              {
+                "value": 4,
+                "label": "High cut"
+              },
+              {
+                "value": 5,
+                "label": "Horn EQ"
+              },
+              {
+                "value": 6,
+                "label": "All-pass (1st order)"
+              },
+              {
+                "value": 7,
+                "label": "All-pass (2nd order)"
+              }
+            ]
+          },
+          {
+            "key": "band14Freq",
+            "label": "Filter 14 frequency",
+            "kind": "number",
+            "unit": "Hz",
+            "min": 20,
+            "max": 20000,
+            "step": 1
+          },
+          {
+            "key": "band14Width",
+            "label": "Filter 14 bandwidth",
+            "kind": "number",
+            "unit": "oct",
+            "min": 0.025,
+            "max": 6.4,
+            "step": 0.025
+          },
+          {
+            "key": "band14Gain",
+            "label": "Filter 14 gain",
+            "kind": "number",
+            "unit": "dB",
+            "min": -15,
+            "max": 12,
+            "step": 0.25
+          },
+          {
+            "key": "band15Enable",
+            "label": "Filter 15 on",
+            "kind": "bool"
+          },
+          {
+            "key": "band15Type",
+            "label": "Filter 15 type",
+            "kind": "enum",
+            "options": [
+              {
+                "value": 0,
+                "label": "Band"
+              },
+              {
+                "value": 1,
+                "label": "Low shelf"
+              },
+              {
+                "value": 2,
+                "label": "High shelf"
+              },
+              {
+                "value": 3,
+                "label": "Low cut"
+              },
+              {
+                "value": 4,
+                "label": "High cut"
+              },
+              {
+                "value": 5,
+                "label": "Horn EQ"
+              },
+              {
+                "value": 6,
+                "label": "All-pass (1st order)"
+              },
+              {
+                "value": 7,
+                "label": "All-pass (2nd order)"
+              }
+            ]
+          },
+          {
+            "key": "band15Freq",
+            "label": "Filter 15 frequency",
+            "kind": "number",
+            "unit": "Hz",
+            "min": 20,
+            "max": 20000,
+            "step": 1
+          },
+          {
+            "key": "band15Width",
+            "label": "Filter 15 bandwidth",
+            "kind": "number",
+            "unit": "oct",
+            "min": 0.025,
+            "max": 6.4,
+            "step": 0.025
+          },
+          {
+            "key": "band15Gain",
+            "label": "Filter 15 gain",
+            "kind": "number",
+            "unit": "dB",
+            "min": -15,
+            "max": 12,
+            "step": 0.25
+          }
+        ],
+        "compact": [
+          "mode",
+          "freeze"
+        ]
+      },
+      {
+        "blockType": 1792,
+        "name": "Signal Generator",
+        "role": "generator",
+        "evidence": "simulator",
+        "params": [
+          {
+            "key": "signal",
+            "label": "Signal",
+            "kind": "enum",
+            "options": [
+              {
+                "value": 0,
+                "label": "Pink noise"
+              },
+              {
+                "value": 1,
+                "label": "Sine"
+              }
+            ]
+          },
+          {
+            "key": "level",
+            "label": "Level",
+            "kind": "number",
+            "unit": "dB",
+            "min": -40,
+            "max": 0,
+            "step": 0.5
+          },
+          {
+            "key": "frequency",
+            "label": "Sine frequency",
+            "kind": "number",
+            "unit": "Hz",
+            "min": 20,
+            "max": 20000,
+            "step": 1
+          },
+          {
+            "key": "mute",
+            "label": "Mute",
+            "kind": "bool"
+          }
+        ],
+        "compact": [
+          "signal",
+          "level",
+          "mute"
+        ]
+      }
+    ],
+    "dspPercent": 0
+  },
+  "values": {
+    "1": {
+      "sensitivity": 0,
+      "userTrim": 0,
+      "trim": 0,
+      "mute": false
+    },
+    "2": {
+      "sensitivity": 0,
+      "userTrim": 0,
+      "trim": 0,
+      "mute": false
+    },
+    "3": {
+      "trim": 0,
+      "mute": false
+    },
+    "4": {
+      "trim": 0,
+      "mute": false
+    },
+    "5": {
+      "trim": 0,
+      "mute": false,
+      "invert": false
+    },
+    "6": {
+      "trim": 0,
+      "mute": false,
+      "invert": false
+    },
+    "7": {
+      "trim": 0,
+      "mute": false,
+      "invert": false
+    },
+    "8": {
+      "trim": 0,
+      "mute": false,
+      "invert": false
+    },
+    "9": {
+      "trim": 0,
+      "mute": false,
+      "invert": false
+    },
+    "10": {
+      "trim": 0,
+      "mute": false,
+      "invert": false
+    },
+    "11": {
+      "signal": 0,
+      "level": -20,
+      "frequency": 1000,
+      "mute": true
+    },
+    "12": {
+      "threshold": -6,
+      "attack": 8,
+      "release": 7
+    },
+    "13": {
+      "threshold": -6,
+      "attack": 8,
+      "release": 7
+    },
+    "14": {
+      "threshold": -18,
+      "attack": 8,
+      "release": 7,
+      "ratio": 14
+    },
+    "15": {
+      "threshold": -18,
+      "attack": 8,
+      "release": 7,
+      "ratio": 14
+    },
+    "16": {
+      "band1Enable": true,
+      "band1Type": 0,
+      "band1Freq": 80,
+      "band1Width": 1.5,
+      "band1Gain": -3,
+      "band2Enable": true,
+      "band2Type": 0,
+      "band2Freq": 400,
+      "band2Width": 0.5,
+      "band2Gain": -4.5,
+      "band3Enable": true,
+      "band3Type": 0,
+      "band3Freq": 2500,
+      "band3Width": 1,
+      "band3Gain": 2,
+      "band4Enable": true,
+      "band4Type": 2,
+      "band4Freq": 10000,
+      "band4Width": 1,
+      "band4Gain": 3
+    },
+    "17": {
+      "band1Enable": true,
+      "band1Type": 0,
+      "band1Freq": 80,
+      "band1Width": 1.5,
+      "band1Gain": -3,
+      "band2Enable": true,
+      "band2Type": 0,
+      "band2Freq": 400,
+      "band2Width": 0.5,
+      "band2Gain": -4.5,
+      "band3Enable": true,
+      "band3Type": 0,
+      "band3Freq": 2500,
+      "band3Width": 1,
+      "band3Gain": 2,
+      "band4Enable": true,
+      "band4Type": 2,
+      "band4Freq": 10000,
+      "band4Width": 1,
+      "band4Gain": 3
+    },
+    "18": {
+      "delay": 4
+    },
+    "19": {
+      "delay": 4
+    },
+    "20": {
+      "level": -2.5,
+      "options": {
+        "mute": false,
+        "offAtMin": false
+      },
+      "min": 0,
+      "max": 0
+    },
+    "21": {
+      "level": -2.5,
+      "options": {
+        "mute": false,
+        "offAtMin": false
+      },
+      "min": 0,
+      "max": 0
+    },
+    "22": {
+      "lowUpperType": 2,
+      "lowUpperFreq": 200,
+      "lowUpperInvert": false,
+      "midLowerType": 2,
+      "midLowerFreq": 200,
+      "midLowerInvert": false,
+      "midUpperType": 2,
+      "midUpperFreq": 1200,
+      "midUpperInvert": false,
+      "highLowerType": 2,
+      "highLowerFreq": 1200,
+      "highLowerInvert": false
+    },
+    "23": {
+      "lowUpperType": 2,
+      "lowUpperFreq": 200,
+      "lowUpperInvert": false,
+      "midLowerType": 2,
+      "midLowerFreq": 200,
+      "midLowerInvert": false,
+      "midUpperType": 2,
+      "midUpperFreq": 1200,
+      "midUpperInvert": false,
+      "highLowerType": 2,
+      "highLowerFreq": 1200,
+      "highLowerInvert": false
+    },
+    "24": {
+      "band1Enable": true,
+      "band1Type": 5,
+      "band1Freq": 3000,
+      "band1Width": 1,
+      "band1Gain": 4,
+      "band2Enable": true,
+      "band2Type": 0,
+      "band2Freq": 6300,
+      "band2Width": 0.3,
+      "band2Gain": -5,
+      "band3Enable": false,
+      "band3Type": 0,
+      "band3Freq": 1000,
+      "band3Width": 1,
+      "band3Gain": 0,
+      "band4Enable": false,
+      "band4Type": 0,
+      "band4Freq": 1000,
+      "band4Width": 1,
+      "band4Gain": 0,
+      "band5Enable": false,
+      "band5Type": 0,
+      "band5Freq": 1000,
+      "band5Width": 1,
+      "band5Gain": 0,
+      "band6Enable": false,
+      "band6Type": 0,
+      "band6Freq": 1000,
+      "band6Width": 1,
+      "band6Gain": 0,
+      "band7Enable": false,
+      "band7Type": 0,
+      "band7Freq": 1000,
+      "band7Width": 1,
+      "band7Gain": 0,
+      "band8Enable": false,
+      "band8Type": 0,
+      "band8Freq": 1000,
+      "band8Width": 1,
+      "band8Gain": 0,
+      "band9Enable": false,
+      "band9Type": 0,
+      "band9Freq": 1000,
+      "band9Width": 1,
+      "band9Gain": 0
+    },
+    "25": {
+      "band1Enable": true,
+      "band1Type": 5,
+      "band1Freq": 3000,
+      "band1Width": 1,
+      "band1Gain": 4,
+      "band2Enable": true,
+      "band2Type": 0,
+      "band2Freq": 6300,
+      "band2Width": 0.3,
+      "band2Gain": -5,
+      "band3Enable": false,
+      "band3Type": 0,
+      "band3Freq": 1000,
+      "band3Width": 1,
+      "band3Gain": 0,
+      "band4Enable": false,
+      "band4Type": 0,
+      "band4Freq": 1000,
+      "band4Width": 1,
+      "band4Gain": 0,
+      "band5Enable": false,
+      "band5Type": 0,
+      "band5Freq": 1000,
+      "band5Width": 1,
+      "band5Gain": 0,
+      "band6Enable": false,
+      "band6Type": 0,
+      "band6Freq": 1000,
+      "band6Width": 1,
+      "band6Gain": 0,
+      "band7Enable": false,
+      "band7Type": 0,
+      "band7Freq": 1000,
+      "band7Width": 1,
+      "band7Gain": 0,
+      "band8Enable": false,
+      "band8Type": 0,
+      "band8Freq": 1000,
+      "band8Width": 1,
+      "band8Gain": 0,
+      "band9Enable": false,
+      "band9Type": 0,
+      "band9Freq": 1000,
+      "band9Width": 1,
+      "band9Gain": 0
+    },
+    "26": {
+      "delay": 0
+    },
+    "27": {
+      "delay": 0
+    },
+    "28": {
+      "level": 0,
+      "options": {
+        "mute": false,
+        "offAtMin": false
+      },
+      "min": 0,
+      "max": 0
+    },
+    "29": {
+      "level": 0,
+      "options": {
+        "mute": false,
+        "offAtMin": false
+      },
+      "min": 0,
+      "max": 0
+    },
+    "30": {
+      "threshold": 0,
+      "attack": 8,
+      "release": 7
+    },
+    "31": {
+      "threshold": 0,
+      "attack": 8,
+      "release": 7
+    },
+    "32": {
+      "band1Enable": false,
+      "band1Type": 0,
+      "band1Freq": 1000,
+      "band1Width": 1,
+      "band1Gain": 0,
+      "band2Enable": false,
+      "band2Type": 0,
+      "band2Freq": 1000,
+      "band2Width": 1,
+      "band2Gain": 0,
+      "band3Enable": false,
+      "band3Type": 0,
+      "band3Freq": 1000,
+      "band3Width": 1,
+      "band3Gain": 0,
+      "band4Enable": false,
+      "band4Type": 0,
+      "band4Freq": 1000,
+      "band4Width": 1,
+      "band4Gain": 0
+    },
+    "33": {
+      "band1Enable": false,
+      "band1Type": 0,
+      "band1Freq": 1000,
+      "band1Width": 1,
+      "band1Gain": 0,
+      "band2Enable": false,
+      "band2Type": 0,
+      "band2Freq": 1000,
+      "band2Width": 1,
+      "band2Gain": 0,
+      "band3Enable": false,
+      "band3Type": 0,
+      "band3Freq": 1000,
+      "band3Width": 1,
+      "band3Gain": 0,
+      "band4Enable": false,
+      "band4Type": 0,
+      "band4Freq": 1000,
+      "band4Width": 1,
+      "band4Gain": 0
+    },
+    "34": {
+      "level": 0,
+      "options": {
+        "mute": false,
+        "offAtMin": false
+      },
+      "min": 0,
+      "max": 0
+    },
+    "35": {
+      "level": 0,
+      "options": {
+        "mute": false,
+        "offAtMin": false
+      },
+      "min": 0,
+      "max": 0
+    },
+    "36": {
+      "threshold": 0,
+      "attack": 8,
+      "release": 7
+    },
+    "37": {
+      "threshold": 0,
+      "attack": 8,
+      "release": 7
+    },
+    "38": {
+      "input1Level": 0,
+      "input1Mute": false,
+      "input2Level": 0,
+      "input2Mute": false,
+      "outputLevel": 0,
+      "outputMute": false
+    },
+    "39": {
+      "lowUpperType": 2,
+      "lowUpperFreq": 90,
+      "lowUpperInvert": false,
+      "highLowerType": 2,
+      "highLowerFreq": 90,
+      "highLowerInvert": false
+    },
+    "40": {
+      "delay": 3.5
+    },
+    "41": {},
+    "42": {
+      "band1Enable": false,
+      "band1Type": 0,
+      "band1Freq": 1000,
+      "band1Width": 1,
+      "band1Gain": 0,
+      "band2Enable": false,
+      "band2Type": 0,
+      "band2Freq": 1000,
+      "band2Width": 1,
+      "band2Gain": 0,
+      "band3Enable": false,
+      "band3Type": 0,
+      "band3Freq": 1000,
+      "band3Width": 1,
+      "band3Gain": 0,
+      "band4Enable": false,
+      "band4Type": 0,
+      "band4Freq": 1000,
+      "band4Width": 1,
+      "band4Gain": 0
+    },
+    "43": {
+      "level": 0,
+      "options": {
+        "mute": false,
+        "offAtMin": false
+      },
+      "min": 0,
+      "max": 0
+    },
+    "44": {
+      "threshold": 0,
+      "attack": 8,
+      "release": 7
+    },
+    "45": {
+      "input1Level": 0,
+      "input1Mute": false,
+      "input2Level": 0,
+      "input2Mute": false,
+      "input3Level": 0,
+      "input3Mute": false,
+      "input4Level": 0,
+      "input4Mute": false,
+      "outputLevel": 0,
+      "outputMute": false
+    },
+    "46": {
+      "out1In1Level": 0,
+      "out1In1Mute": false,
+      "out1In2Level": 0,
+      "out1In2Mute": true,
+      "out2In1Level": 0,
+      "out2In1Mute": true,
+      "out2In2Level": 0,
+      "out2In2Mute": false,
+      "input1Level": 0,
+      "input1Solo": false,
+      "input1Mute": false,
+      "input1Invert": false,
+      "input2Level": 0,
+      "input2Solo": false,
+      "input2Mute": false,
+      "input2Invert": false,
+      "output1Level": 0,
+      "output1Solo": false,
+      "output1Mute": false,
+      "output1Invert": false,
+      "output2Level": 0,
+      "output2Solo": false,
+      "output2Mute": false,
+      "output2Invert": false,
+      "autoCancel": false
+    },
+    "47": {
+      "out1In1Level": 0,
+      "out1In1Mute": false,
+      "out1In2Level": 0,
+      "out1In2Mute": true,
+      "out1In3Level": 0,
+      "out1In3Mute": true,
+      "out1In4Level": 0,
+      "out1In4Mute": true,
+      "out1In5Level": 0,
+      "out1In5Mute": true,
+      "out1In6Level": 0,
+      "out1In6Mute": true,
+      "out2In1Level": 0,
+      "out2In1Mute": true,
+      "out2In2Level": 0,
+      "out2In2Mute": false,
+      "out2In3Level": 0,
+      "out2In3Mute": true,
+      "out2In4Level": 0,
+      "out2In4Mute": true,
+      "out2In5Level": 0,
+      "out2In5Mute": true,
+      "out2In6Level": 0,
+      "out2In6Mute": true,
+      "out3In1Level": 0,
+      "out3In1Mute": true,
+      "out3In2Level": 0,
+      "out3In2Mute": true,
+      "out3In3Level": 0,
+      "out3In3Mute": false,
+      "out3In4Level": 0,
+      "out3In4Mute": true,
+      "out3In5Level": 0,
+      "out3In5Mute": true,
+      "out3In6Level": 0,
+      "out3In6Mute": true,
+      "out4In1Level": 0,
+      "out4In1Mute": true,
+      "out4In2Level": 0,
+      "out4In2Mute": true,
+      "out4In3Level": 0,
+      "out4In3Mute": true,
+      "out4In4Level": 0,
+      "out4In4Mute": false,
+      "out4In5Level": 0,
+      "out4In5Mute": true,
+      "out4In6Level": 0,
+      "out4In6Mute": true,
+      "out5In1Level": 0,
+      "out5In1Mute": true,
+      "out5In2Level": 0,
+      "out5In2Mute": true,
+      "out5In3Level": 0,
+      "out5In3Mute": true,
+      "out5In4Level": 0,
+      "out5In4Mute": true,
+      "out5In5Level": 0,
+      "out5In5Mute": false,
+      "out5In6Level": 0,
+      "out5In6Mute": true,
+      "out6In1Level": 0,
+      "out6In1Mute": true,
+      "out6In2Level": 0,
+      "out6In2Mute": true,
+      "out6In3Level": 0,
+      "out6In3Mute": true,
+      "out6In4Level": 0,
+      "out6In4Mute": true,
+      "out6In5Level": 0,
+      "out6In5Mute": true,
+      "out6In6Level": 0,
+      "out6In6Mute": false,
+      "input1Level": 0,
+      "input1Solo": false,
+      "input1Mute": false,
+      "input1Invert": false,
+      "input2Level": 0,
+      "input2Solo": false,
+      "input2Mute": false,
+      "input2Invert": false,
+      "input3Level": 0,
+      "input3Solo": false,
+      "input3Mute": false,
+      "input3Invert": false,
+      "input4Level": 0,
+      "input4Solo": false,
+      "input4Mute": false,
+      "input4Invert": false,
+      "input5Level": 0,
+      "input5Solo": false,
+      "input5Mute": false,
+      "input5Invert": false,
+      "input6Level": 0,
+      "input6Solo": false,
+      "input6Mute": false,
+      "input6Invert": false,
+      "output1Level": 0,
+      "output1Solo": false,
+      "output1Mute": false,
+      "output1Invert": false,
+      "output2Level": 0,
+      "output2Solo": false,
+      "output2Mute": false,
+      "output2Invert": false,
+      "output3Level": 0,
+      "output3Solo": false,
+      "output3Mute": false,
+      "output3Invert": false,
+      "output4Level": 0,
+      "output4Solo": false,
+      "output4Mute": false,
+      "output4Invert": false,
+      "output5Level": 0,
+      "output5Solo": false,
+      "output5Mute": false,
+      "output5Invert": false,
+      "output6Level": 0,
+      "output6Solo": false,
+      "output6Mute": false,
+      "output6Invert": false,
+      "autoCancel": false
+    },
+    "48": {
+      "band1Gain": 0,
+      "band2Gain": 0,
+      "band3Gain": -1,
+      "band4Gain": -2,
+      "band5Gain": -3,
+      "band6Gain": -2,
+      "band7Gain": 0,
+      "band8Gain": 0,
+      "band9Gain": 1,
+      "band10Gain": 0,
+      "band11Gain": -1.5,
+      "band12Gain": -3,
+      "band13Gain": -4,
+      "band14Gain": -2,
+      "band15Gain": 0,
+      "band16Gain": 0,
+      "band17Gain": 0,
+      "band18Gain": 1,
+      "band19Gain": 2,
+      "band20Gain": 2.5,
+      "band21Gain": 1,
+      "band22Gain": 0,
+      "band23Gain": -1,
+      "band24Gain": -2,
+      "band25Gain": -3,
+      "band26Gain": -2,
+      "band27Gain": -1,
+      "band28Gain": 0,
+      "band29Gain": -3,
+      "band30Gain": -6,
+      "lowLevel": 32,
+      "midLevel": 32,
+      "highLevel": 32,
+      "lowCut": 32,
+      "inputLevel": 0,
+      "outputLevel": 0,
+      "bypass": false,
+      "range": 0,
+      "eqType": 0
+    },
+    "49": {
+      "mode": 0,
+      "dynamicLevel": false,
+      "releaseRate": 8,
+      "maxAttenuation": 0,
+      "newFilterWidth": 1,
+      "cycleClear": false,
+      "timeoutClear": false,
+      "timeout": 8,
+      "threshold": 0,
+      "freeze": false,
+      "band1Enable": false,
+      "band1Type": 0,
+      "band1Freq": 1000,
+      "band1Width": 1,
+      "band1Gain": 0,
+      "band2Enable": false,
+      "band2Type": 0,
+      "band2Freq": 1000,
+      "band2Width": 1,
+      "band2Gain": 0,
+      "band3Enable": false,
+      "band3Type": 0,
+      "band3Freq": 1000,
+      "band3Width": 1,
+      "band3Gain": 0,
+      "band4Enable": false,
+      "band4Type": 0,
+      "band4Freq": 1000,
+      "band4Width": 1,
+      "band4Gain": 0,
+      "band5Enable": false,
+      "band5Type": 0,
+      "band5Freq": 1000,
+      "band5Width": 1,
+      "band5Gain": 0,
+      "band6Enable": false,
+      "band6Type": 0,
+      "band6Freq": 1000,
+      "band6Width": 1,
+      "band6Gain": 0,
+      "band7Enable": false,
+      "band7Type": 0,
+      "band7Freq": 1000,
+      "band7Width": 1,
+      "band7Gain": 0,
+      "band8Enable": false,
+      "band8Type": 0,
+      "band8Freq": 1000,
+      "band8Width": 1,
+      "band8Gain": 0,
+      "band9Enable": false,
+      "band9Type": 0,
+      "band9Freq": 1000,
+      "band9Width": 1,
+      "band9Gain": 0,
+      "band10Enable": false,
+      "band10Type": 0,
+      "band10Freq": 1000,
+      "band10Width": 1,
+      "band10Gain": 0,
+      "band11Enable": false,
+      "band11Type": 0,
+      "band11Freq": 1000,
+      "band11Width": 1,
+      "band11Gain": 0,
+      "band12Enable": false,
+      "band12Type": 0,
+      "band12Freq": 1000,
+      "band12Width": 1,
+      "band12Gain": 0,
+      "band13Enable": false,
+      "band13Type": 0,
+      "band13Freq": 1000,
+      "band13Width": 1,
+      "band13Gain": 0,
+      "band14Enable": false,
+      "band14Type": 0,
+      "band14Freq": 1000,
+      "band14Width": 1,
+      "band14Gain": 0,
+      "band15Enable": false,
+      "band15Type": 0,
+      "band15Freq": 1000,
+      "band15Width": 1,
+      "band15Gain": 0
+    },
+    "50": {
+      "bypass": false,
+      "target": -5,
+      "threshold": 0,
+      "ratio": 2,
+      "gainIncrease": 1,
+      "gainDecrease": 1,
+      "hold": 16,
+      "gainNormalize": 0
+    },
+    "51": {
+      "threshold": 0,
+      "ratio": 64,
+      "attack": 0,
+      "release": 0,
+      "knee": 0,
+      "bypass": false
+    },
+    "52": {
+      "threshold": 0,
+      "ratio": 64,
+      "attack": 0,
+      "release": 0,
+      "knee": 0,
+      "bypass": false
+    },
+    "53": {
+      "minGain": 0,
+      "maxGain": 0,
+      "gainIncreaseTime": 0,
+      "gainDecreaseTime": 0,
+      "threshold": 0,
+      "ratio": 7,
+      "acousticCoupling": 0,
+      "mode": 0,
+      "bypass": false,
+      "programMute": false,
+      "freeze": false
+    },
+    "54": {
+      "out1In1Level": 0,
+      "out1In1Assign": true,
+      "out1In2Level": 0,
+      "out1In2Assign": true,
+      "out1In3Level": 0,
+      "out1In3Assign": true,
+      "out1In4Level": 0,
+      "out1In4Assign": true,
+      "out2In1Level": 0,
+      "out2In1Assign": false,
+      "out2In2Level": 0,
+      "out2In2Assign": false,
+      "out2In3Level": 0,
+      "out2In3Assign": false,
+      "out2In4Level": 0,
+      "out2In4Assign": false,
+      "out3In1Level": 0,
+      "out3In1Assign": false,
+      "out3In2Level": 0,
+      "out3In2Assign": false,
+      "out3In3Level": 0,
+      "out3In3Assign": false,
+      "out3In4Level": 0,
+      "out3In4Assign": false,
+      "out4In1Level": 0,
+      "out4In1Assign": false,
+      "out4In2Level": 0,
+      "out4In2Assign": false,
+      "out4In3Level": 0,
+      "out4In3Assign": false,
+      "out4In4Level": 0,
+      "out4In4Assign": false,
+      "input1Threshold": -12,
+      "input1HoldOff": 0,
+      "input1Priority": 2,
+      "input1DuckDepth": 0,
+      "input1RampBack": 0,
+      "input1GateDepth": 48,
+      "input2Threshold": -12,
+      "input2HoldOff": 0,
+      "input2Priority": 2,
+      "input2DuckDepth": 0,
+      "input2RampBack": 0,
+      "input2GateDepth": 48,
+      "input3Threshold": -12,
+      "input3HoldOff": 0,
+      "input3Priority": 2,
+      "input3DuckDepth": 0,
+      "input3RampBack": 0,
+      "input3GateDepth": 48,
+      "input4Threshold": -12,
+      "input4HoldOff": 0,
+      "input4Priority": 2,
+      "input4DuckDepth": 0,
+      "input4RampBack": 0,
+      "input4GateDepth": 48,
+      "output1Level": 0,
+      "output1Mute": false,
+      "output2Level": 0,
+      "output2Mute": false,
+      "output3Level": 0,
+      "output3Mute": false,
+      "output4Level": 0,
+      "output4Mute": false,
+      "nomMode": false
+    }
+  }
+}

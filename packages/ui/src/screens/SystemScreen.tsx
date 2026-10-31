@@ -3,7 +3,6 @@ import type { CSSProperties } from 'react';
 import type { ModuleInfo, Rack, Setup, Values } from '@rackline/api';
 import { Button, MuteButton, RackCard } from '@rackline/ui-kit';
 import { useCoreClient } from '../app/core-context.js';
-import { peqBands } from '../curves.js';
 import {
   anyMuted,
   blockById,
@@ -23,14 +22,8 @@ import {
   sourceChoice,
 } from '../racks.js';
 import { CrossoverModule } from '../modules/CrossoverModule.js';
-import { GenericModule } from '../modules/GenericModule.js';
-import type { ModuleViewProps } from '../modules/GenericModule.js';
-import { PeqModule } from '../modules/PeqModule.js';
+import { ModuleView } from '../modules/ModuleView.js';
 import { FlowLine, RackFlow, SourcePicker } from './FlowChips.js';
-
-function ModuleView(props: ModuleViewProps) {
-  return peqBands(props.module).length > 0 ? <PeqModule {...props} /> : <GenericModule {...props} />;
-}
 
 function UnknownModule({ blockIds, setup }: { blockIds: readonly number[]; setup: Setup }) {
   const name = blockById(setup, blockIds[0] ?? -1)?.name ?? 'Unknown block';
@@ -55,6 +48,8 @@ function RackView({ rack, setup, values }: { rack: Rack; setup: Setup; values: V
   const mixerId = rack.channels[0]?.mixerId;
   const mixerModule = mixerId === undefined ? undefined : moduleOf(setup, mixerId);
   const crossover = rack.crossover;
+  // A rack fed by the signal generator starts with the generator's own card.
+  const generators = [...new Set(rack.channels.flatMap((c) => c.sources.flatMap((t) => (t.kind === 'generator' ? [t.blockId] : []))))];
   const crossoverModules = (crossover?.blockIds[0] ?? []).map((id) => moduleOf(setup, id)).filter((m): m is ModuleInfo => m !== undefined);
   // Racks fed by this rack's crossover bands, so the curve uses their colors.
   const bandColors = (crossover?.bands ?? []).map((_, band) => {
@@ -80,6 +75,10 @@ function RackView({ rack, setup, values }: { rack: Rack; setup: Setup; values: V
         )
       }
     >
+      {generators.map((id) => {
+        const module = moduleOf(setup, id);
+        return module && <ModuleView key={`gen${id}`} module={module} blockIds={[id]} values={values} rackName={rack.name} title={blockById(setup, id)?.name ?? module.name} />;
+      })}
       {!choice && mixerId !== undefined && mixerModule && (
         <ModuleView module={mixerModule} blockIds={[mixerId]} values={values} rackName={rack.name} title="Sum" />
       )}

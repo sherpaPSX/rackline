@@ -8,12 +8,16 @@ import { CoreClient } from '../src/core-client.js';
 import type { OpenSocket } from '../src/core-client.js';
 import { AppState } from '@rackline/api';
 import psx from '../test/fixtures/psx-rcf-final-state.json';
+import catalog from '../test/fixtures/module-catalog-state.json';
 import { withSelects } from '../test/select-demo.js';
 
-// Demo Selects (input of ANALOG, source of Out 5+6) show the source pickers; Lukas's file has none yet.
-const state = withSelects(AppState.parse(psx));
+/** Which preview build.mjs is building: Lukas's rig, or every module on one page. */
+declare const __PREVIEW__: 'preview' | 'modules';
 
-// Preview only: an in-page fake core that echoes every edit, loaded with PSX_RCF_FINAL.r26.
+// Demo Selects (input of ANALOG, source of Out 5+6) show the source pickers; Lukas's file has none yet.
+const state = __PREVIEW__ === 'modules' ? AppState.parse(catalog) : withSelects(AppState.parse(psx));
+
+// Preview only: an in-page fake core that echoes every edit.
 const fake: OpenSocket = (_url, h) => {
   setTimeout(() => {
     h.open();
