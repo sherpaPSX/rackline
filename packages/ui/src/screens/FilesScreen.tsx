@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { AppState } from '@rackline/api';
 import { Button, ConfirmButton, Select, TextField } from '@rackline/ui-kit';
 import { useCoreClient } from '../app/core-context.js';
@@ -11,10 +11,16 @@ const validIp = (ip: string) => IPV4.test(ip) && ip.split('.').every((n) => Numb
 export function FilesScreen({ app }: { app: AppState }) {
   const client = useCoreClient();
   const [ip, setIp] = useState(app.connection.device?.ip ?? '');
+  const [manual, setManual] = useState(false);
   const [preset, setPreset] = useState(app.currentPreset ?? 1);
   const fileInput = useRef<HTMLInputElement>(null);
   const { connection, setup } = app;
   const connected = connection.status !== 'offline';
+
+  // Plug-and-play: look for devices as soon as the screen shows without one.
+  useEffect(() => {
+    if (!connected) client.send({ type: 'discover' });
+  }, [client, connected]);
 
   return (
     <div className="app-screen">
@@ -33,21 +39,29 @@ export function FilesScreen({ app }: { app: AppState }) {
           <>
             <div className="app-row">
               <Button onClick={() => client.send({ type: 'discover' })}>Find devices</Button>
-              <TextField label="Device IP address" placeholder="192.168.1.20" value={ip} onChange={setIp} inputMode="decimal" size={16} />
-              <Button disabled={!validIp(ip)} onClick={() => client.send({ type: 'connect', ip })}>
-                Connect
-              </Button>
+              {!manual && <Button onClick={() => setManual(true)}>Connect by IP address</Button>}
             </div>
-            {app.devices.length > 0 && (
+            {app.devices.length > 0 ? (
               <ul className="app-list">
                 {app.devices.map((d) => (
                   <li key={d.mac} className="app-row">
                     <span className="app-mono">{d.ip}</span>
                     <span className="app-note">{d.mac}</span>
+                    {d.reachable === false && <span className="app-note">Other network: Connect gives it a free address in yours</span>}
                     <Button onClick={() => client.send({ type: 'connect', ip: d.ip })}>Connect</Button>
                   </li>
                 ))}
               </ul>
+            ) : (
+              <p className="app-note">No device found yet. Check that the RPM is on and plugged into the same network, then Find devices.</p>
+            )}
+            {manual && (
+              <div className="app-row">
+                <TextField label="Device IP address" placeholder="192.168.1.20" value={ip} onChange={setIp} inputMode="decimal" size={16} />
+                <Button disabled={!validIp(ip)} onClick={() => client.send({ type: 'connect', ip })}>
+                  Connect
+                </Button>
+              </div>
             )}
           </>
         )}

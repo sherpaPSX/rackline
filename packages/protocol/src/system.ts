@@ -23,7 +23,10 @@ export const SYSTEM = {
   currentPreset: system(0x01, 0xfc00),
 } as const;
 
-/** Value of `SYSTEM.modelCode` → model name. */
+/**
+ * Top three bits of `SYSTEM.modelCode` → model name. A real RPM 26z answers
+ * 0x62 (the simulator 0x60); what the low bits mean is unknown.
+ */
 export const MODEL_CODES: Readonly<Record<number, string>> = {
   0x00: 'RPM 88',
   0x20: 'RPM 22',
@@ -72,5 +75,5 @@ export function decodeDeviceInfo(records: readonly ParamRecord[]): DeviceInfo {
 
 function modelName(code: number | undefined): string {
   if (code === undefined) return 'unknown';
-  return MODEL_CODES[code] ?? `unknown (0x${code.toString(16).padStart(2, '0')})`;
+  return MODEL_CODES[code & 0xe0] ?? `unknown (0x${code.toString(16).padStart(2, '0')})`;
 }

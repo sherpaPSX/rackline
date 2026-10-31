@@ -66,16 +66,21 @@ export function encodeFrame(frame: Frame): Uint8Array {
   return bytes;
 }
 
-/** Decode a frame received from the network. */
+/**
+ * Decode a frame received from the network. Drag Net and the simulator send
+ * the full 905 bytes; a real RPM 26z (firmware 2.5.3) cuts its replies after
+ * the last record, so any length that holds the records is accepted.
+ */
 export function decodeFrame(bytes: Uint8Array): Result<Frame> {
-  if (bytes.length !== CONTROL_FRAME_SIZE) {
-    return fail(`frame must be ${CONTROL_FRAME_SIZE} bytes, got ${bytes.length}`);
+  if (bytes.length < RECORDS_OFFSET || bytes.length > CONTROL_FRAME_SIZE) {
+    return fail(`frame must be ${RECORDS_OFFSET}–${CONTROL_FRAME_SIZE} bytes, got ${bytes.length}`);
   }
   const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
   const kind = KIND_BY_BYTE.get(view.getUint8(0));
   if (kind === undefined) return fail(`unknown frame kind ${view.getUint8(0)}`);
   const count = view.getUint8(8);
   if (count > MAX_RECORDS_PER_FRAME) return fail(`record count ${count} exceeds ${MAX_RECORDS_PER_FRAME}`);
+  if (bytes.length < RECORDS_OFFSET + RECORD_SIZE * count) return fail(`frame of ${bytes.length} bytes is too short for ${count} records`);
 
   const records: ParamRecord[] = [];
   for (let i = 0; i < count; i++) {
