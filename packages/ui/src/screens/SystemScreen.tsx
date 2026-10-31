@@ -9,7 +9,7 @@ import { SystemRacks } from './SystemRacks.js';
  */
 export function SystemScreen({ setup, values }: { setup: Setup; values: Values }) {
   return (
-    <div className="app-screen">
+    <div className="app-screen app-screen-fluid">
       <div className="app-toolbar">
         <span className="app-mode">Tune</span>
         <Button disabled title="Editing the layout comes in phase 2">

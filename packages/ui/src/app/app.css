@@ -77,6 +77,10 @@ body {
 .app-screen > * {
   min-width: 0;
 }
+/* The system grid uses the whole window. */
+.app-screen-fluid {
+  max-width: none;
+}
 .app-empty {
   justify-items: center;
   padding-top: var(--rl-s6);
@@ -463,7 +467,7 @@ button.app-flow-chip:focus-visible {
 }
 .app-grid-canvas {
   overflow: auto;
-  max-height: 70vh;
+  max-height: calc(100vh - 140px);
   background-color: var(--rl-well);
   background-image: radial-gradient(circle, var(--rl-line) 1px, transparent 1px);
   background-size: 16px 16px;
