@@ -174,14 +174,13 @@ body {
 }
 
 /* System: modules */
-.app-channels .rl-btn {
-  height: 22px;
-  min-width: 26px;
-  padding: 0 6px;
-  font-size: 11px;
-}
-.app-channels[data-differ] .rl-btn {
-  border-color: var(--rl-warn);
+.app-differ {
+  padding: 1px 6px;
+  border: 1px solid var(--rl-warn);
+  border-radius: var(--rl-radius);
+  color: var(--rl-warn);
+  font: 600 11px var(--rl-font-value);
+  white-space: nowrap;
 }
 .app-mini-curve {
   width: 200px;
@@ -252,7 +251,7 @@ body {
   }
 }
 
-/* System: fixed inputs (top) and outputs (bottom) */
+/* System: outputs nothing plays into */
 .app-io {
   padding: var(--rl-s3);
   background: var(--rl-panel);
@@ -264,28 +263,12 @@ body {
   flex-wrap: wrap;
   gap: var(--rl-s2);
 }
-.app-io-tile {
-  display: grid;
-  grid-template-rows: 1fr auto;
-  gap: var(--rl-s1);
-  scroll-margin-top: 72px;
-}
-.app-io-flow .app-note {
-  margin: 0;
-}
 
-/* System: signal flow */
-.app-rack {
-  /* A rack fed by another rack sits one step in, so the screen reads as the signal tree. */
-  margin-left: calc(var(--app-depth, 0) * var(--rl-s5));
+/* System: input channels and speakers, one row each */
+.app-row-card {
   scroll-margin-top: 72px;
 }
-@media (max-width: 600px) {
-  .app-rack {
-    margin-left: calc(var(--app-depth, 0) * var(--rl-s2));
-  }
-}
-.app-rack .rl-rack-detail {
+.app-row-card .rl-rack-detail {
   white-space: normal;
   overflow: visible;
 }
@@ -332,9 +315,45 @@ button.app-flow-chip:focus-visible {
   outline: 2px solid var(--rl-accent);
   outline-offset: 1px;
 }
+.app-flow-then {
+  font: 500 13px var(--rl-font-label);
+  color: var(--rl-fg);
+}
+/* A block other speakers also play through: editing it changes them too. */
+.app-shared {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.app-shared > .rl-module {
+  flex: 1;
+  border-style: dashed;
+}
+.app-shared-note {
+  font: 500 11px var(--rl-font-label);
+  color: var(--rl-dim);
+  white-space: nowrap;
+}
 .app-source .rl-select {
   height: 26px;
 }
 .app-source[data-differ] .rl-select {
   border-color: var(--rl-warn);
+}
+
+/* An unlinked stereo row: one lane per channel, stacked. */
+.app-row-card[data-split] .rl-rack-chain {
+  flex-direction: column;
+}
+.app-lane {
+  display: flex;
+  align-items: stretch;
+  gap: var(--rl-s2);
+}
+.app-lane-name {
+  flex: none;
+  align-self: center;
+  width: 44px;
+  font: 600 12px var(--rl-font-label);
+  color: var(--rl-dim);
 }

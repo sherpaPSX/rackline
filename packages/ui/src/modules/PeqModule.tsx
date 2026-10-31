@@ -4,7 +4,7 @@ import type { EqCurveLine } from '@rackline/ui-kit';
 import { peqBands, peqBypassPatch, peqFilter, peqFilters, peqHasGain, readPeqBand } from '../curves.js';
 import { formatParam, numberScale } from '../params.js';
 import type { NumberParam } from '../params.js';
-import { ChannelPicker } from './ChannelPicker.js';
+import { ChannelsBadge } from './ChannelsBadge.js';
 import type { ModuleViewProps } from './GenericModule.js';
 import { useLinkedModule } from './linked.js';
 
@@ -55,7 +55,7 @@ export function PeqModule({ module, blockIds, values, rackName, channelNames, ti
         linked.set(peqBypassPatch(bands, on, remembered));
         setRemembered(on ? undefined : bands.filter((b) => b.on).map((b) => b.band));
       }}
-      badge={linked.stereo ? <ChannelPicker linked={linked} owner={owner} /> : undefined}
+      badge={linked.stereo ? <ChannelsBadge linked={linked} /> : undefined}
       expanded={open}
       onExpandedChange={setOpen}
       wide

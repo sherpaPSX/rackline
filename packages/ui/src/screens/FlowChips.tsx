@@ -1,11 +1,11 @@
 import type { CSSProperties } from 'react';
-import type { Rack, Setup, Values } from '@rackline/api';
+import type { Values } from '@rackline/api';
 import { Select } from '@rackline/ui-kit';
 import { useCoreClient } from '../app/core-context.js';
-import { channelsAgree, flowSources, flowTargets, sourceChoice, valueOf } from '../racks.js';
+import { channelsAgree, valueOf } from '../racks.js';
 import type { FlowLink, SourceChoice } from '../racks.js';
 
-/** Scrolls to a rack, input or output drawn by the System screen. */
+/** Scrolls to an input channel or speaker drawn by the System screen. */
 export function jumpTo(anchor: string): void {
   const el = document.getElementById(anchor);
   el?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -26,14 +26,15 @@ function Chip({ link }: { link: FlowLink }) {
   );
 }
 
-/** A labelled row of links: "From In 1+2", "To Out 5+6". */
-export function FlowLine({ label, links }: { label: string; links: readonly FlowLink[] }) {
+/** A labelled row of links: "From ANALOG → High", "To MF\\HF LF". `then` follows the links after an arrow. */
+export function FlowLine({ label, links, then }: { label: string; links: readonly FlowLink[]; then?: string | undefined }) {
   return (
     <span className="app-flow-line">
       <span className="app-flow-label">{label}</span>
       {links.map((l) => (
         <Chip key={`${l.anchor ?? ''}${l.text}`} link={l} />
       ))}
+      {then !== undefined && <span className="app-flow-then">→ {then}</span>}
     </span>
   );
 }
@@ -51,26 +52,6 @@ export function SourcePicker({ choice, values, owner }: { choice: SourceChoice; 
         value={typeof current === 'number' ? current : -1}
         onChange={(value) => client.setParams(choice.blockIds.map((blockId) => ({ blockId, key: 'input', value })))}
       />
-    </span>
-  );
-}
-
-/** The rack header line: width, where the signal comes from and where it goes. */
-export function RackFlow({ setup, rack, values }: { setup: Setup; rack: Rack; values: Values }) {
-  const choice = sourceChoice(setup, rack);
-  const targets = flowTargets(setup, rack);
-  return (
-    <span className="app-rack-flow">
-      <span>{rack.channels.length > 1 ? 'Stereo' : 'Mono'}</span>
-      {choice ? (
-        <span className="app-flow-line">
-          <span className="app-flow-label">From</span>
-          <SourcePicker choice={choice} values={values} owner={rack.name} />
-        </span>
-      ) : (
-        <FlowLine label="From" links={flowSources(setup, rack)} />
-      )}
-      {targets.length > 0 && <FlowLine label="To" links={targets} />}
     </span>
   );
 }

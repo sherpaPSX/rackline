@@ -28,7 +28,7 @@ const OUTPUT_SELECT = [903, 904];
  * picking analog 1/2 or digital A/B, and one in front of outputs 5/6 picking
  * MF\HF or LF, so Out 5+6 becomes its own rack.
  */
-export function withSelects(state: AppState): AppState {
+export function withSelects(state: AppState, { output = true } = {}): AppState {
   const setup = state.setup;
   if (!setup) return state;
   const mfhf = setup.racks.find((r) => r.name === 'MF\\HF');
@@ -55,8 +55,8 @@ export function withSelects(state: AppState): AppState {
       ...setup,
       blocks: [...setup.blocks, ...blocks.map(([name, id, i]) => ({ id, blockType: SELECT_2.blockType, name: `${name} ${i === 0 ? 'L' : 'R'}`, channel: 0 }))],
       modules: [...setup.modules, SELECT_2],
-      racks: [...setup.racks, outRack].map((r) =>
-        r.id === mfhf.id ? { ...r, channels: r.channels.map((c) => ({ ...c, outputIds: [] })) } : r,
+      racks: (output ? [...setup.racks, outRack] : setup.racks).map((r) =>
+        output && r.id === mfhf.id ? { ...r, channels: r.channels.map((c) => ({ ...c, outputIds: [] })) } : r,
       ).map((r) =>
         r.name !== 'ANALOG'
           ? r

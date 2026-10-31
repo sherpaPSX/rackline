@@ -2,7 +2,7 @@ import { useState } from 'react';
 import type { ReactNode } from 'react';
 import type { ModuleInfo, Values } from '@rackline/api';
 import { ModuleCard } from '@rackline/ui-kit';
-import { ChannelPicker } from './ChannelPicker.js';
+import { ChannelsBadge } from './ChannelsBadge.js';
 import { ParamControl } from './ParamControl.js';
 import { useLinkedModule } from './linked.js';
 
@@ -59,7 +59,7 @@ export function GenericModule({ module, blockIds, values, rackName, channelNames
   return (
     <ModuleCard
       name={title}
-      badge={linked.stereo ? <ChannelPicker linked={linked} owner={owner} /> : undefined}
+      badge={linked.stereo ? <ChannelsBadge linked={linked} /> : undefined}
       {...(compact.length > 0 && compact.length < params.length ? { summary: compact.map(control), expanded: open, onExpandedChange: setOpen } : {})}
     >
       {params.map(control)}
