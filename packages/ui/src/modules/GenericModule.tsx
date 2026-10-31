@@ -2,7 +2,7 @@ import { useState } from 'react';
 import type { ReactNode } from 'react';
 import type { ModuleInfo, Values } from '@rackline/api';
 import { Meter, ModuleCard } from '@rackline/ui-kit';
-import { ChannelPicker } from './ChannelPicker.js';
+import { ChannelsBadge } from './ChannelsBadge.js';
 import { ParamControl } from './ParamControl.js';
 import { useLinkedModule } from './linked.js';
 
@@ -83,7 +83,7 @@ export function GenericModule({ initiallyOpen, module, blockIds, values, rackNam
     <ModuleCard
       name={title}
       {...(hasBypass ? { on: linked.value('bypass') !== true, onOnChange: (on: boolean) => linked.set({ bypass: !on }) } : {})}
-      badge={linked.stereo ? <ChannelPicker linked={linked} owner={owner} /> : undefined}
+      badge={linked.stereo ? <ChannelsBadge linked={linked} /> : undefined}
       {...(compact.length > 0 && compact.length < params.length ? { summary: compact.map(control), expanded: open, onExpandedChange: setOpen } : {})}
     >
       {params.length === 0 && (

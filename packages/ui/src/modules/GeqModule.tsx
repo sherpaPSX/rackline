@@ -3,7 +3,7 @@ import type { ModuleInfo } from '@rackline/api';
 import { ConfirmButton, EqCurve, GraphicEq } from '@rackline/ui-kit';
 import type { Filter } from '@rackline/ui-kit';
 import { ModuleCard } from '@rackline/ui-kit';
-import { ChannelPicker } from './ChannelPicker.js';
+import { ChannelsBadge } from './ChannelsBadge.js';
 import type { ModuleViewProps } from './GenericModule.js';
 import { useLinkedModule } from './linked.js';
 import { ParamControl } from './ParamControl.js';
@@ -38,7 +38,7 @@ export function GeqModule({ initiallyOpen, module, blockIds, values, rackName, c
     <ModuleCard
       name={title}
       {...(bypass ? { on: linked.value('bypass') !== true, onOnChange: (on: boolean) => linked.set({ bypass: !on }) } : {})}
-      badge={linked.stereo ? <ChannelPicker linked={linked} owner={owner} /> : undefined}
+      badge={linked.stereo ? <ChannelsBadge linked={linked} /> : undefined}
       expanded={open}
       onExpandedChange={setOpen}
       wide

@@ -14,6 +14,7 @@ const PATHS = {
   expandDown: <path d="m4 6 4 4 4-4" />,
   close: <path d="m4.5 4.5 7 7M11.5 4.5l-7 7" />,
   plus: <path d="M8 3v10M3 8h10" />,
+  link: <path d="M6.5 9.5l3-3M7.5 4.5l1-1a2.5 2.5 0 0 1 3.5 3.5l-1 1M8.5 11.5l-1 1a2.5 2.5 0 0 1-3.5-3.5l1-1" />,
   grip: (
     <g fill="currentColor" stroke="none">
       {DOTS}

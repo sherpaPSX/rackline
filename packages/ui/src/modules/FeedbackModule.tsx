@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { EqCurve, ModuleCard } from '@rackline/ui-kit';
 import { peqBands, peqFilters, readPeqBand } from '../curves.js';
-import { ChannelPicker } from './ChannelPicker.js';
+import { ChannelsBadge } from './ChannelsBadge.js';
 import { EXPANDED_CURVE_H } from './CrossoverModule.js';
 import type { ModuleViewProps } from './GenericModule.js';
 import { useLinkedModule } from './linked.js';
@@ -37,7 +37,7 @@ export function FeedbackModule({ initiallyOpen, module, blockIds, values, rackNa
   return (
     <ModuleCard
       name={title}
-      badge={linked.stereo ? <ChannelPicker linked={linked} owner={owner} /> : undefined}
+      badge={linked.stereo ? <ChannelsBadge linked={linked} /> : undefined}
       expanded={open}
       onExpandedChange={setOpen}
       wide

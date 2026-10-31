@@ -14,8 +14,8 @@ import { withSelects } from '../test/select-demo.js';
 /** Which preview build.mjs is building: Lukas's rig, or every module on one page. */
 declare const __PREVIEW__: 'preview' | 'modules';
 
-// Demo Selects (input of ANALOG, source of Out 5+6) show the source pickers; Lukas's file has none yet.
-const state = __PREVIEW__ === 'modules' ? AppState.parse(catalog) : withSelects(AppState.parse(psx));
+// Lukas's file with an input Select, so the preview shows picking the source.
+const state = __PREVIEW__ === 'modules' ? AppState.parse(catalog) : withSelects(AppState.parse(psx), { output: false });
 
 // Preview only: an in-page fake core that echoes every edit.
 const fake: OpenSocket = (_url, h) => {

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import type { CSSProperties, ReactNode } from 'react';
 import type { ParamInfo } from '@rackline/api';
 import { ModuleCard, ToggleButton } from '@rackline/ui-kit';
-import { ChannelPicker } from './ChannelPicker.js';
+import { ChannelsBadge } from './ChannelsBadge.js';
 import type { ModuleViewProps } from './GenericModule.js';
 import { useLinkedModule } from './linked.js';
 import { ParamField } from './ParamControl.js';
@@ -65,7 +65,7 @@ export function GridModule({ initiallyOpen, module, blockIds, values, rackName, 
   return (
     <ModuleCard
       name={title}
-      badge={linked.stereo ? <ChannelPicker linked={linked} owner={owner} /> : undefined}
+      badge={linked.stereo ? <ChannelsBadge linked={linked} /> : undefined}
       expanded={open}
       onExpandedChange={setOpen}
       wide

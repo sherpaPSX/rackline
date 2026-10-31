@@ -172,8 +172,12 @@ export const Connection = z.object({
 });
 export type Connection = z.infer<typeof Connection>;
 
-/** A device that answered discovery. */
-export const FoundDevice = z.object({ ip: z.string(), mac: z.string() });
+/**
+ * A device that answered discovery. `reachable: false`: it is in another
+ * subnet than this computer; connecting gives it a free address in this
+ * computer's network first (plug-and-play).
+ */
+export const FoundDevice = z.object({ ip: z.string(), mac: z.string(), reachable: z.boolean().optional() });
 export type FoundDevice = z.infer<typeof FoundDevice>;
 
 /** Everything a client needs to draw the app. Sent whole on connect and after a setup change. */

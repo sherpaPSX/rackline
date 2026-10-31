@@ -4,7 +4,7 @@ import type { EqCurveLine } from '@rackline/ui-kit';
 import { peqBands, peqFilter, peqFilters, peqHasGain, readPeqBand } from '../curves.js';
 import { formatParam, numberScale } from '../params.js';
 import type { NumberParam } from '../params.js';
-import { ChannelPicker } from './ChannelPicker.js';
+import { ChannelsBadge } from './ChannelsBadge.js';
 import { EXPANDED_CURVE_H } from './CrossoverModule.js';
 import type { ModuleViewProps } from './GenericModule.js';
 import { useLinkedModule } from './linked.js';
@@ -49,7 +49,7 @@ export function PeqModule({ initiallyOpen, module, blockIds, values, rackName, c
   return (
     <ModuleCard
       name={title}
-      badge={linked.stereo ? <ChannelPicker linked={linked} owner={owner} /> : undefined}
+      badge={linked.stereo ? <ChannelsBadge linked={linked} /> : undefined}
       expanded={open}
       onExpandedChange={setOpen}
       wide

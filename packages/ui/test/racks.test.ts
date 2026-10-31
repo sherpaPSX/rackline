@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { anyMuted, bandStrips, channelName, rackChannelNames, channelsAgree, flowSources, flowTargets, inputTargets, isOutputSelect, outputStrips, inputStrips, isSelect, sourceChoice, joinChannels, pairName, rackColor, rackDetail, rackTree } from '../src/index.js';
+import { anyMuted, bandStrips, channelName, rackChannelNames, rackChannelsAgree, channelsAgree, flowSources, inputChannels, inputTargets, isInputRack, isOutputSelect, outputStrips, inputStrips, isSelect, sharedWith, sourceChoice, speakers, joinChannels, pairName, rackColor, rackDetail } from '../src/index.js';
+import type { Speaker } from '../src/index.js';
 import { psxState } from './fixtures.js';
 import { withSelects } from './select-demo.js';
 
@@ -24,20 +25,19 @@ describe('rack views of PSX_RCF_FINAL', () => {
     expect(rackColor(setup, rack('ANALOG').id)).toBe('var(--rl-dim)');
   });
 
-  it('draws the signal flow: sources, targets and crossover bands', () => {
+  it('names where a rack\'s signal comes from', () => {
     const text = (links: { text: string }[]) => links.map((l) => l.text);
     expect(text(flowSources(setup, rack('ANALOG')))).toEqual(['In 1+2']);
     expect(text(flowSources(setup, rack('ANALOG mono')))).toEqual(['Σ ANALOG']);
     expect(flowSources(setup, rack('MF\\HF'))).toEqual([{ text: 'Delay · High', anchor: `rack-${rack('Delay').id}`, color: 'var(--rl-dim)' }]);
     expect(flowSources(setup, rack('ANALOG'))).toEqual([{ text: 'In 1+2', anchor: 'in-1' }]);
-    expect(text(flowTargets(setup, rack('ANALOG')))).toEqual(['Delay', 'ANALOG mono']);
-    expect(flowTargets(setup, rack('MF\\HF'))).toEqual([{ text: 'Out 5+6', anchor: 'out-15' }]);
-    expect(text(inputTargets(setup, [1, 2]))).toEqual(['ANALOG']);
-    expect(inputTargets(setup, [9, 10])).toEqual([]);
-    expect(text(flowTargets(setup, rack('Delay')))).toEqual(['High → MF\\HF', 'Mid → LF']);
-    expect(text(flowTargets(setup, rack('ANALOG mono')))).toEqual(['High mid → SUB FLEX', 'Low mid → SUB HORN']);
     expect(joinChannels(['In 1', 'In 2'])).toBe('In 1+2');
     expect(joinChannels(['Out 5'])).toBe('Out 5');
+  });
+
+  it('tells which stereo racks hold equal values on both channels', () => {
+    const agree = (name: string) => rackChannelsAgree(setup, rack(name), state.values);
+    expect([agree('ANALOG'), agree('Delay'), agree('MF\\HF'), agree('LF'), agree('SUB FLEX')]).toEqual([true, true, false, false, true]);
   });
 
   it('lists physical outputs in channel order, paired by their stereo rack', () => {
@@ -49,16 +49,36 @@ describe('rack views of PSX_RCF_FINAL', () => {
     ]);
   });
 
-  it('orders racks as a tree, each under the rack that feeds it', () => {
-    expect(rackTree(setup).map((n) => `${'  '.repeat(n.depth)}${n.rack.name}`)).toEqual([
-      'ANALOG',
-      '  Delay',
-      '    MF\\HF',
-      '    LF',
-      '  ANALOG mono',
-      '    SUB FLEX',
-      '    SUB HORN',
+  it('shows one row per speaker with every rack its signal passes', () => {
+    const list = speakers(setup, state.values);
+    const row = (sp: Speaker) => `${sp.rack.name}: ${sp.path.map((p) => p.rack.name).join(' → ')} (from ${sp.from.map((l) => l.text).join(', ')} → ${sp.band ?? ''})`;
+    expect(list.map(row)).toEqual([
+      'MF\\HF: Delay → MF\\HF (from ANALOG → High)',
+      'LF: Delay → LF (from ANALOG → Mid)',
+      'SUB FLEX: ANALOG mono → SUB FLEX (from Σ ANALOG → High mid)',
+      'SUB HORN: ANALOG mono → SUB HORN (from Σ ANALOG → Low mid)',
     ]);
+    expect(list.every((sp) => sp.inputRack === rack('ANALOG'))).toBe(true);
+    const [mfhf, lf] = list;
+    if (!mfhf || !lf) throw new Error('no speakers');
+    expect(mfhf.path.map((p) => p.channels)).toEqual([[0, 1], [0, 1]]);
+    expect(sharedWith(list, mfhf, rack('Delay').id)).toEqual(['LF']);
+    expect(sharedWith(list, mfhf, mfhf.rack.id)).toEqual([]);
+  });
+
+  it('puts the processing before the first split into its input channel', () => {
+    expect(isInputRack(rack('ANALOG'))).toBe(true);
+    expect(isInputRack(rack('ANALOG mono'))).toBe(false);
+    const channels = inputChannels(setup);
+    expect(channels.map((ch) => [ch.name, ch.rack?.name, ch.strips.map((st) => st.name)])).toEqual([
+      ['ANALOG', 'ANALOG', ['ANALOG']],
+      ['DIGITAL', undefined, ['DIGITAL']],
+    ]);
+    const list = speakers(setup, state.values);
+    const [analog, digital] = channels;
+    if (!analog || !digital) throw new Error('no input channels');
+    expect(inputTargets(setup, analog, list).map((l) => l.text)).toEqual(['MF\\HF', 'LF', 'SUB FLEX', 'SUB HORN']);
+    expect(inputTargets(setup, digital, list)).toEqual([]);
   });
 
   it('pairs left/right inputs into one strip', () => {
@@ -130,9 +150,13 @@ describe('racks that pick their source with a Select', () => {
     expect(isOutputSelect(s, out)).toBe(true);
     expect(isOutputSelect(s, find('LF'))).toBe(false);
     expect(sourceChoice(s, out)?.options.map((o) => o.link.text)).toEqual(['MF\\HF', 'LF']);
-    expect(rackTree(s).map((n) => n.rack.name)).not.toContain('Out 5+6');
-    expect(flowTargets(s, find('MF\\HF'))).toEqual([{ text: 'Out 5+6', anchor: 'out-15' }]);
-    expect(flowTargets(s, find('LF')).map((l) => l.text)).toEqual(['Out 3+4', 'Out 5+6']);
+    const rows = (values: typeof demo.values) => speakers(s, values).map((sp) => `${sp.name}: ${sp.path.map((p) => p.rack.name).join(' → ')}`);
+    // Out 5+6 plays the selected rack; the other one stays tunable at the end.
+    const subs = ['SUB FLEX: ANALOG mono → SUB FLEX', 'SUB HORN: ANALOG mono → SUB HORN'];
+    expect(rows(demo.values)).toEqual(['LF: Delay → LF', ...subs, 'Out 5+6: Delay → MF\\HF']);
+    const lf = { ...demo.values, '903': { input: 1 }, '904': { input: 1 } };
+    expect(rows(lf)).toEqual(['LF: Delay → LF', ...subs, 'Out 5+6: Delay → LF', 'MF\\HF: Delay → MF\\HF']);
+    expect(inputChannels(s).map((ch) => [ch.name, ch.strips.map((st) => st.name)])).toEqual([['ANALOG', ['ANALOG', 'DIGITAL']]]);
   });
 });
 
