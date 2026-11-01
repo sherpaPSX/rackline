@@ -59,6 +59,16 @@ describe('ControlClient', () => {
     expect(socket.sent).toHaveLength(5);
   });
 
+  it('lets one read use its own timeout and attempts, e.g. one short try for meters', async () => {
+    const socket = new FakeSocket(() => []);
+    const client = new ControlClient(socket, IP, { timeoutMs: 500, attempts: 3 });
+
+    const meters = client.read([trim(1)], { timeoutMs: 200, attempts: 1 });
+    await vi.advanceTimersByTimeAsync(200);
+    expect(await meters).toEqual({ ok: false, error: `no reply from ${IP}` });
+    expect(socket.sent).toHaveLength(1);
+  });
+
   it('ignores replies from another address or to another request', async () => {
     const answer = device(() => 7);
     const socket = new FakeSocket((sent) => {

@@ -123,10 +123,12 @@ Every message is JSON validated by a zod schema on both sides
   the core makes, and only on that user action.
 - **Meters:** while online, every 100 ms after the last reply the core reads
   every meter (0x8000+ indexes, read only) in as few frames as possible and
-  broadcasts `meters`. If the device refuses a meter frame, the core reads
-  each block's meters alone once and stops reading the blocks it refuses
-  (some meter indexes are guessed). A failed meter read never marks the
-  device unreachable; the liveness poll does that.
+  broadcasts `meters`. Meter frames are sent once with a short timeout: a lost
+  one is skipped, not retried, so it never holds up a write. If the device
+  refuses a meter frame, the core reads each block's meters alone once and
+  stops reading the blocks it refuses (the Meter block index is guessed). A
+  failed meter read never marks the device unreachable; the liveness poll
+  does that.
 - Not yet: storing presets, saving `.r26` files.
 
 ## UI client (`@rackline/ui`)

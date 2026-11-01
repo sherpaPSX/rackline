@@ -1,18 +1,11 @@
-import { API_VERSION, parseServerMessage } from "@rackline/api";
-import type {
-  AppState,
-  ClientMessage,
-  Levels,
-  ParamInfo,
-  ParamValue,
-  ServerMessage,
-} from "@rackline/api";
-import { quantize, sameValue } from "./params.js";
-import { UndoHistory } from "./undo.js";
-import type { ParamChange } from "./undo.js";
+import { API_VERSION, parseServerMessage } from '@rackline/api';
+import type { AppState, ClientMessage, Levels, ParamInfo, ParamValue, ServerMessage } from '@rackline/api';
+import { quantize, sameValue } from './params.js';
+import { UndoHistory } from './undo.js';
+import type { ParamChange } from './undo.js';
 
 /** The UI's own link to the core (not the core's link to the device). */
-export type CoreLink = "connecting" | "open" | "closed";
+export type CoreLink = 'connecting' | 'open' | 'closed';
 
 export interface ClientSnapshot {
   link: CoreLink;
@@ -70,13 +63,7 @@ const defaultLater = (run: () => void, ms: number) => {
  * back. Any other broadcast (another window, the device, clamping) wins.
  */
 export class CoreClient {
-  private snapshot: ClientSnapshot = {
-    link: "connecting",
-    app: undefined,
-    errors: [],
-    canUndo: false,
-    canRedo: false,
-  };
+  private snapshot: ClientSnapshot = { link: 'connecting', app: undefined, errors: [], canUndo: false, canRedo: false };
   private readonly listeners = new Set<() => void>();
   private readonly history = new UndoHistory();
   /** Values sent per `blockId:key` and not echoed yet, oldest first. */
@@ -89,7 +76,7 @@ export class CoreClient {
   private levelsAt = -Infinity;
   private closed = false;
   private readonly now: () => number;
-  private readonly later: NonNullable<CoreClientOptions["later"]>;
+  private readonly later: NonNullable<CoreClientOptions['later']>;
 
   constructor(private readonly options: CoreClientOptions) {
     this.now = options.now ?? Date.now;
@@ -109,9 +96,7 @@ export class CoreClient {
   paramInfo(blockId: number, key: string): ParamInfo | undefined {
     const setup = this.snapshot.app?.setup;
     const block = setup?.blocks.find((b) => b.id === blockId);
-    return setup?.modules
-      .find((m) => m.blockType === block?.blockType)
-      ?.params.find((p) => p.key === key);
+    return setup?.modules.find((m) => m.blockType === block?.blockType)?.params.find((p) => p.key === key);
   }
 
   /**
@@ -146,7 +131,7 @@ export class CoreClient {
   }
 
   /** Send an intent that is not a parameter change (connect, recall preset …). */
-  send(message: Exclude<ClientMessage, { type: "setParam" }>): void {
+  send(message: Exclude<ClientMessage, { type: 'setParam' }>): void {
     this.transmit(message);
   }
 
@@ -172,22 +157,11 @@ export class CoreClient {
       const id = String(edit.blockId);
       const before = values[id]?.[edit.key];
       if (before !== undefined && sameValue(info, before, value)) continue;
-      if (before !== undefined)
-        changes.push({
-          blockId: edit.blockId,
-          key: edit.key,
-          before,
-          after: value,
-        });
+      if (before !== undefined) changes.push({ blockId: edit.blockId, key: edit.key, before, after: value });
       values = { ...values, [id]: { ...values[id], [edit.key]: value } };
       const target = `${id}:${edit.key}`;
       this.inFlight.set(target, [...(this.inFlight.get(target) ?? []), value]);
-      this.transmit({
-        type: "setParam",
-        blockId: edit.blockId,
-        key: edit.key,
-        value,
-      });
+      this.transmit({ type: 'setParam', blockId: edit.blockId, key: edit.key, value });
     }
     if (values === app.values) return;
     if (record) this.history.record(changes, this.now());
@@ -195,69 +169,58 @@ export class CoreClient {
   }
 
   private transmit(message: ClientMessage): void {
-    if (this.snapshot.link !== "open" || !this.socket) {
-      this.pushError("Not connected to the Rackline core.");
+    if (this.snapshot.link !== 'open' || !this.socket) {
+      this.pushError('Not connected to the Rackline core.');
       return;
     }
     this.socket.send(JSON.stringify(message));
   }
 
   private open(): void {
-    this.update({ link: "connecting" });
+    this.update({ link: 'connecting' });
     this.socket = this.options.openSocket(this.options.url, {
-      open: () => this.update({ link: "open" }),
+      open: () => this.update({ link: 'open' }),
       message: (text) => this.receive(text),
       close: () => {
         this.socket = undefined;
         this.inFlight.clear();
-        this.update({ link: "closed" });
-        if (!this.closed)
-          this.cancelReconnect = this.later(() => this.open(), RECONNECT_MS);
+        this.update({ link: 'closed' });
+        if (!this.closed) this.cancelReconnect = this.later(() => this.open(), RECONNECT_MS);
       },
     });
   }
 
   private receive(text: string): void {
     const parsed = parseServerMessage(text);
-    if (!parsed.ok)
-      return this.pushError(
-        `Unreadable message from the core: ${parsed.error}`,
-      );
+    if (!parsed.ok) return this.pushError(`Unreadable message from the core: ${parsed.error}`);
     this.handle(parsed.value);
   }
 
   private handle(message: ServerMessage): void {
     const app = this.snapshot.app;
     switch (message.type) {
-      case "hello":
+      case 'hello':
         if (message.apiVersion !== API_VERSION) {
-          this.pushError(
-            `This window speaks API ${API_VERSION}, the core ${message.apiVersion}. Reload the window.`,
-          );
+          this.pushError(`This window speaks API ${API_VERSION}, the core ${message.apiVersion}. Reload the window.`);
         }
         return;
-      case "state":
+      case 'state':
         // A new setup or a preset recall: earlier steps may no longer apply.
         this.history.clear();
         this.inFlight.clear();
         this.levels = {};
         return this.update({ app: message.state });
-      case "param":
+      case 'param':
         return this.receiveParam(message.blockId, message.key, message.value);
-      case "connection":
-        return (
-          app &&
-          this.update({ app: { ...app, connection: message.connection } })
-        );
-      case "meters":
+      case 'connection':
+        return app && this.update({ app: { ...app, connection: message.connection } });
+      case 'meters':
         this.levels = message.levels;
         this.levelsAt = this.now();
         return;
-      case "devices":
-        return (
-          app && this.update({ app: { ...app, devices: message.devices } })
-        );
-      case "error":
+      case 'devices':
+        return app && this.update({ app: { ...app, devices: message.devices } });
+      case 'error':
         this.inFlight.clear();
         return this.pushError(message.message);
     }
@@ -284,29 +247,16 @@ export class CoreClient {
       }
     }
     const id = String(blockId);
-    this.update({
-      app: {
-        ...app,
-        values: { ...app.values, [id]: { ...app.values[id], [key]: value } },
-      },
-    });
+    this.update({ app: { ...app, values: { ...app.values, [id]: { ...app.values[id], [key]: value } } } });
   }
 
   private pushError(message: string): void {
-    const errors = [
-      ...this.snapshot.errors,
-      { id: this.nextErrorId++, message },
-    ].slice(-MAX_ERRORS);
+    const errors = [...this.snapshot.errors, { id: this.nextErrorId++, message }].slice(-MAX_ERRORS);
     this.update({ errors });
   }
 
   private update(patch: Partial<ClientSnapshot>): void {
-    this.snapshot = {
-      ...this.snapshot,
-      ...patch,
-      canUndo: this.history.canUndo,
-      canRedo: this.history.canRedo,
-    };
+    this.snapshot = { ...this.snapshot, ...patch, canUndo: this.history.canUndo, canRedo: this.history.canRedo };
     for (const listener of this.listeners) listener();
   }
 }
@@ -316,7 +266,7 @@ export const browserSocket: OpenSocket = (url, handlers) => {
   const ws = new WebSocket(url);
   ws.onopen = () => handlers.open();
   ws.onmessage = (event) => {
-    if (typeof event.data === "string") handlers.message(event.data);
+    if (typeof event.data === 'string') handlers.message(event.data);
   };
   ws.onclose = () => handlers.close();
   return { send: (text) => ws.send(text), close: () => ws.close() };

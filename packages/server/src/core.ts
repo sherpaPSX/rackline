@@ -1,14 +1,4 @@
-import type {
-  AppState,
-  ClientMessage,
-  Connection,
-  DeviceInfo,
-  FoundDevice,
-  ParamValue,
-  ServerMessage,
-  Setup,
-  Values,
-} from "@rackline/api";
+import type { AppState, ClientMessage, Connection, DeviceInfo, FoundDevice, ParamValue, ServerMessage, Setup, Values } from '@rackline/api';
 import {
   decodeDeviceInfo,
   deviceInfoReadRecords,
@@ -22,21 +12,11 @@ import {
   type ParamRecord,
   type R26Preset,
   type Result,
-} from "@rackline/protocol";
-import { isRejection } from "./control.js";
-import type { Device } from "./device.js";
-import {
-  applyRecords,
-  decodeLevels,
-  findParam,
-  fromApiValue,
-  meterReadRecords,
-  paramRecord,
-  toApiValue,
-  toSetup,
-  valueReadRecords,
-} from "./setup.js";
-import { Throttle } from "./throttle.js";
+} from '@rackline/protocol';
+import { isRejection } from './control.js';
+import type { Device } from './device.js';
+import { applyRecords, decodeLevels, findParam, fromApiValue, meterReadRecords, paramRecord, toApiValue, toSetup, valueReadRecords } from './setup.js';
+import { Throttle } from './throttle.js';
 
 export interface CoreOptions {
   openDevice(ip: string): Promise<Device>;
@@ -65,6 +45,13 @@ interface Loaded {
 const PRESET = readRecord(SYSTEM.currentPreset, 1);
 
 /**
+ * Meter frames are sent once with a short wait: a real RPM answers in about
+ * 35 ms and loses about 1 frame in 30 (docs/protocol.md "Meters"). Skipping a
+ * lost one keeps writes from queueing behind retries.
+ */
+const METER_READ = { timeoutMs: 200, attempts: 1 };
+
+/**
  * The single source of truth for device state (docs/architecture.md). Clients
  * send intents through `handle`; every resulting change goes to all
  * subscribers. Only parameter values and preset recalls are written: the core
@@ -72,7 +59,7 @@ const PRESET = readRecord(SYSTEM.currentPreset, 1);
  * user connects to a device outside this computer's networks (plug-and-play).
  */
 export class Core {
-  private connection: Connection = { status: "offline" };
+  private connection: Connection = { status: 'offline' };
   private devices: FoundDevice[] = [];
   private loaded: Loaded | undefined;
   private values: Values = {};
@@ -107,9 +94,7 @@ export class Core {
       devices: this.devices,
       ...(this.loaded === undefined ? {} : { setup: this.loaded.setup }),
       values: this.values,
-      ...(this.currentPreset === undefined
-        ? {}
-        : { currentPreset: this.currentPreset }),
+      ...(this.currentPreset === undefined ? {} : { currentPreset: this.currentPreset }),
     };
   }
 
@@ -120,23 +105,23 @@ export class Core {
   async handle(message: ClientMessage): Promise<string | undefined> {
     try {
       switch (message.type) {
-        case "setParam":
+        case 'setParam':
           return this.setParam(message.blockId, message.key, message.value);
-        case "recallPreset":
+        case 'recallPreset':
           return await this.recallPreset(message.preset);
-        case "discover":
+        case 'discover':
           this.devices = await this.options.discover();
-          this.emit({ type: "devices", devices: this.devices });
+          this.emit({ type: 'devices', devices: this.devices });
           return undefined;
-        case "connect":
+        case 'connect':
           await this.connect(message.ip);
           return undefined;
-        case "disconnect":
+        case 'disconnect':
           await this.dropDevice();
           this.unload();
           this.emitState();
           return undefined;
-        case "openProject":
+        case 'openProject':
           return await this.openProject(message.fileName, message.text);
       }
     } catch (e) {
@@ -149,12 +134,8 @@ export class Core {
     this.listeners.clear();
   }
 
-  private setParam(
-    blockId: number,
-    key: string,
-    value: ParamValue,
-  ): string | undefined {
-    if (this.loaded === undefined) return "no setup loaded";
+  private setParam(blockId: number, key: string, value: ParamValue): string | undefined {
+    if (this.loaded === undefined) return 'no setup loaded';
     const target = findParam(this.loaded.table, blockId, key);
     if (!target.ok) return target.error;
     const raw = fromApiValue(target.value.param, value);
@@ -163,20 +144,18 @@ export class Core {
     // The value as the device will hold it (rounded to its step, clamped to its range).
     const stored = toApiValue(target.value.param, raw.value);
     (this.values[String(blockId)] ??= {})[key] = stored;
-    this.emit({ type: "param", blockId, key, value: stored });
+    this.emit({ type: 'param', blockId, key, value: stored });
 
     const device = this.device;
     this.throttle.run(`${blockId}:${key}`, () => {
-      void device
-        ?.write([paramRecord(target.value, raw.value)])
-        .then((r) => r.ok || this.lost(device, r.error));
+      void device?.write([paramRecord(target.value, raw.value)]).then((r) => r.ok || this.lost(device, r.error));
     });
     return undefined;
   }
 
   private async recallPreset(preset: number): Promise<string | undefined> {
     const loaded = this.loaded;
-    if (loaded === undefined) return "no setup loaded";
+    if (loaded === undefined) return 'no setup loaded';
     const device = this.device;
     if (device === undefined) {
       const stored = loaded.presets.find((p) => p.number === preset);
@@ -188,9 +167,7 @@ export class Core {
     }
     const written = await device.write([{ ...PRESET, value: preset }]);
     // Recalling changes many values at once: read them all back.
-    const values = written.ok
-      ? await readValues(device, loaded.table)
-      : written;
+    const values = written.ok ? await readValues(device, loaded.table) : written;
     if (device !== this.device) return undefined;
     if (!values.ok) {
       this.lost(device, values.error);
@@ -205,38 +182,27 @@ export class Core {
   private async connect(ip: string): Promise<void> {
     await this.dropDevice();
     this.unload();
-    this.connection = { status: "connecting" };
+    this.connection = { status: 'connecting' };
     this.emitState();
     const generation = this.generation;
     const found = this.devices.find((d) => d.ip === ip);
-    if (
-      found?.reachable === false &&
-      this.options.moveIntoNetwork !== undefined
-    ) {
+    if (found?.reachable === false && this.options.moveIntoNetwork !== undefined) {
       const moved = await this.options.moveIntoNetwork(found);
       if (generation !== this.generation) return;
       if (!moved.ok) {
-        this.connection = {
-          status: "offline",
-          error: `cannot bring the device into this computer's network: ${moved.error}`,
-        };
-        return this.emit({ type: "connection", connection: this.connection });
+        this.connection = { status: 'offline', error: `cannot bring the device into this computer's network: ${moved.error}` };
+        return this.emit({ type: 'connection', connection: this.connection });
       }
-      this.devices = this.devices.map((d) =>
-        d.mac === found.mac ? moved.value : d,
-      );
-      this.emit({ type: "devices", devices: this.devices });
+      this.devices = this.devices.map((d) => (d.mac === found.mac ? moved.value : d));
+      this.emit({ type: 'devices', devices: this.devices });
       ip = moved.value.ip;
     }
     let device: Device;
     try {
       device = await this.options.openDevice(ip);
     } catch (e) {
-      this.connection = {
-        status: "offline",
-        error: `cannot open the network: ${e instanceof Error ? e.message : String(e)}`,
-      };
-      return this.emit({ type: "connection", connection: this.connection });
+      this.connection = { status: 'offline', error: `cannot open the network: ${e instanceof Error ? e.message : String(e)}` };
+      return this.emit({ type: 'connection', connection: this.connection });
     }
     if (generation !== this.generation) return device.close(); // a later connect or disconnect won
     this.device = device;
@@ -244,8 +210,8 @@ export class Core {
     if (device !== this.device) return; // replaced by a later connect or disconnect
     if (!loaded.ok) {
       await this.dropDevice();
-      this.connection = { status: "offline", error: loaded.error };
-      return this.emit({ type: "connection", connection: this.connection });
+      this.connection = { status: 'offline', error: loaded.error };
+      return this.emit({ type: 'connection', connection: this.connection });
     }
     this.useDevice(loaded.value);
     this.emitState();
@@ -254,39 +220,24 @@ export class Core {
   }
 
   private useDevice(loaded: DeviceSnapshot): void {
-    this.loaded = {
-      table: loaded.table,
-      setup: toSetup(loaded.table, { kind: "device", ip: loaded.info.ip }),
-      presets: [],
-    };
+    this.loaded = { table: loaded.table, setup: toSetup(loaded.table, { kind: 'device', ip: loaded.info.ip }), presets: [] };
     this.values = loaded.values;
     this.currentPreset = loaded.preset;
-    this.connection = { status: "online", device: loaded.info };
+    this.connection = { status: 'online', device: loaded.info };
     this.meterRecords = meterReadRecords(loaded.table);
   }
 
-  private async openProject(
-    fileName: string,
-    text: string,
-  ): Promise<string | undefined> {
+  private async openProject(fileName: string, text: string): Promise<string | undefined> {
     const project = parseR26(text);
     if (!project.ok) return `cannot open ${fileName}: ${project.error}`;
     await this.dropDevice();
     const { blockTable: table, presets } = project.value;
-    this.loaded = {
-      table,
-      setup: toSetup(table, { kind: "file", fileName }),
-      presets,
-    };
+    this.loaded = { table, setup: toSetup(table, { kind: 'file', fileName }), presets };
     this.values = {};
     // Preset 0 holds the values Drag Net saved with the project (meaning vs. the device's working state: unverified).
-    applyRecords(
-      table,
-      this.values,
-      presets.find((p) => p.number === 0)?.params ?? [],
-    );
+    applyRecords(table, this.values, presets.find((p) => p.number === 0)?.params ?? []);
     this.currentPreset = undefined;
-    this.connection = { status: "offline" };
+    this.connection = { status: 'offline' };
     this.emitState();
     return undefined;
   }
@@ -309,7 +260,7 @@ export class Core {
       return this.schedulePoll(device);
     }
     const preset = reply.value[0]?.value;
-    if (this.connection.status === "unreachable") {
+    if (this.connection.status === 'unreachable') {
       // The setup may have been replaced meanwhile (e.g. by Drag Net): load it again.
       const loaded = await loadDevice(device);
       if (device !== this.device) return;
@@ -338,29 +289,18 @@ export class Core {
    */
   private scheduleMeters(device: Device): void {
     clearTimeout(this.meterTimer);
-    this.meterTimer = setTimeout(
-      () => void this.readMeters(device),
-      this.meterMs,
-    );
+    this.meterTimer = setTimeout(() => void this.readMeters(device), this.meterMs);
   }
 
   private async readMeters(device: Device): Promise<void> {
     if (device !== this.device) return;
     const table = this.loaded?.table;
     const records = this.meterRecords;
-    if (
-      table !== undefined &&
-      records.length > 0 &&
-      this.connection.status === "online"
-    ) {
-      const reply = await device.read(records);
+    if (table !== undefined && records.length > 0 && this.connection.status === 'online') {
+      const reply = await device.read(records, METER_READ);
       if (device !== this.device) return;
       if (reply.ok) {
-        if (this.loaded?.table === table)
-          this.emit({
-            type: "meters",
-            levels: decodeLevels(table, reply.value),
-          });
+        if (this.loaded?.table === table) this.emit({ type: 'meters', levels: decodeLevels(table, reply.value) });
       } else if (isRejection(reply.error)) {
         await this.dropRefusedMeters(device, records);
         if (device !== this.device) return;
@@ -374,16 +314,12 @@ export class Core {
    * guessed (docs/protocol.md "Meters"): read each block's meters alone once
    * and keep only the blocks the device answers.
    */
-  private async dropRefusedMeters(
-    device: Device,
-    records: readonly ParamRecord[],
-  ): Promise<void> {
+  private async dropRefusedMeters(device: Device, records: readonly ParamRecord[]): Promise<void> {
     const blocks = new Map<number, ParamRecord[]>();
-    for (const r of records)
-      blocks.set(r.instance, [...(blocks.get(r.instance) ?? []), r]);
+    for (const r of records) blocks.set(r.instance, [...(blocks.get(r.instance) ?? []), r]);
     const kept: ParamRecord[] = [];
     for (const group of blocks.values()) {
-      const reply = await device.read(group);
+      const reply = await device.read(group, METER_READ);
       if (device !== this.device) return;
       if (reply.ok) kept.push(...group);
       else if (!isRejection(reply.error)) return; // not answering: try everything again next time
@@ -393,10 +329,9 @@ export class Core {
 
   /** The device stopped answering: keep the state, say so, keep polling. */
   private lost(device: Device, error: string): void {
-    if (device !== this.device || this.connection.status === "unreachable")
-      return;
-    this.connection = { ...this.connection, status: "unreachable", error };
-    this.emit({ type: "connection", connection: this.connection });
+    if (device !== this.device || this.connection.status === 'unreachable') return;
+    this.connection = { ...this.connection, status: 'unreachable', error };
+    this.emit({ type: 'connection', connection: this.connection });
   }
 
   private async dropDevice(): Promise<void> {
@@ -412,11 +347,11 @@ export class Core {
     this.loaded = undefined;
     this.values = {};
     this.currentPreset = undefined;
-    this.connection = { status: "offline" };
+    this.connection = { status: 'offline' };
   }
 
   private emitState(): void {
-    this.emit({ type: "state", state: this.state() });
+    this.emit({ type: 'state', state: this.state() });
   }
 
   private emit(message: ServerMessage): void {
@@ -441,17 +376,10 @@ async function loadDevice(device: Device): Promise<Result<DeviceSnapshot>> {
   if (!table.ok) return fail(`cannot read the setup: ${table.error}`);
   const values = await readValues(device, table.value);
   if (!values.ok) return values;
-  return ok({
-    info: { ip: device.ip, ...decodeDeviceInfo(info.value) },
-    table: table.value,
-    ...values.value,
-  });
+  return ok({ info: { ip: device.ip, ...decodeDeviceInfo(info.value) }, table: table.value, ...values.value });
 }
 
-async function readValues(
-  device: Device,
-  table: BlockTable,
-): Promise<Result<{ values: Values; preset: number | undefined }>> {
+async function readValues(device: Device, table: BlockTable): Promise<Result<{ values: Values; preset: number | undefined }>> {
   const records = await device.read([PRESET, ...valueReadRecords(table)]);
   if (!records.ok) return records;
   const [preset, ...params] = records.value;

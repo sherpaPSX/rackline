@@ -541,7 +541,7 @@ button.app-flow-chip:focus-visible {
 }
 .app-map-chain > .app-tile::before,
 .app-map-outs > .app-tile::before {
-  content: "";
+  content: '';
   position: absolute;
   right: 100%;
   top: 50%;
@@ -592,7 +592,7 @@ button.app-flow-chip:focus-visible {
   color: var(--rl-dim);
 }
 .app-tile[data-muted] .app-tile-body::after {
-  content: "MUTED";
+  content: 'MUTED';
   font: 600 10px var(--rl-font-label);
   color: var(--rl-danger);
 }
