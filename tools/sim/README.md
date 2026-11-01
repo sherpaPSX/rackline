@@ -16,6 +16,8 @@ python3 -I tools/sim/fake_rpm.py      # data and log in tools/sim/.data/
 - `.data/values.json` sets initial parameter values
   (`"<record hex>:<index>": raw`, e.g. `"04110fb05:0"`), `.data/store.json`
   keeps values written by clients, `.data/tftp/` holds uploaded configs.
+- Meter reads (index 0x8000 and up) without a stored value get a moving
+  level (gain reduction for 0x05xx blocks), so the UI meters move.
 - `parse_cfg.py FILE` prints the block table of a config file; it is the
   reference for the TypeScript parser in `@rackline/protocol`.
 

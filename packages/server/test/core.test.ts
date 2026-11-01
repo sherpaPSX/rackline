@@ -148,6 +148,59 @@ describe('Core', () => {
     expect(core.state().connection.status).toBe('offline');
   });
 
+  it('reads the meters while online and broadcasts the levels, without writing', async () => {
+    const { core, device, last } = setup();
+    device.set({ ...SUB_HORN_TRIM, index: 0x8002 }, 30);
+    device.set({ ...SUB_HORN_TRIM, index: 0x8001 }, 7);
+    await core.handle({ type: 'connect', ip: device.ip });
+    expect(last('meters')).toBeUndefined();
+
+    await vi.advanceTimersByTimeAsync(100);
+    expect(last('meters')?.levels['11']).toEqual({ analog: -6, dac: -7 });
+    device.set({ ...SUB_HORN_TRIM, index: 0x8002 }, 0);
+    await vi.advanceTimersByTimeAsync(100);
+    expect(last('meters')?.levels['11']?.analog).toBe(24);
+    expect(device.writes).toEqual([]);
+  });
+
+  it('leaves out the meters of blocks the device refuses and keeps reading the rest', async () => {
+    const { core, device, last } = setup();
+    const limiter = { target: 'block', instance: 46, objectType: 0x0501, index: 0x8000 } as const;
+    device.refuse(limiter);
+    device.set({ target: 'block', instance: 47, objectType: 0x0501, index: 0x8000 }, 3);
+    await core.handle({ type: 'connect', ip: device.ip });
+
+    await vi.advanceTimersByTimeAsync(100); // refused, then each block alone
+    expect(last('meters')).toBeUndefined();
+    await vi.advanceTimersByTimeAsync(100);
+    const levels = last('meters')?.levels;
+    expect(levels?.['46']).toBeUndefined();
+    expect(levels?.['47']).toEqual({ reduction: 3 });
+    expect(levels?.['1']).toEqual({ adc: 0, analog: 24 });
+    expect(device.writes).toEqual([]);
+  });
+
+  it('stops reading meters while the device is unreachable and after a disconnect', async () => {
+    const { core, device, sent } = setup();
+    await core.handle({ type: 'connect', ip: device.ip });
+    device.reachable = false;
+    await vi.advanceTimersByTimeAsync(2000);
+    expect(core.state().connection.status).toBe('unreachable');
+    const count = sent.filter((m) => m.type === 'meters').length;
+    await vi.advanceTimersByTimeAsync(500);
+    expect(sent.filter((m) => m.type === 'meters')).toHaveLength(count);
+
+    device.reachable = true;
+    await vi.advanceTimersByTimeAsync(2100);
+    expect(core.state().connection.status).toBe('online');
+    expect(sent.filter((m) => m.type === 'meters').length).toBeGreaterThan(count);
+
+    await core.handle({ type: 'disconnect' });
+    const after = sent.length;
+    await vi.advanceTimersByTimeAsync(500);
+    expect(sent).toHaveLength(after);
+  });
+
   it('lists discovered devices', async () => {
     const { core, last } = setup();
     await core.handle({ type: 'discover' });

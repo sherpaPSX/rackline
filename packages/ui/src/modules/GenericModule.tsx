@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import type { ReactNode } from 'react';
 import type { ModuleInfo, Values } from '@rackline/api';
-import { Meter, ModuleCard } from '@rackline/ui-kit';
+import { ModuleCard } from '@rackline/ui-kit';
+import { MeterCell } from './LiveMeter.js';
 import { ChannelsBadge } from './ChannelsBadge.js';
 import { ParamControl } from './ParamControl.js';
 import { useLinkedModule } from './linked.js';
@@ -25,7 +26,7 @@ export interface ModuleViewProps {
 
 /** Level's limits for remote wall controls: not needed while tuning. */
 const HIDDEN = new Set(['min', 'max']);
-/** Dynamics show only their key controls until expanded (D27; live meters join them once the core reads meters). */
+/** Dynamics show only their key controls and their gain reduction until expanded (D27). */
 const COMPACT = /^(Limiter|Compressor)/;
 /** More controls than this and a module shows its compact controls until expanded. */
 const MANY = 6;
@@ -79,21 +80,16 @@ export function GenericModule({ initiallyOpen, module, blockIds, values, rackNam
   );
   const many = params.length > MANY;
   const compact = COMPACT.test(module.name) || many ? params.filter((p) => module.compact.includes(p.key)) : [];
+  const meters = module.meters.map((m) => <MeterCell key={`meter-${m.key}`} meter={m} blockIds={blockIds} />);
   return (
     <ModuleCard
       name={title}
       {...(hasBypass ? { on: linked.value('bypass') !== true, onOnChange: (on: boolean) => linked.set({ bypass: !on }) } : {})}
       badge={linked.stereo ? <ChannelsBadge linked={linked} /> : undefined}
-      {...(compact.length > 0 && compact.length < params.length ? { summary: compact.map(control), expanded: open, onExpandedChange: setOpen } : {})}
+      {...(compact.length > 0 && compact.length < params.length ? { summary: [...compact.map(control), ...meters], expanded: open, onExpandedChange: setOpen } : {})}
     >
-      {params.length === 0 && (
-        // A meter block; the core does not read levels yet, so it stays empty.
-        <div className="rl-cell app-meter-cell">
-          <Meter readLevel={() => -Infinity} />
-          <span className="rl-label">No level yet</span>
-        </div>
-      )}
       {many ? <div className="app-many">{params.map(control)}</div> : params.map(control)}
+      {meters}
       {extra}
     </ModuleCard>
   );

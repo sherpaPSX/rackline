@@ -39,6 +39,23 @@ export type ModuleRole = 'input' | 'output' | 'processing' | 'mixer' | 'crossove
  */
 export type Evidence = 'simulator' | 'sample' | 'guessed';
 
+/**
+ * A live level the device reports as a 1-byte block parameter from index
+ * 0x8000 (docs/protocol.md "Meters"). Raw is the distance below full scale
+ * in dB; for gain reduction it is the reduction in dB.
+ */
+export interface MeterDef {
+  index: number;
+  /** Stable key within the module, e.g. `level`, `adc`, `reduction`. */
+  key: string;
+  label: string;
+  /** `dBu` and `dBFS` levels, or `dB` of gain reduction. */
+  unit: 'dBu' | 'dBFS' | 'dB';
+  /** Level at raw 0 (full scale): +24 dBu analog, 0 dBFS converters. Unused for gain reduction. */
+  fullScale: number;
+  reduction: boolean;
+}
+
 export interface ModuleDef {
   blockType: number;
   name: string;
@@ -53,4 +70,6 @@ export interface ModuleDef {
   delayBlocks?: number;
   /** Crossover band names in output order. */
   bands?: readonly string[];
+  /** Live levels the device reports for this block. */
+  meters?: readonly MeterDef[];
 }

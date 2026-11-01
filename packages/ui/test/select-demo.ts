@@ -17,6 +17,7 @@ const SELECT_2: ModuleInfo = {
     },
   ],
   compact: ['input'],
+  meters: [],
 };
 
 const INPUT_SELECT = [901, 902];

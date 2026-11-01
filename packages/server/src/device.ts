@@ -6,7 +6,8 @@ import { openUdpSocket } from './udp.js';
 /** One RPM as the core sees it. Tests replace it with an in-memory device. */
 export interface Device {
   readonly ip: string;
-  read(records: readonly ParamRecord[]): Promise<Result<ParamRecord[]>>;
+  /** `options` override the timeout and attempts for this read. */
+  read(records: readonly ParamRecord[], options?: ControlOptions): Promise<Result<ParamRecord[]>>;
   /** Refuses system objects other than the preset recall (see `ControlClient`). */
   write(records: readonly ParamRecord[]): Promise<Result<ParamRecord[]>>;
   /** The configuration file over TFTP (header, block table, DSP program). */
@@ -25,7 +26,7 @@ export async function openRpm(ip: string, options: RpmOptions = {}): Promise<Dev
   const control = new ControlClient(socket, ip, options.control);
   return {
     ip,
-    read: (records) => control.read(records),
+    read: (records, readOptions) => control.read(records, readOptions),
     write: (records) => control.write(records),
     readConfig: async () => {
       // TFTP replies come to the requesting port, so each download gets its own socket.

@@ -2,6 +2,7 @@ import type { CSSProperties } from 'react';
 import type { Setup, Values } from '@rackline/api';
 import { Fader, MuteButton, faderScale } from '@rackline/ui-kit';
 import { useCoreClient } from '../app/core-context.js';
+import { LiveMeters } from '../modules/LiveMeter.js';
 import { anyMuted, bandStrips, inputStrips, moduleOf, valueOf } from '../racks.js';
 
 interface StripProps {
@@ -13,10 +14,12 @@ interface StripProps {
   values: Values;
 }
 
-/** Fader + mute of one input pair or band. The fader is the blocks' trim, linked across channels. */
+/** Fader, meter and mute of one input pair or band. The fader is the blocks' trim, linked across channels. */
 function Strip({ name, color, blockIds, setup, values }: StripProps) {
   const client = useCoreClient();
-  const trim = moduleOf(setup, blockIds[0] ?? -1)?.params.find((p) => p.key === 'trim');
+  const module = moduleOf(setup, blockIds[0] ?? -1);
+  const trim = module?.params.find((p) => p.key === 'trim');
+  const meter = module?.meters[0];
   if (trim?.kind !== 'number') return null;
   const current = valueOf(values, blockIds[0] ?? -1, 'trim');
   const scale = faderScale({ minDb: trim.min, maxDb: trim.max, unityPosition: 0.7 });
@@ -26,7 +29,15 @@ function Strip({ name, color, blockIds, setup, values }: StripProps) {
       <span className="app-strip-name" title={name}>
         {name}
       </span>
-      <Fader label={`${name} level`} valueDb={typeof current === 'number' ? current : 0} onChange={(db) => setAll('trim', db)} scale={scale} color={color} touch />
+      <Fader
+        label={`${name} level`}
+        valueDb={typeof current === 'number' ? current : 0}
+        onChange={(db) => setAll('trim', db)}
+        scale={scale}
+        color={color}
+        meter={meter && <LiveMeters meter={meter} blockIds={blockIds} />}
+        touch
+      />
       <MuteButton muted={anyMuted(values, blockIds)} onChange={(m) => setAll('mute', m)} target={name} touch />
     </div>
   );

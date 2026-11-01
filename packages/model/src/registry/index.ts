@@ -16,7 +16,7 @@ import { MIXERS } from './mixer.js';
 import { peq, PEQ_MAX_FILTERS } from './peq.js';
 import type { ModuleDef } from './types.js';
 
-export type { Evidence, ModuleDef, ModuleRole, ParamDef, ParamKind } from './types.js';
+export type { Evidence, MeterDef, ModuleDef, ModuleRole, ParamDef, ParamKind } from './types.js';
 export { CROSSOVER_FILTER_TYPES } from './crossover.js';
 export { GEQ_BANDS_HZ } from './geq.js';
 export { PEQ_FILTER_TYPES, PEQ_MAX_FILTERS, peqFilterCount } from './peq.js';

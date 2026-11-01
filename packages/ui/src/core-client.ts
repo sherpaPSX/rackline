@@ -1,5 +1,5 @@
 import { API_VERSION, parseServerMessage } from '@rackline/api';
-import type { AppState, ClientMessage, ParamInfo, ParamValue, ServerMessage } from '@rackline/api';
+import type { AppState, ClientMessage, Levels, ParamInfo, ParamValue, ServerMessage } from '@rackline/api';
 import { quantize, sameValue } from './params.js';
 import { UndoHistory } from './undo.js';
 import type { ParamChange } from './undo.js';
@@ -45,6 +45,8 @@ export interface ParamEdit {
 }
 
 const RECONNECT_MS = 1000;
+/** Levels older than this are not shown (the core stopped sending them). */
+const LEVELS_STALE_MS = 1000;
 const MAX_ERRORS = 3;
 
 const defaultLater = (run: () => void, ms: number) => {
@@ -69,6 +71,9 @@ export class CoreClient {
   private socket: CoreSocket | undefined;
   private cancelReconnect: (() => void) | undefined;
   private nextErrorId = 1;
+  /** Latest live levels; kept out of the snapshot so meters do not re-render React. */
+  private levels: Levels = {};
+  private levelsAt = -Infinity;
   private closed = false;
   private readonly now: () => number;
   private readonly later: NonNullable<CoreClientOptions['later']>;
@@ -104,6 +109,15 @@ export class CoreClient {
 
   setParam(blockId: number, key: string, value: ParamValue): void {
     this.apply([{ blockId, key, value }], true);
+  }
+
+  /**
+   * Latest level of a block's meter (dBu / dBFS, or dB of gain reduction),
+   * undefined without a fresh reading. Meters call this every animation frame.
+   */
+  level(blockId: number, key: string): number | undefined {
+    if (this.now() - this.levelsAt > LEVELS_STALE_MS) return undefined;
+    return this.levels[String(blockId)]?.[key];
   }
 
   undo(): void {
@@ -194,11 +208,16 @@ export class CoreClient {
         // A new setup or a preset recall: earlier steps may no longer apply.
         this.history.clear();
         this.inFlight.clear();
+        this.levels = {};
         return this.update({ app: message.state });
       case 'param':
         return this.receiveParam(message.blockId, message.key, message.value);
       case 'connection':
         return app && this.update({ app: { ...app, connection: message.connection } });
+      case 'meters':
+        this.levels = message.levels;
+        this.levelsAt = this.now();
+        return;
       case 'devices':
         return app && this.update({ app: { ...app, devices: message.devices } });
       case 'error':

@@ -115,6 +115,38 @@ analog, 0 dBFS for converters), 10 = 10 dB below. Drag Net's meter shows about
 64 dB of range. For gain reduction the value is the dB of reduction directly.
 The 1 dB step is an estimate from the meter drawing; verify on hardware.
 
+**Seen on hardware** (Lukas's RPM 26z, firmware 2.5.3, 1 Nov 2026, reads
+only, no signal on the inputs; the running configuration has no compressor,
+Meter block or generator):
+
+- Analog input and output blocks answer 0x8000 … 0x8002 (0x8003 and up:
+  status 7). Limiter 0x0501 answers 0x8000 (0 at rest; 0x8001 and up: status
+  7). Digital input answers 0x8000 … 0x8007, always 140 without a signal.
+  PEQ, delay, crossover and mixer blocks answer 0x8000 … 0x8007 with 0; they
+  have no meter.
+- Meter indexes accept every size; the reading is the top byte of the value
+  (size 2 returns raw × 256). Read them with size 1.
+- At rest the analog inputs read 89 … 92 on all three indexes and the
+  outputs 82 … 113, moving by 2 … 6 between reads: the noise floor, about
+  −90 dB if the 1 dB step holds. On outputs with a non-zero output trim (+3
+  and +4 dB), 0x8000 reads 3 … 4 more than 0x8001 and 0x8002, which are
+  equal: 0x8000 may be measured before the trim. Unverified, needs a
+  signal.
+- One frame with all 46 meters of the configuration took 35 ms median
+  (24 … 122 ms); about 1 frame in 30 got no reply.
+
+**Guessed, not seen on hardware:**
+
+| Meter | Record |
+|---|---|
+| Meter block level (dBFS) | `00 <id> 0400` idx 0x8000; the block answers no index 0 … 9 |
+
+Still unverified on hardware: the scale and step with a signal, which output
+index is dBu and which dBFS, and the limiter and compressor gain reduction
+while limiting.
+
+Code: `meters` in the module registry (`@rackline/model`), `decodeMeter`.
+
 ### Presets
 
 The device has 24 unnamed presets (names exist only in the Drag Net project).

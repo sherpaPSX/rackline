@@ -1,4 +1,5 @@
 import { INPUT_TRIM, USER_GAIN } from '../units.js';
+import { levelMeter } from '../meters.js';
 import { bool, choice, num } from './params.js';
 import type { ModuleDef } from './types.js';
 
@@ -14,5 +15,7 @@ export const analogInput: ModuleDef = {
     bool(5, 'mute', 'Mute'),
   ],
   compact: ['trim', 'mute'],
+  // The converter level first: the UI shows the first meter where there is room for one.
+  meters: [levelMeter(0x8001, 'adc', 'After A/D', 'dBFS'), levelMeter(0x8000, 'analog', 'Analog in', 'dBu')],
   dspPercent: 0,
 };
